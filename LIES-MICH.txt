@@ -1,0 +1,48 @@
+STRICHKAMPF – DOJO / 07
+Eigenständige Version des gemeinsam erarbeiteten Spielstands.
+
+SO STARTET DAS SPIEL
+1. ZIP-Datei vollständig entpacken.
+2. Strichkampf.html per Doppelklick im Browser öffnen.
+3. „Gegen Computer“ wählen. Zum Aktivieren der Sounds ins Spiel klicken.
+
+Keine Installation und kein Netlify-/ChatGPT-Konto zum lokalen Spielen nötig.
+Spielgrafik, Sounds, Spiellogik und die PeerJS-Bibliothek sind in der HTML-Datei enthalten.
+Der Computergegner funktioniert ohne Internet. index.html ist eine identische
+Startdatei für optionales statisches Hosting.
+
+STEUERUNG
+Direkt: F vor, D zurück, J Schlag, K Tritt, S hoher Block,
+Leertaste tiefer Block, W oder Pfeil oben Sprung, Pfeil unten ducken.
+J + K: freigeschaltete Dreier-Serie im Duell.
+Klassik: Pfeilrichtung + J/Leertaste; die vollständige Belegung steht unter „?“.
+Controller: Mit dem Rechner verbinden, ins Spiel klicken und Taste drücken.
+Direkt: Quadrat Schlag, Kreis Tritt, Kreuz Sprung, L1 hoher Block,
+L2 tiefer Block, R1 Serie, Options Pause. Klassik: Richtung + Kreuz.
+Die Controllererkennung hängt vom Browser und seinem Standard-Gamepad-Support ab.
+
+SPIELMODI
+Duell: Lebensbalken; zwei Rundensiege gewinnen das Match.
+Punktkampf: Ein ungeblockter Treffer gibt einen Punkt; zwei oder drei Punkte zum Sieg.
+Steuerung und Regeln sind unabhängig wählbar. Zeitlimit optional.
+
+ONLINE MIT ANDREAS
+Beide verwenden diese Version. Einer erstellt einen Raum, der andere tritt
+mit dem Raumcode bei. Beide brauchen Internet. Raumvermittlung und
+Verbindungsaufbau verwenden externe PeerJS-/STUN-Dienste; diese Dienste sind
+nicht Bestandteil der ZIP. Strenge Router können direkte Verbindungen verhindern;
+ein TURN-Relay ist nicht eingerichtet. Echte Zweinetz- und Controller-Tests
+sind noch offen. Solo benötigt diese Dienste nicht.
+
+QUELLCODE
+Quellcode/src/: vollständiger HTML-, JavaScript- und Bibliothekscode.
+Quellcode/build.py: erzeugt mit Python 3 die beiden Einzeldateien in Quellcode/dist/.
+Aufruf im Ordner Quellcode: python3 build.py
+Zum Spielen ist dieser Schritt NICHT nötig.
+Quellcode/tests/: vorhandene Simulationsprüfungen. Combat-Test: node tests/combat.cjs
+Der Integrationstest benötigt Node.js und @napi-rs/canvas, auflösbar über NODE_PATH.
+Quellcode/DEVELOPMENT.md: technischer Entwicklungsstand und Testgrenzen.
+PeerJS-Lizenz: Quellcode/src/PEERJS-LICENSE.txt (auch im HTML eingebettet).
+
+Paketstand: DOJO / 07, Quellstand 31bdff40e5ae2c0cded17f8296132067280801ae.
+Export vom 27.10.2026. Spielmechanik gegenüber diesem Stand unverändert.
