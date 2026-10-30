@@ -1,7 +1,7 @@
 # Strichkampf – Schrittplan (Regelwerk-Schritte 2–5)
 
 Stand: 30.10.2026 · Projektart: Spiel · Modus: selbstständig · Zielgruppe: Stefan (Solo gegen KI), Stefan + Andreas (online)
-**Status: ENTWURF – Freigabe durch Stefan offen (Plan = Haltepunkt).**
+**Status: FREIGEGEBEN von Stefan am 30.10.2026 (Steckbrief H1, Prüfpunkte 3–5, Fragen 1–3 je Empfehlung A, offene Punkte 1–3 je Vorschlag).**
 
 Quelle für alle Regeln: `REGELWERK.md` v1 (eingefroren). Jede Abweichung davon ist ein Haltepunkt (H2).
 Prüfpunkte für Schritt 3, 4, 5 standen im Regelwerk auf „vor Beginn festlegen“ – sie stehen hier als Vorschlag und werden mit diesem Plan freigegeben.
@@ -25,7 +25,7 @@ Prüfpunkte für Schritt 3, 4, 5 standen im Regelwerk auf „vor Beginn festlege
 
 ## Fragerunde (offen – Stefan antwortet mit dem Plan)
 
-Siehe Nachricht im Chat. Die Antworten werden hier und in `ENTSCHEIDUNGEN.md` nachgetragen.
+Frage 1 Combo-Takt: **A** – HUD zeigt die nächste Taste, Fenster 0,5 s. Frage 2 Ansager: **A** – eigene synthetische Stimme plus Großtext. Frage 3 Canvas-Paket: **A** – installiert. Offen 1: Punktkampf-Siege zählen. Offen 2: Rücksetz-Knopf im Hilfe-Dialog. Offen 3: Rufe auf Englisch.
 
 Selbst entschiedene Punkte stehen im Entscheidungs-Log (`ENTSCHEIDUNGEN.md`) mit Kriterium.
 
@@ -56,6 +56,7 @@ Testbefehle (alle im Ordner `Quellcode/`): `node tests/combat.cjs` (Engine), `no
 ### 2a · KI als eigenes Modul mit drei Stufen (Regelwerk §6)
 - Die KI zieht aus `game.js` in `Quellcode/src/ai.js` (gleiche Eingaben wie ein Mensch, liest den Zustand mit Verzögerung, kein Schummeln). Drei Stufen als Zahlentabelle: Reaktionsverzögerung, Entscheidungstakt, Blockquote, Kampfstile. Stufe 1 (Grün): ein Stil. Stufe 2 (Schwarz): schneller, dichter Block, zwei Stile, Wechsel je Runde. Stufe 3 (Meister 2): extrem schnell, drei Stile, Wechsel alle 4 Sekunden oder nach kassiertem Treffer. Zufall ist einspeisbar (fester Startwert in Tests).
 - **Erwartet:** Stufe 2 schlägt Stufe 1 in ≥ 7 von 10 simulierten Duell-Matches; Stufe 3 schlägt Stufe 2 in ≥ 7 von 10 (Prüfpunkt Regelwerk §7). Stufe 1 schlägt einen Zufalls-Bot (wahllose Tasten) in ≥ 9 von 10 („schon anspruchsvoll“). Reaktionsverzögerung sinkt und Blockquote steigt von Stufe zu Stufe (Test liest die Tabelle). Stilwechsel zählbar: Stufe 1 = 0 Wechsel, Stufe 2 ≥ 1 je Match, Stufe 3 ≥ 3 je Match. Kaputte Stufen (0, 4, −1, `null`, „x“) → Stufe 1, kein Fehler. Gleicher Startwert = gleicher Spielverlauf. Alte 27 Prüfungen bleiben grün.
+- **Ergebnis (30.10.2026):** 9 von 9 Prüfungen in `tests/ki.cjs`: Stufe 2 gegen 1 = 10/10, Stufe 3 gegen 2 = 10/10, Stufe 1 gegen Zufalls-Bot = 9/10 (über 30 Matches: 27/30, 27/30, 29/30). Zufalls-Bot drückt drei Mal je Sekunde wahllose Tasten (40 % Angriffe); ein Bot mit vier Entscheidungen je Sekunde ist durch den Schlagabtausch stärker als jede Stufe 1 mit menschlicher Reaktion (dort 19/30) – siehe Log. Reaktion 0,18 / 0,11 / 0,05 s, Block 70 / 82 / 92 %. Alte 27 Prüfungen und 8 Integrationsprüfungen grün.
 
 ### 2b · Gürtel des Spielers (Regelwerk §6)
 - `Quellcode/src/progress.js`: 11 Gürtel, Siege → Gürtel, Gürtel → KI-Stufe, Speichern/Laden. Anzeige im Startbild (Gürtel, Gegnerstufe, Siege bis zum nächsten Gürtel), im Ergebnis („Neuer Gürtel: …“) und am Gi der Figur (Spieler: Ranggürtel, KI: Grün/Schwarz).
