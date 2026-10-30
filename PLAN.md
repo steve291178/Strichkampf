@@ -86,6 +86,7 @@ Testbefehle (alle im Ordner `Quellcode/`): `node tests/combat.cjs` (Engine), `no
 ### 4c · Effekte bei Treffern (game.js)
 - Kontaktblitz, Schlaglinien, Funken nach Stärke; Bildwackeln; Block-Funkenring; Breaker: goldener Blitz + „COMBO BREAKER“; Show 7–9: Großtext „7 TREFFER“ bis „9 TREFFER“, Farbblitz, Leuchtspur an der schlagenden Extremität. `prefers-reduced-motion` halbiert alles.
 - **Erwartet:** Partikel je Treffer: leicht 7, stark 14, Show 28; Bildwackeln 0,04 s leicht / 0,08 s stark. 60 Sekunden Simulation mit 30 Treffern: nie mehr als 400 Partikel gleichzeitig, kein Fehler. Bildprobe PNG je Effekt (Frage 3). Kontaktstopp unverändert (kein Slow-Mo).
+- **Ergebnis (30.10.2026):** 6/6 in `tests/effekte.cjs`: leicht 7 / stark 14 / Show 28 Funken plus Ring und Schlaglinien (4/8/10), „COMBO n“ schwebt ab Treffer 4, ab 7 Großtext „n TREFFER“ und Blitz; Block 7, perfekter Block 17, Breaker 26 Funken mit „COMBO BREAKER!“; kaputte Koordinaten → nichts; 60 s mit 30 Treffern: Spitze unter 400, nach 2 s leer; 200 Treffer in einer Sekunde bleiben unter 400; Leuchtspur in der Show klingt ab. Bildwackeln 0,04/0,08 s. Bildprobe `Quellcode/bildproben/effekte.png`.
 
 ### 5a · Kampfgeräusche (audio.js, nur Web Audio)
 - Schlag-„Wusch“ leicht/stark, krachende Treffer (Kopf, Körper, Knie, Sturz), Block, perfekter Block, Breaker, Schritt, Landung, Sprung, Start, Runde, Match, Gürtel. Kiai (Bruce-Lee-Art) bei starken Treffern und Combo-Start – zwei Varianten, Stefan wählt am Ende.
