@@ -18,7 +18,7 @@ function play(type,kind='jab',strong=false){
  if(!enabled||!ctx||ctx.state!=='running')return;const kick=['kick','side','sweep','air'].includes(kind);
  if(type==='swing'){hiss(kick?.22:.135,kick?.18:.12,kick?480:720,kick?2200:2900,'bandpass',0,kick?.04:.025);}
  else if(type==='hit'){hiss(.055,kick?.48:.36,1900,700,'bandpass');tone(kick?102:155,42,kick?.24:.16,kick?.40:.29,'sine');hiss(.026,.16,3700,2100,'highpass',.013);if(kind==='body'||strong||kick)grunt(strong||kind==='body');}
- else if(type==='block'||type==='parry'){hiss(.065,.30,1500,650,'bandpass');tone(420,210,.08,.14,'triangle');if(type==='parry'){tone(990,740,.23,.09,'sine',.012);tone(1470,1390,.16,.035,'sine',.02);}}
+ else if(type==='block'||type==='parry'||type==='breaker'){hiss(.065,.30,1500,650,'bandpass');tone(420,210,.08,.14,'triangle');if(type!=='block'){tone(990,740,.23,.09,'sine',.012);tone(1470,1390,.16,.035,'sine',.02);}}
  else if(type==='step'||type==='land'){hiss(type==='land'?.085:.045,type==='land'?.11:.034,650,220,'lowpass');}
  else if(type==='jump')hiss(.11,.065,420,1250,'bandpass');
  else if(type==='start'){tone(740,510,.42,.10,'sine');tone(1110,940,.3,.035,'sine');}

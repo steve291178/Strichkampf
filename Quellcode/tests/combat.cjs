@@ -108,4 +108,44 @@ test('Point mode preserves perfect blocks',()=>{
  const g=C.create({mode:'points'});g.phase='fight';const a=g.fighters[0];
  g.fighters[1].x=a.x+95;attack(a,'jab',C.MOVES.jab.wind-.02);tick(g,C.blank(),C.blank(),{...C.blank(),block:true});assert(g.events.some(e=>e.type==='parry'));assert.equal(g.scores[0],0);
 });
+// --- Combo-System (Regelwerk §5): Treffer über echte Tastendrücke, damit Takt und Taste geprüft werden.
+function fresh(g,{clock=0,block=false,down=false,blockAt=-1}={}){const [a,b]=g.fighters;g.freeze=0;g.freezeQueue=[null,null];a.x=450;b.x=545;a.face=1;b.face=-1;for(const f of [a,b]){f.attack=null;f.stun=0;f.invuln=0;f.knockback=0;f.stride=null;f.settle=null;f.buffer=null;f.block=false;f.blockHeld=false;f.guardRelease=1;f.parryCooldown=0;f.reactionTime=0;f.reaction=null;f.hit=0;f.stagger=0;}a.comboClock=clock;return {block,down,blockAt};}
+// Drückt eine Taste und spielt, bis ein Treffer, Block oder Breaker gemeldet wird. blockAt = Tick, ab dem der Verteidiger blockt.
+function strike(g,key,mods={},defend={}){const before=g.eventId;const edge={...C.blank(),[key]:true},input={...C.blank(),right:!!mods.forward,down:!!mods.down};let n=0;for(;n<80;n++){const guard=defend.blockAt>=0&&n>=defend.blockAt?{...C.blank(),block:true,down:!!defend.down}:defend.block?{...C.blank(),block:true,down:!!defend.down}:C.blank();tick(g,n?C.blank():input,n?C.blank():edge,guard);const hit=g.events.find(e=>e.id>before&&['hit','block','parry','breaker'].includes(e.type));if(hit)return {event:hit,events:g.events.filter(e=>e.id>before),tick:n};}return {event:null,events:g.events.filter(e=>e.id>before),tick:n};}
+function chain(g,count){let last=null;for(let i=0;i<count;i++){fresh(g);last=strike(g,i%2?'kick':'punch');assert.equal(last.event.type,'hit','Treffer '+(i+1));}return last;}
+const nextKey=g=>g.fighters[0].comboKey,otherKey=g=>nextKey(g)==='punch'?'kick':'punch';
+test('Combo: two hits open nothing, the third opens the chance (2/3)',()=>{
+ const g=setup();chain(g,2);assert.equal(g.fighters[0].combo,2);assert(!g.events.some(e=>e.type==='combo'));assert.equal(g.fighters[0].comboKey,null);
+ const r=chain(g,1);assert.equal(g.fighters[0].combo,3);assert(r.events.some(e=>e.type==='combo'&&e.phase==='chance'&&e.count===3));assert.equal(g.fighters[0].comboKey,'kick','after a punch the kick is announced');
+});
+test('Combo beat: a technique started 0,49 s after the contact continues, 0,51 s breaks the chain',()=>{
+ let g=setup();chain(g,3);fresh(g,{clock:.49});let r=strike(g,nextKey(g));assert.equal(r.event.type,'hit');assert.equal(g.fighters[0].combo,4);assert(r.events.some(e=>e.type==='combo'&&e.phase==='chain'&&e.count===4));
+ g=setup();chain(g,3);fresh(g,{clock:.51});r=strike(g,nextKey(g));assert(r.events.some(e=>e.type==='drop'));assert.equal(r.event.type,'hit');assert.equal(g.fighters[0].combo,1);
+});
+test('Combo beat: the wrong key breaks the chain, the announced key alternates punch/kick',()=>{
+ const g=setup();chain(g,3);assert.equal(nextKey(g),'kick');fresh(g);let r=strike(g,otherKey(g));assert(r.events.some(e=>e.type==='drop'));assert.equal(g.fighters[0].combo,1);
+ fresh(g);strike(g,'kick');fresh(g);strike(g,'punch');assert.equal(g.fighters[0].combo,3);assert.equal(nextKey(g),'kick');fresh(g);r=strike(g,'kick');assert.equal(g.fighters[0].combo,4);assert.equal(nextKey(g),'punch');
+});
+test('Combo chain: an ordinary block of hit 4–6 ends the combo',()=>{const g=setup();chain(g,3);fresh(g);const r=strike(g,nextKey(g),{},{block:true});assert.equal(r.event.type,'block');assert.equal(g.fighters[0].combo,0);assert.equal(g.fighters[1].hp,C.HP-2);});
+test('Combo Breaker: matching block 0,125 s before contact of hit 4 breaks, 0,158 s before is an ordinary block, from hit 7 on no breaker',()=>{
+ // Fronttritt: erst den Kontakt-Tick T messen; Block ab Tick T−15 → 0,125 s vor Kontakt, ab T−19 → 0,158 s davor.
+ let g=setup();chain(g,3);assert.equal(nextKey(g),'kick');fresh(g);const T=strike(g,'kick').tick;assert(T>30&&T<40,'Kontakt-Tick '+T);
+ g=setup();chain(g,3);fresh(g);let r=strike(g,'kick',{},{blockAt:T-15});assert.equal(r.event.type,'breaker',JSON.stringify(r.event));assert.equal(g.fighters[0].combo,0);assert(g.fighters[0].stun>.5,'attacker staggers');
+ g=setup();chain(g,3);fresh(g);r=strike(g,'kick',{},{blockAt:T-19});assert.equal(r.event.type,'block');assert.equal(g.fighters[0].combo,0);
+ g=setup();chain(g,6);fresh(g);assert.equal(g.fighters[0].combo,6);assert.equal(nextKey(g),'punch');r=strike(g,'punch',{},{blockAt:2});assert.equal(r.event.type,'hit','hit 7 cannot be blocked');assert.equal(r.event.combo,7);
+ g=setup();chain(g,5);assert.equal(nextKey(g),'kick');fresh(g);r=strike(g,'kick',{},{blockAt:T-15});assert.equal(r.event.type,'breaker','hit 6 can still be broken');
+});
+test('Combo show: hits 7–9 land through a matching guard, the combo ends after 9 and the next hit counts as 1',()=>{
+ const g=setup();chain(g,6);const hp=g.fighters[1].hp;
+ for(let n=7;n<=9;n++){fresh(g);const r=strike(g,nextKey(g),{},{block:true});assert.equal(r.event.type,'hit','hit '+n);assert.equal(r.event.combo,n);assert(r.events.some(e=>e.type==='combo'&&e.phase==='show'&&e.count===n));}
+ assert.equal(g.fighters[1].hp,hp-2);assert.equal(g.fighters[0].combo,0);assert.equal(g.fighters[0].comboKey,null);
+ fresh(g);const r=strike(g,'punch');assert.equal(r.event.combo,1);
+});
+test('Combo resets when the attacker is hit and at the end of a round; nine strong hits cost nine points',()=>{
+ let g=setup();chain(g,4);fresh(g);g.fighters[1].comboClock=0;const b=g.fighters[1];b.x=545;b.face=-1;attack(b,'jab',C.MOVES.jab.wind-C.DT);tick(g);assert.equal(g.fighters[0].combo,0);
+ g=setup();chain(g,3);g.fighters[1].hp=.5;fresh(g);strike(g,nextKey(g));assert.equal(g.phase,'break');run(g,400);assert.equal(g.fighters[0].combo,0);assert.equal(g.fighters[0].hp,C.HP);
+ g=setup();const hp=g.fighters[1].hp;for(let i=0;i<9;i++){fresh(g);const r=strike(g,i%2?'kick':'punch',{forward:true});assert.equal(r.event.type,'hit');assert.equal(r.event.damage,1);}assert.equal(g.fighters[1].hp,hp-9);
+});
+test('Point mode: no combo events, counters stay at zero',()=>{const g=C.create({mode:'points'});g.phase='fight';g.fighters[1].hp=C.HP;fresh(g);const r=strike(g,'punch');assert.equal(r.event.type,'hit');assert.equal(r.event.combo,0);assert.equal(g.fighters[0].combo,0);assert(!g.events.some(e=>e.type==='combo'));});
+test('Serialized online state resolves a combo identically',()=>{const g=setup(),copy=JSON.parse(JSON.stringify(g));for(let i=0;i<4;i++){for(const x of [g,copy]){fresh(x);strike(x,x.fighters[0].comboKey||(i%2?'kick':'punch'));}}assert.equal(g.fighters[0].combo,4);assert.equal(JSON.stringify(g),JSON.stringify(copy));});
 console.log(checks+' combat, movement and rules checks passed');

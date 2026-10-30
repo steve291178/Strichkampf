@@ -107,7 +107,7 @@ peer.on('error',err=>{if(gen!==generation)return;if(conn?.open){showToast('Raumv
 peer.on('disconnected',()=>{if(gen===generation&&!conn?.open)netFail('Die Verbindung zum Raumdienst wurde unterbrochen. Bitte erneut versuchen.');});
 }
 function attachConnection(c,gen){conn=c;c.on('open',()=>{if(gen!==generation)return;clearTimeout(connectTimer);lastReceived=performance.now();$('lobby-title').textContent='Ihr seid verbunden.';$('lobby-hint').textContent=mode==='host'?'Du spielst Koralle. Dein Gegner spielt Jade.':'Du spielst Jade. Der Gastgeber startet das Duell.';$('fight-online-btn').hidden=mode!=='host';$('net-status').textContent='VERBUNDEN';$('lobby-rules').textContent=mode==='host'?ruleText(selectedRules()):'Spielregeln werden vom Gastgeber übernommen.';send({type:'hello',version:7});if(mode==='host')send({type:'settings',rules:selectedRules()});});c.on('data',d=>{if(gen!==generation||!d||typeof d!=='object')return;lastReceived=performance.now();receive(d);});c.on('close',()=>{if(gen===generation)netFail('Dein Gegner hat die Verbindung beendet. Du kannst einen neuen Raum eröffnen.');});c.on('error',()=>{if(gen===generation)netFail('Die direkte Verbindung ist abgebrochen. Bitte erneut verbinden.');});}
-function validGame(g){return g&&['countdown','fight','break','over'].includes(g.phase)&&g.rules&&['duel','points'].includes(g.rules.mode)&&[2,3].includes(g.rules.pointsToWin)&&[0,60,90].includes(g.rules.timeLimit)&&Array.isArray(g.scores)&&g.scores.length===2&&g.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&Number.isFinite(g.clock)&&Number.isFinite(g.freeze)&&Number.isFinite(g.breakTime)&&Number.isFinite(g.elapsed)&&Number.isFinite(g.countdown)&&Array.isArray(g.paused)&&g.paused.length===2&&g.paused.every(v=>typeof v==='boolean')&&Array.isArray(g.fighters)&&g.fighters.length===2&&g.fighters.every(f=>f&&['x','y','hp','face','walk','stun','hit','vy','invuln','guardAge','parryCooldown','parryFlash','stagger','reactionTime','knockback','fall'].every(k=>Number.isFinite(f[k]))&&f.x>=0&&f.x<=1280&&f.y>=0&&f.y<600&&f.hp>=0&&f.hp<=Combat.HP&&(!f.attack||(MOVES[f.attack.kind]&&Number.isFinite(f.attack.t)&&Array.isArray(f.attack.spent)))&&(!f.stride||['t','duration','dir','length'].every(k=>Number.isFinite(f.stride[k]))))&&Number.isInteger(g.eventId)&&Array.isArray(g.events)&&g.events.length<=32;}
+function validGame(g){return g&&['countdown','fight','break','over'].includes(g.phase)&&g.rules&&['duel','points'].includes(g.rules.mode)&&[2,3].includes(g.rules.pointsToWin)&&[0,60,90].includes(g.rules.timeLimit)&&Array.isArray(g.scores)&&g.scores.length===2&&g.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&Number.isFinite(g.clock)&&Number.isFinite(g.freeze)&&Number.isFinite(g.breakTime)&&Number.isFinite(g.elapsed)&&Number.isFinite(g.countdown)&&Array.isArray(g.paused)&&g.paused.length===2&&g.paused.every(v=>typeof v==='boolean')&&Array.isArray(g.fighters)&&g.fighters.length===2&&g.fighters.every(f=>f&&['x','y','hp','face','walk','stun','hit','vy','invuln','guardAge','parryCooldown','parryFlash','stagger','reactionTime','knockback','fall','combo','comboClock'].every(k=>Number.isFinite(f[k]))&&(f.comboKey===null||['punch','kick'].includes(f.comboKey))&&f.x>=0&&f.x<=1280&&f.y>=0&&f.y<600&&f.hp>=0&&f.hp<=Combat.HP&&(!f.attack||(MOVES[f.attack.kind]&&Number.isFinite(f.attack.t)&&Array.isArray(f.attack.spent)))&&(!f.stride||['t','duration','dir','length'].every(k=>Number.isFinite(f.stride[k]))))&&Number.isInteger(g.eventId)&&Array.isArray(g.events)&&g.events.length<=32;}
 function receive(d){
  if(d.type==='hello'&&mode==='host'){send({type:'settings',rules:selectedRules()});return;}
  if(d.type==='settings'&&mode==='guest'){$('lobby-rules').textContent=ruleText(Combat.rules(d.rules));return;}
@@ -133,7 +133,7 @@ if(game){$('net-status').textContent=(localId===0?'DU: KORALLE':'DU: JADE')+' ·
 function burst(x,y,color,n){if(!Number.isFinite(x)||!Number.isFinite(y))return;for(let i=0;i<n;i++){const angle=Math.random()*Math.PI*2,s=80+Math.random()*200;particles.push({x,y,vx:Math.cos(angle)*s,vy:Math.sin(angle)*s,life:.38,max:.38,color});}}
 function consumeEvents(){if(!game)return;for(const e of game.events){if(e.id<=lastEvent)continue;lastEvent=e.id;DojoAudio.play(e.type,e.kind,e.strong);
  if(e.type==='hit'){burst(e.x,e.y,COLORS[e.who]||'#f2e8bd',reduce?2:7);shake=reduce?0:e.strong?.06:.04;rumble(e.who!==localId?.35:.10,75);}
- else if(e.type==='block'||e.type==='parry'){burst(e.x,e.y,e.type==='parry'?'#fff0ad':'#f8eac5',reduce?3:e.type==='parry'?17:7);if(e.who===localId)rumble(e.type==='parry'?.55:.17,e.type==='parry'?140:45);}
+ else if(e.type==='block'||e.type==='parry'||e.type==='breaker'){burst(e.x,e.y,e.type==='block'?'#f8eac5':'#fff0ad',reduce?3:e.type==='breaker'?26:e.type==='parry'?17:7);shake=reduce?0:e.type==='breaker'?.08:shake;if(e.who===localId)rumble(e.type==='block'?.17:.55,e.type==='block'?45:140);}
  else if(e.type==='round'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;}
  else if(e.type==='reset'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;particles=[];}
  else if(e.type==='sudden')showToast('Verlängerung · der nächste eindeutige Treffer entscheidet.');
@@ -189,6 +189,8 @@ function drawFighter(f,ambient=false){
  if(f.parryFlash>0)text('PERFEKTER BLOCK',f.x,FLOOR-f.y-232,15,'#fff0ac','center',800);
  if(ambient)text(f.id?'02 / JADE':'01 / KORALLE',f.x,FLOOR+42,14,'#2e4a3b','center',650);
 }
+// Which key continues the combo, in the words of the device the local player is using.
+function comboHint(key,mine){const punch=key==='punch';if(!mine)return punch?'SCHLAG':'TRITT';if(classicControls())return punch?'AKTION':'ZURÜCK + AKTION';if(lastDevice==='pad')return punch?'SCHLAG □/X':'TRITT ○/B';if(lastDevice==='touch')return punch?'SCHLAG':'TRITT';return punch?'SCHLAG (J)':'TRITT (K)';}
 function drawHUD(){
  const points=game.rules.mode==='points',target=points?game.rules.pointsToWin:2;
  ctx.fillStyle='#143731d0';ctx.fillRect(0,0,W,125);
@@ -198,6 +200,13 @@ function drawHUD(){
   if(!points){ctx.fillStyle='#0d2520';ctx.fillRect(left,52,width,17);ctx.fillStyle=COLORS[f.id];ctx.fillRect(f.id?left+width-width*f.hp/Combat.HP:left,52,width*f.hp/Combat.HP,17);text(String(f.hp).replace('.',','),f.id?left:left+width,91,15,'#f0ead3',f.id?'left':'right',600);}
   for(let n=0;n<target;n++)circle(f.id?left+width-10-n*27:left+10+n*27,points?70:87,points?9:6,n<game.scores[f.id]?COLORS[f.id]:'#b0bdb1',n<game.scores[f.id],1.5);
   if(points)text(`${game.scores[f.id]} / ${target} PUNKTE`,f.id?left+width:left,111,15,'#e4e5d1',f.id?'right':'left',600);
+  else if(f.combo>=Combat.COMBO_CHAIN&&f.comboKey){
+   // Chain phase: announce the next key and show how much of the beat is left.
+   const mine=f.id===localId,show=f.combo>=Combat.COMBO_SHOW,label=show?`COMBO ${f.combo} · SHOW!`:`COMBO ${f.combo} · ${comboHint(f.comboKey,mine)}`;
+   text(label,f.id?left+width:left,114,14,show?'#ffd36b':'#fff0ab',f.id?'right':'left',800);
+   const rest=Math.max(0,1-f.comboClock/Combat.COMBO_BEAT),bar=120;ctx.fillStyle='#0d2520';ctx.fillRect(f.id?left+width-bar:left,119,bar,4);ctx.fillStyle=show?'#ffd36b':'#fff0ab';ctx.fillRect(f.id?left+width-bar*rest:left,119,bar*rest,4);
+  }
+  else if(f.combo>0)text(`${f.combo} ${f.combo===1?'TREFFER':'TREFFER IN FOLGE'}`,f.id?left+width:left,114,13,'#c0cdba',f.id?'right':'left',600);
 
  }
  const clock=game.suddenDeath?'NÄCHSTER TREFFER':game.rules.timeLimit?String(Math.ceil(game.clock)).padStart(2,'0'):'OHNE ZEITLIMIT';

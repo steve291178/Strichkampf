@@ -6,11 +6,12 @@ const DojoAI=(()=>{
 // Level table: reaction = seconds of delay before the opponent's state is "seen",
 // tick = seconds between decisions (min/max), block = chance to answer a seen attack with a block,
 // guard = chance to keep the guard up while the opponent is close, punish = chance to strike
-// right after the opponent's technique ends. Reaction and tick fall, block rises, from level to level.
+// right after the opponent's technique ends, chain = chance to continue an open combo in the beat.
+// Reaction and tick fall, block rises, from level to level.
 const LEVELS={
- 1:{name:'Grün',belt:'green',reaction:.18,tick:[.14,.24],block:.70,guard:.40,punish:.55,jumpSweep:.12,styles:['kicker'],switchEvery:0},
- 2:{name:'Schwarz',belt:'black',reaction:.11,tick:[.09,.15],block:.82,guard:.50,punish:.75,jumpSweep:.22,styles:['kicker','boxer'],switchEvery:'round'},
- 3:{name:'Meister 2',belt:'black',reaction:.05,tick:[.05,.08],block:.92,guard:.60,punish:.95,jumpSweep:.32,styles:['kicker','boxer','counter'],switchEvery:4}
+ 1:{name:'Grün',belt:'green',reaction:.18,tick:[.14,.24],block:.70,guard:.40,punish:.55,chain:0,jumpSweep:.12,styles:['kicker'],switchEvery:0},
+ 2:{name:'Schwarz',belt:'black',reaction:.11,tick:[.09,.15],block:.82,guard:.50,punish:.75,chain:.5,jumpSweep:.22,styles:['kicker','boxer'],switchEvery:'round'},
+ 3:{name:'Meister 2',belt:'black',reaction:.05,tick:[.05,.08],block:.92,guard:.60,punish:.95,chain:1,jumpSweep:.32,styles:['kicker','boxer','counter'],switchEvery:4}
 };
 // Fighting styles: preferred distance and how an open moment is spent (weights sum to 1).
 const STYLES={
@@ -56,7 +57,12 @@ function think(s,g,dt){
  const free=!me.attack&&me.stun===0;
  const justRecovered=s.sawAttack&&!seen.attack;s.sawAttack=!!seen.attack;
  const inRange=distance<128,threat=seen.attack&&distance<160;
- if(threat){
+ if(me.combo>=Combat.COMBO_CHAIN&&me.comboKey&&free&&me.comboClock<Combat.COMBO_BEAT&&r()<s.params.chain){
+  // Open combo: press the announced key in the beat, with a forward step when the opponent is far.
+  if(me.comboKey==='punch'){e.punch=true;if(distance>96)a[forward]=true;else if(r()<.3)a.down=true;}
+  else{e.kick=true;if(distance>108)a[forward]=true;else if(r()<.25)a.down=true;}
+ }
+ else if(threat){
   // Never swing into a running attack: block it (as a short tap, so a fresh guard can be
   // a perfect block), hop over a sweep, or step out of range.
   if(r()<s.params.block){a.block=true;a.down=Combat.MOVES[seen.attack].level==='low';s.timer=.22;if(a.down&&r()<s.params.jumpSweep){a.block=false;e.up=true;}}

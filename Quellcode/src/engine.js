@@ -1,6 +1,9 @@
 'use strict';
 const Combat=(()=>{
 const W=1280,FLOOR=542,DT=1/120,STEP_TIME=.36,STEP_REST=.07,PARRY_WINDOW=.14;
+// Regelwerk §5, Combo (nur Duell): Treffer 1–3 öffnen die Chance, 4–6 laufen nur im Takt mit der
+// angezeigten Taste weiter (Combo Breaker = perfekter Block), 7–9 sind nicht blockbar, Ende bei 9.
+const COMBO_BEAT=.5,COMBO_CHAIN=3,COMBO_SHOW=6,COMBO_MAX=9;
 // Regelwerk §4: Duell startet mit 20 Trefferpunkten, leichte Technik −½, starke −1.
 const HP=20;
 const MOVES={
@@ -15,7 +18,7 @@ const MOVES={
 const PUNCHES=['jab','lunge','body'];
 const strong=m=>m.damage>=1;
 const blank=()=>({left:false,right:false,up:false,down:false,punch:false,kick:false,block:false});
-const fighter=i=>({id:i,x:i?830:450,y:0,vy:0,hp:HP,face:i?-1:1,nextHand:0,nextLeg:0,attack:null,stun:0,invuln:0,crouch:false,block:false,walk:0,move:0,hit:0,stride:null,settle:null,stepRest:0,guardAge:9,guardRelease:1,blockHeld:false,parryCooldown:0,parryFlash:0,stagger:0,buffer:null,reaction:null,reactionTime:0,knockback:0,fall:0});
+const fighter=i=>({id:i,x:i?830:450,y:0,vy:0,hp:HP,face:i?-1:1,nextHand:0,nextLeg:0,attack:null,stun:0,invuln:0,crouch:false,block:false,walk:0,move:0,hit:0,stride:null,settle:null,stepRest:0,guardAge:9,guardRelease:1,blockHeld:false,parryCooldown:0,parryFlash:0,stagger:0,buffer:null,reaction:null,reactionTime:0,knockback:0,fall:0,combo:0,comboClock:0,comboKey:null});
 const rules=options=>({mode:options?.mode==='points'?'points':'duel',pointsToWin:options?.pointsToWin===3?3:2,roundsToWin:2,timeLimit:[60,90].includes(options?.timeLimit)?options.timeLimit:0});
 const create=options=>{const r=rules(options);return {phase:'countdown',countdown:2.1,elapsed:0,paused:[false,false],fighters:[fighter(0),fighter(1)],winner:null,eventId:0,events:[],rules:r,scores:[0,0],round:1,clock:r.timeLimit,suddenDeath:false,freeze:0,breakTime:0,roundWinner:null,roundReason:'',exchange:0,freezeQueue:[null,null]};};
 function resetExchange(g){g.fighters=[fighter(0),fighter(1)];g.phase='countdown';g.countdown=1.5;g.freeze=0;g.freezeQueue=[null,null];g.exchange++;g.roundWinner=null;if(g.rules.mode==='duel'&&g.roundReason!=='double'){g.clock=g.rules.timeLimit;g.suddenDeath=false;}event(g,{type:'reset'});}
@@ -32,7 +35,11 @@ function advanceFall(g,dt){for(const f of g.fighters)if(f.fall>0)f.fall=Math.min
 
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 function event(g,e){g.events.push({...e,id:++g.eventId});if(g.events.length>32)g.events.shift();}
-function beginAttack(g,f,kind){const punching=PUNCHES.includes(kind),hand=punching?f.nextHand:0;if(punching)f.nextHand=(f.nextHand+1)%2;const leg=punching?0:f.nextLeg;if(!punching)f.nextLeg=1-f.nextLeg;const stance=f.stride||f.settle?KarateRig.pose(f):null;f.attack={kind,t:0,spent:[],hand,leg,stance:stance?{front:stance.frontLeg[2],back:stance.backLeg[2]}:null};f.crouch=kind==='body'||kind==='sweep';f.block=false;f.stride=null;f.settle=null;f.buffer=null;event(g,{type:'swing',who:f.id,kind});}
+function dropCombo(g,f){if(f.combo>=COMBO_CHAIN)event(g,{type:'drop',who:f.id,count:f.combo});f.combo=0;f.comboKey=null;}
+function beginAttack(g,f,kind){const punching=PUNCHES.includes(kind),hand=punching?f.nextHand:0;
+ // Chain phase: the next technique must start within the beat and use the announced key.
+ if(f.combo>=COMBO_CHAIN&&(f.comboClock>COMBO_BEAT||(punching?'punch':'kick')!==f.comboKey))dropCombo(g,f);
+if(punching)f.nextHand=(f.nextHand+1)%2;const leg=punching?0:f.nextLeg;if(!punching)f.nextLeg=1-f.nextLeg;const stance=f.stride||f.settle?KarateRig.pose(f):null;f.attack={kind,t:0,spent:[],hand,leg,stance:stance?{front:stance.frontLeg[2],back:stance.backLeg[2]}:null};f.crouch=kind==='body'||kind==='sweep';f.block=false;f.stride=null;f.settle=null;f.buffer=null;event(g,{type:'swing',who:f.id,kind});}
 // Recover an interrupted stance with two short foot placements, never a teleport.
 function settleFeet(f,p){
  const front=p.frontLeg[2],back=p.backLeg[2];
@@ -45,6 +52,7 @@ function tickFighter(g,f,o,input,edge,dt){
  if(f.knockback){const move=f.knockback*(1-Math.exp(-15*dt));f.x+=move;f.knockback-=move;if(Math.abs(f.knockback)<.05)f.knockback=0;}
  f.guardAge+=dt;const releasedFor=f.guardRelease;f.guardRelease=input.block?0:f.guardRelease+dt;
  if(f.buffer){f.buffer.ttl-=dt;if(f.buffer.ttl<=0)f.buffer=null;}
+ f.comboClock=Math.min(9,f.comboClock+dt);
  if(f.attack){f.attack.t+=dt;const m=MOVES[f.attack.kind];if(f.attack.t>=m.duration){const ending=KarateRig.pose(f);f.attack=null;if(f.y===0)settleFeet(f,ending);}}
  if(!f.attack)f.face=o.x>=f.x?1:-1;
  const ground=f.y===0;
@@ -71,14 +79,14 @@ function tickFighter(g,f,o,input,edge,dt){
  if(f.y>0||f.vy>0){f.y+=f.vy*dt;f.vy-=1850*dt;if(f.y<0){f.y=0;f.vy=0;event(g,{type:'land',who:f.id});}}
  f.x=Math.max(75,Math.min(W-75,f.x));
 }
-function collision(a,b){
+function collision(a,b,duel){
  const atk=a.attack;if(!atk||b.invuln>0||atk.spent.length)return null;const m=MOVES[atk.kind];
  // Contact begins during the final extension, not only once the limb is fully out.
  if(atk.t<m.wind-.055||atk.t>m.wind+m.active)return null;
  const dx=(b.x-a.x)*a.face;if(dx<0)return null;
  const strike=KarateRig.geometry(a).strike,target=KarateRig.geometry(b);if(!strike)return null;
  const facing=(a.x-b.x)*b.face>=0;
- const guarded=b.block&&facing&&(m.level==='low'?b.crouch:!b.crouch);
+ const guarded=b.block&&facing&&(m.level==='low'?b.crouch:!b.crouch)&&!(duel&&a.combo>=COMBO_SHOW);
  const guardContact=guarded&&target.guard.some(part=>KarateRig.touches(strike,part));
  if(!guardContact&&!target.body.some(part=>KarateRig.touches(strike,part)))return null;
  atk.spent.push(0);
@@ -98,20 +106,28 @@ function step(g,inputs,edges,dt=DT){
  if(g.phase==='countdown'){g.countdown-=dt;if(g.countdown<=0){g.phase='fight';event(g,{type:'start'});}return;}
  const [a,b]=g.fighters;tickFighter(g,a,b,inputs[0],edges[0],dt);tickFighter(g,b,a,inputs[1],edges[1],dt);
  const dx=b.x-a.x,min=56;if(Math.abs(dx)<min&&Math.abs(a.y-b.y)<140){const dir=dx>=0?1:-1,shift=(min-Math.abs(dx))/2;a.x-=dir*shift;b.x+=dir*shift;}for(const f of g.fighters)f.x=Math.max(75,Math.min(W-75,f.x));
- const contacts=[collision(a,b),collision(b,a)].filter(Boolean);
+ const duel=g.rules.mode==='duel',contacts=[collision(a,b,duel),collision(b,a,duel)].filter(Boolean);
  // Resolve both collected contacts together so a simultaneous KO stays possible.
  for(const {a:att,b:def,m,kind,blocked,x,y} of contacts){
-  if(blocked){const perfect=def.guardAge<=PARRY_WINDOW&&def.parryCooldown===0;
+  if(blocked){const perfect=def.guardAge<=PARRY_WINDOW&&def.parryCooldown===0,breaker=perfect&&duel&&att.combo>=COMBO_CHAIN;
    if(perfect){att.stun=.55;att.stagger=.55;att.attack=null;att.stride=null;att.settle=null;att.buffer=null;def.parryFlash=.48;def.parryCooldown=.65;def.guardAge=9;}
-   att.knockback-=att.face*(perfect?18:7);g.freeze=Math.max(g.freeze,perfect?.045:.02);
-   event(g,{type:perfect?'parry':'block',x,y,who:def.id,kind});
+   att.knockback-=att.face*(breaker?26:perfect?18:7);g.freeze=Math.max(g.freeze,perfect?.045:.02);
+   if(duel&&att.combo>=COMBO_CHAIN){att.combo=0;att.comboKey=null;}
+   event(g,{type:breaker?'breaker':perfect?'parry':'block',x,y,who:def.id,kind});
   }else{
    def.hp=g.rules.mode==='points'||g.suddenDeath?0:Math.max(0,def.hp-m.damage);
    def.stun=.21;def.invuln=.24;def.hit=.22;
    def.reaction=kind==='body'?'body':kind==='sweep'?'low':'high';def.reactionTime=.28;
    g.freeze=Math.max(g.freeze,strong(m)?.045:.03);def.block=false;def.attack=null;def.stride=null;def.settle=null;def.buffer=null;
-   def.knockback+=att.face*(strong(m)?16:9);
-   event(g,{type:'hit',x,y,who:att.id,damage:m.damage,label:m.label,kind,strong:strong(m)});
+   let combo=0;
+   if(duel){
+    att.combo++;att.comboClock=0;combo=att.combo;att.comboKey=combo>=COMBO_CHAIN?(PUNCHES.includes(kind)?'kick':'punch'):null;
+    def.combo=0;def.comboKey=null;
+   }
+   // Inside a combo the defender stays close, so the beat remains reachable.
+   def.knockback+=att.face*(combo>COMBO_CHAIN?4:strong(m)?16:9);
+   event(g,{type:'hit',x,y,who:att.id,damage:m.damage,label:m.label,kind,strong:strong(m),combo});
+   if(combo>=COMBO_CHAIN){event(g,{type:'combo',who:att.id,count:combo,phase:combo===COMBO_CHAIN?'chance':combo<=COMBO_SHOW?'chain':'show'});if(combo>=COMBO_MAX){att.combo=0;att.comboKey=null;}}
   }
  }
  if(a.hp===0||b.hp===0){finishExchange(g,a.hp===b.hp?-1:a.hp>0?0:1,a.hp===b.hp?'double':g.rules.mode==='points'?'point':'ko');return;}
@@ -124,5 +140,5 @@ function step(g,inputs,edges,dt=DT){
   }
  }
 }
-return {W,FLOOR,DT,HP,MOVES,STEP_TIME,STEP_REST,PARRY_WINDOW,blank,fighter,create,rules,step};
+return {W,FLOOR,DT,HP,MOVES,STEP_TIME,STEP_REST,PARRY_WINDOW,COMBO_BEAT,COMBO_CHAIN,COMBO_SHOW,COMBO_MAX,blank,fighter,create,rules,step};
 })();
