@@ -43,7 +43,9 @@ function think(s,g,dt){
  s.memory.push({at:g.elapsed,x:foe.x,y:foe.y,attack:foe.attack?foe.attack.kind:null,crouch:foe.crouch,hit:foe.hit>0});
  while(s.memory.length>120)s.memory.shift();
  s.timer-=dt;
- const seen=s.memory.findLast(o=>o.at<=g.elapsed-s.params.reaction)||s.memory[0];
+ // Nothing old enough to have been seen yet: the AI is still blind right after a reset.
+ const seen=s.memory.findLast(o=>o.at<=g.elapsed-s.params.reaction);
+ if(!seen)return {input:s.input,edges:Combat.blank()};
  // Like a human, the AI reacts to an event (an attack starts or ends) at once; otherwise it decides on its own clock.
  const eventSeen=!!seen.attack!==s.sawAttack;
  if(s.timer>0&&!eventSeen)return {input:s.input,edges:Combat.blank()};

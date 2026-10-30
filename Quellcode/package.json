@@ -1,19 +1,15 @@
 {
-  "name": "quellcode",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "@napi-rs/canvas": "^1.0.13"
-  }
+ "name": "strichkampf",
+ "version": "0.8.0",
+ "private": true,
+ "description": "Strichkampf – Quellcode, Build und Prüfungen",
+ "scripts": {
+  "test": "node tests/combat.cjs && node tests/ki.cjs && node tests/fortschritt.cjs && node tests/integration.cjs",
+  "build": "python3 build.py"
+ },
+ "license": "UNLICENSED",
+ "type": "commonjs",
+ "devDependencies": {
+  "@napi-rs/canvas": "^1.0.13"
+ }
 }

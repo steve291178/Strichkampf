@@ -4,7 +4,7 @@ root=Path(__file__).parent
 (root/'dist').mkdir(exist_ok=True)
 shell=(root/'src/shell.html').read_text()
 parts=[]
-for path in ['src/peerjs.min.js','src/engine.js','src/rig.js','src/controls.js','src/ai.js','src/audio.js','src/game.js']:
+for path in ['src/peerjs.min.js','src/engine.js','src/rig.js','src/controls.js','src/ai.js','src/progress.js','src/audio.js','src/game.js']:
  code=(root/path).read_text()
  if path.endswith('peerjs.min.js'):
   code='/*!\n'+(root/'src/PEERJS-LICENSE.txt').read_text()+'\n*/\n'+code

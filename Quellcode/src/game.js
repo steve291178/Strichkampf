@@ -9,6 +9,15 @@ let classicActionQueued=false,classicWasAction=false,classicWasUp=false;
 let renderFighters=null,aiState=null,wasHelpPaused=false,helpFocus=null;
 const keys=new Set(),touch=blank(),prevInput=blank();let queuedEdges=blank(),observedInput=blank(),toastTimer=null;
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+// Belt progress lives in this browser only; a missing or blocked store just keeps it for the session.
+const store=(()=>{try{return window.localStorage||null;}catch{return null;}})();
+let wins=Progress.load(store),promotion=null,resetArmed=null;
+const aiLevel=()=>Progress.level(wins);
+// Variant for Stefan (H9): the figure wears the earned belt against the computer; false keeps the fighter colour.
+const BELT_ON_GI=true;
+function beltColors(f){if(mode!=='ai'||!BELT_ON_GI||!aiState)return null;if(f.id===0)return Progress.belt(wins);return {colors:[DojoAI.LEVELS[aiState.level].belt==='green'?'#3f9a4e':'#1d1f22'],stripes:aiState.level===3?2:0};}
+function updateBelt(){const b=Progress.belt(wins),lv=DojoAI.LEVELS[aiLevel()];$('belt-line').textContent=`Dein Gürtel: ${b.name} · Gegner: ${lv.name} (KI-Stufe ${aiLevel()})`+(b.next?` · noch ${b.next.remaining} ${b.next.remaining===1?'Sieg':'Siege'} bis ${b.next.name}`:' · höchster Gürtel erreicht');}
+$('belt-reset').onclick=()=>{if(resetArmed){clearTimeout(resetArmed);resetArmed=null;wins=Progress.reset(store);updateBelt();$('belt-reset').textContent='Gürtel zurücksetzen';showToast('Gürtel zurückgesetzt: Weiß.');}else{$('belt-reset').textContent='Wirklich? Noch einmal tippen.';resetArmed=setTimeout(()=>{resetArmed=null;$('belt-reset').textContent='Gürtel zurücksetzen';},4000);}};
 function showToast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3000);}
 function panels(id){for(const p of document.querySelectorAll('.panel'))p.hidden=p.id!==id;}
 function setTouch(v){touchEnabled=v;stage.classList.toggle('touch-on',v);$('touch-btn').setAttribute('aria-pressed',String(v));}
@@ -21,11 +30,11 @@ function classicControls(){return $('control-select').value==='classic';}
 function updateSettings(){const r=selectedRules();$('point-setting').hidden=r.mode!=='points';$('match-summary').textContent=ruleText(r);document.querySelector('[data-action="kick"]').hidden=classicControls();document.querySelector('[data-action="punch"]').textContent=classicControls()?'Aktion':'Schlag';}
 $('rule-select').onchange=()=>{$('control-select').value=$('rule-select').value==='points'?'classic':'direct';updateSettings();};
 for(const id of ['control-select','timer-select','points-select'])$(id).onchange=updateSettings;
-updateSettings();
+updateSettings();updateBelt();
 function clearInput(){classicActionQueued=false;classicWasAction=false;classicWasUp=false;if(game){game.freezeQueue=[null,null];for(const f of game.fighters)f.buffer=null;}keys.clear();Object.assign(touch,blank());Object.assign(prevInput,blank());queuedEdges=blank();observedInput=blank();$('knob').style.transform='';document.querySelectorAll('.held').forEach(e=>e.classList.remove('held'));}
 function closeNetwork(){generation++;clearTimeout(connectTimer);const c=conn,p=peer;conn=null;peer=null;c?.close();p?.destroy();remoteInput=blank();remoteEdges=blank();remoteSeq=-1;ready=[false,false];lastReceived=0;roomCode='';}
-function home(){closeNetwork();game=null;mode='menu';clearInput();renderFighters=null;particles=[];trails=[];stage.classList.remove('playing');$('pause-btn').hidden=true;$('help').hidden=true;panels('home-panel');$('net-status').textContent='SOLO & ONLINE';$('create-btn').disabled=false;$('join-btn').disabled=false;$('ai-btn').focus({preventScroll:true});}
-function startGame(selectedMode){mode=selectedMode;localId=mode==='guest'?1:0;game=create(selectedRules());renderFighters=null;lastEvent=0;particles=[];trails=[];aiState=mode==='ai'?DojoAI.create(aiLevel(),1):null;lastFrame=performance.now();acc=0;ready=[false,false];localRematch=false;remoteRematch=false;remoteInput=blank();remoteEdges=blank();clearInput();stage.classList.add('playing');$('pause-btn').hidden=false;panels(null);unlock();if(mode==='host')sendState();if(mode==='ai')$('net-status').textContent='DU: KORALLE · COMPUTER: JADE';}
+function home(){closeNetwork();game=null;mode='menu';clearInput();renderFighters=null;particles=[];trails=[];stage.classList.remove('playing');$('pause-btn').hidden=true;$('help').hidden=true;panels('home-panel');$('net-status').textContent='SOLO & ONLINE';updateBelt();$('create-btn').disabled=false;$('join-btn').disabled=false;$('ai-btn').focus({preventScroll:true});}
+function startGame(selectedMode){mode=selectedMode;localId=mode==='guest'?1:0;game=create(selectedRules());renderFighters=null;lastEvent=0;particles=[];trails=[];aiState=mode==='ai'?DojoAI.create(aiLevel(),1):null;lastFrame=performance.now();acc=0;ready=[false,false];localRematch=false;remoteRematch=false;remoteInput=blank();remoteEdges=blank();clearInput();stage.classList.add('playing');$('pause-btn').hidden=false;panels(null);unlock();if(mode==='host')sendState();promotion=null;if(mode==='ai')$('net-status').textContent=`DU: KORALLE · ${Progress.belt(wins).name.toUpperCase()} · COMPUTER: JADE · ${DojoAI.LEVELS[aiState.level].name.toUpperCase()}`;}
 $('ai-btn').onclick=()=>{closeNetwork();startGame('ai');};
 $('online-btn').onclick=()=>{panels('online-panel');$('online-hint').textContent='Ihr braucht beide eine Internetverbindung.';$('online-hint').classList.remove('error');$('create-btn').disabled=false;$('join-btn').disabled=false;};
 document.querySelectorAll('.back-home').forEach(b=>b.onclick=home);
@@ -39,7 +48,7 @@ $('pause-btn').onclick=togglePause;$('resume-btn').onclick=()=>setPause(false);
 function openHelp(){helpFocus=document.activeElement;wasHelpPaused=!!game?.paused[localId];if(game)setPause(true);$('help').hidden=false;$('close-help').focus();}
 function closeHelp(){$('help').hidden=true;if(game&&!wasHelpPaused)setPause(false);helpFocus?.focus?.({preventScroll:true});}
 $('help-btn').onclick=openHelp;$('learn-btn').onclick=openHelp;$('close-help').onclick=closeHelp;
-function showResult(){panels('result-panel');const w=game.winner;$('result-title').textContent=w===-1?'Unentschieden':(w===0?'Koralle':'Jade')+' gewinnt das Match.';$('result-description').textContent=`${game.scores[0]} : ${game.scores[1]} ${game.rules.mode==='points'?'Punkte':'Runden'}${game.roundReason==='time'?' · nach Zeitablauf':''}.`;$('rematch-btn').disabled=localRematch;$('rematch-hint').textContent=localRematch?'Du bist bereit. Warte auf deinen Gegner.':remoteRematch?'Dein Gegner möchte eine Revanche.':'';}
+function showResult(){panels('result-panel');const w=game.winner;$('result-title').textContent=w===-1?'Unentschieden':(w===0?'Koralle':'Jade')+' gewinnt das Match.';$('result-description').textContent=`${game.scores[0]} : ${game.scores[1]} ${game.rules.mode==='points'?'Punkte':'Runden'}${game.roundReason==='time'?' · nach Zeitablauf':''}.`;$('belt-result').textContent=mode!=='ai'?'':promotion?`Neuer Gürtel: ${promotion.name}!`:w===0?`Gürtel: ${Progress.belt(wins).name}`+(Progress.belt(wins).next?` · noch ${Progress.belt(wins).next.remaining} bis ${Progress.belt(wins).next.name}`:''):'';$('rematch-btn').disabled=localRematch;$('rematch-hint').textContent=localRematch?'Du bist bereit. Warte auf deinen Gegner.':remoteRematch?'Dein Gegner möchte eine Revanche.':'';}
 $('rematch-btn').onclick=()=>{if(mode==='ai')startGame('ai');else{localRematch=true;send({type:'rematch'});if(mode==='host'&&remoteRematch)startGame('host');else showResult();}};
 const bindings={KeyF:'forward',KeyD:'back',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',ArrowUp:'up',ArrowDown:'down',KeyJ:'punch',KeyK:'kick',KeyS:'highBlock',Space:'lowBlock'};
 addEventListener('keydown',e=>{
@@ -82,7 +91,6 @@ if(isClassic){
 observedInput={...a};
 return a;}
 function takeEdges(){const e=queuedEdges;queuedEdges=blank();return e;}
-const aiLevel=()=>1;
 function send(data){if(!conn?.open)return;try{if(conn.dataChannel?.bufferedAmount>256000)return;conn.send(data);}catch{}}
 function sendState(){if(game)send({type:'state',game});}
 function netFail(message){closeNetwork();game=null;mode='menu';stage.classList.remove('playing');$('pause-btn').hidden=true;panels('online-panel');$('online-hint').textContent=message;$('online-hint').classList.add('error');$('create-btn').disabled=false;$('join-btn').disabled=false;clearInput();}
@@ -132,7 +140,7 @@ function consumeEvents(){if(!game)return;for(const e of game.events){if(e.id<=la
  else if(e.type==='round'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;}
  else if(e.type==='reset'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;particles=[];}
  else if(e.type==='sudden')showToast('Verlängerung · der nächste eindeutige Treffer entscheidet.');
- else if(e.type==='match'){clearInput();if(game.fighters.every(f=>f.hp>0))showResult();}
+ else if(e.type==='match'){clearInput();if(mode==='ai'&&e.winner===0){const r=Progress.recordWin(store,wins);wins=r.wins;promotion=r.newBelt?r.belt:null;updateBelt();}if(game.fighters.every(f=>f.hp>0))showResult();}
 }}
 function rumble(strength,duration){const p=gamepads().find(p=>p.index===selectedPad);try{p?.vibrationActuator?.playEffect('dual-rumble',{duration,strongMagnitude:strength,weakMagnitude:strength*.65})?.catch(()=>{});}catch{}}
 function line(points,color,width=7){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();}
@@ -170,7 +178,10 @@ function drawFighter(f,ambient=false){
  const s=p.shoulder,h=p.hip;
  polygon([[s[0]-16,s[1]-3],[s[0]+16,s[1]-1],[h[0]+20,h[1]+11],[h[0]+2,h[1]+15],[h[0]-21,h[1]+10]],cloth);
  line([[s[0]-10,s[1]],[s[0]+2,s[1]+20],[h[0]+10,h[1]-9]],shade,5);line([[s[0]+11,s[1]],[s[0]+2,s[1]+20],[h[0]-6,h[1]-5]],ink,2);line([[s[0]-7,s[1]+2],[s[0]+2,s[1]+20]],'#ffffff70',2);
- line([[h[0]-19,h[1]-1],[h[0]+18,h[1]-1]],ink,9);line([[h[0]-18,h[1]-1],[h[0]+17,h[1]-1]],color,5);const sway=Math.sin(nowTime*.008+f.walk*3)*2;line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],ink,6);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],color,3);line([[h[0]+5,h[1]],[h[0]-1+sway,h[1]+19]],color,3);
+ // The obi shows the earned belt against the computer (two colours for an in-between belt, red marks for Meister).
+ const belt=beltColors(f),bc=belt?belt.colors:[color],b1=bc[0],b2=bc[bc.length-1];
+ line([[h[0]-19,h[1]-1],[h[0]+18,h[1]-1]],ink,9);line([[h[0]-18,h[1]-1],[h[0],h[1]-1]],b1,5);line([[h[0],h[1]-1],[h[0]+17,h[1]-1]],b2,5);const sway=Math.sin(nowTime*.008+f.walk*3)*2;line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],ink,6);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],b2,3);line([[h[0]+5,h[1]],[h[0]-1+sway,h[1]+19]],b1,3);
+ if(belt&&belt.stripes)for(let i=0;i<belt.stripes;i++)line([[h[0]+7+sway*.7,h[1]+16-i*4],[h[0]+11+sway*.7,h[1]+17-i*4]],'#d84a3a',2);
  arm(p.backArm,true);arm(p.frontArm,false);line([p.shoulder,[p.head[0],p.head[1]+10]],ink,12);line([p.shoulder,[p.head[0],p.head[1]+10]],skin,7);
  circle(p.head[0],p.head[1],15.5,ink);circle(p.head[0],p.head[1],13,skin);line([[p.head[0]+8,p.head[1]-2],[p.head[0]+13,p.head[1]-1]],ink,1.7);
  line([[p.head[0]-13,p.head[1]-6],[p.head[0]+13,p.head[1]-6]],color,5);line([[p.head[0]-12,p.head[1]-5],[p.head[0]-30,p.head[1]+sway]],color,3);
@@ -185,7 +196,7 @@ function drawHUD(){
  const points=game.rules.mode==='points',target=points?game.rules.pointsToWin:2;
  ctx.fillStyle='#143731d0';ctx.fillRect(0,0,W,125);
  for(const f of game.fighters){
-  const left=f.id?813:47,width=420,label=(f.id?'JADE':'KORALLE')+(f.id===localId?' / DU':mode==='ai'?' / COMPUTER':' / GEGNER');
+  const left=f.id?813:47,width=420,label=(f.id?'JADE':'KORALLE')+(f.id===localId?(mode==='ai'?' / DU · '+Progress.belt(wins).name.toUpperCase():' / DU'):mode==='ai'?' / COMPUTER · '+DojoAI.LEVELS[aiState.level].name.toUpperCase():' / GEGNER');
   text(label,f.id?1233:47,40,16,COLORS[f.id],f.id?'right':'left',700);
   if(!points){ctx.fillStyle='#0d2520';ctx.fillRect(left,52,width,17);ctx.fillStyle=COLORS[f.id];ctx.fillRect(f.id?left+width-width*f.hp/100:left,52,width*f.hp/100,17);text(String(f.hp),f.id?left:left+width,91,15,'#f0ead3',f.id?'left':'right',600);}
   for(let n=0;n<target;n++)circle(f.id?left+width-10-n*27:left+10+n*27,points?70:87,points?9:6,n<game.scores[f.id]?COLORS[f.id]:'#b0bdb1',n<game.scores[f.id],1.5);
