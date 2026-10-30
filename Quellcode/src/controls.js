@@ -14,9 +14,8 @@ const ControlMap=(()=>{
   }else if(back&&(raw.up||raw.down)){
    input.block=true;input.down=!!raw.down;
   }else{input.left=!!raw.left;input.right=!!raw.right;input.down=!!raw.down;input.up=!!raw.up;}
-  // Touch has a direct block helper; specials remain available in the life mode.
+  // Touch has a direct block helper.
   if(raw.block){input.block=true;input.down=!!raw.down;edge.punch=edge.kick=edge.up=false;}
-  input.combo=!!raw.combo;
   return {input,edge};
  }
  return {classic};

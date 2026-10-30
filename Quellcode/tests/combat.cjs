@@ -9,17 +9,25 @@ const {C,R} = context;
 function setup(distance=95){const g=C.create();g.phase='fight';g.fighters[0].x=450;g.fighters[1].x=450+distance;return g;}
 function tick(g, input=C.blank(), edge=C.blank(), other=C.blank(), otherEdge=C.blank()){C.step(g,[input,other],[edge,otherEdge]);}
 function run(g,n=120,input=C.blank(),other=C.blank()){for(let i=0;i<n;i++)tick(g,input,C.blank(),other);}
-function attack(f,kind,t=0){f.attack={kind,t,hand:0,spent:[],sounded:[]};}
+function attack(f,kind,t=0){f.attack={kind,t,hand:0,spent:[],};}
 let checks=0;
 function test(name,fn){fn();checks++;console.log('PASS '+name);}
-test('All eight techniques can connect with a body',()=>{for(const kind of Object.keys(C.MOVES)){const g=setup();attack(g.fighters[0],kind);run(g,150);assert(g.fighters[1].hp<100,kind);}});
-test('No damage beyond the visible limb',()=>{const g=setup(180);attack(g.fighters[0],'jab');run(g);assert.equal(g.fighters[1].hp,100);});
-test('Every contact originates at the visible striking limb',()=>{for(const kind of Object.keys(C.MOVES))for(const face of [1,-1]){const g=setup();if(face<0){g.fighters[0].x=545;g.fighters[1].x=450;g.fighters[0].face=-1;g.fighters[1].face=1;}attack(g.fighters[0],kind);for(let n=0;n<150;n++){const before=g.eventId;tick(g);for(const e of g.events.filter(e=>e.id>before&&e.type==='hit')){assert(Number.isFinite(e.x)&&Number.isFinite(e.y));assert(Math.abs(e.x-g.fighters[0].x)<150);}}assert(g.fighters[1].hp<100,kind+' mirrored '+face);}});
-test('A jumping opponent clears a low sweep',()=>{const g=setup();attack(g.fighters[0],'sweep',.3);g.fighters[1].y=240;g.fighters[1].vy=200;run(g,25);assert.equal(g.fighters[1].hp,100);});
-test('Correct high block and low block stop matching attacks',()=>{for(const kind of ['jab','sweep']){const g=setup();attack(g.fighters[0],kind);run(g,130,C.blank(),{...C.blank(),block:true,down:kind==='sweep'});assert.equal(g.fighters[1].hp,100);assert(g.events.some(e=>e.type==='block'||e.type==='parry'));}});
-test('Wrong block height leaves an opening',()=>{const g=setup();attack(g.fighters[0],'sweep');run(g,130,C.blank(),{...C.blank(),block:true});assert(g.fighters[1].hp<100);});
-test('One attack cannot damage twice',()=>{const g=setup();attack(g.fighters[0],'jab');run(g);assert.equal(g.fighters[1].hp,90);});
-test('Simultaneous lethal contacts replay the round without scoring',()=>{const g=setup();for(const f of g.fighters){f.hp=10;attack(f,'jab',C.MOVES.jab.wind-C.DT);}tick(g);assert.equal(g.phase,'break');assert.equal(g.roundWinner,-1);assert.deepEqual([...g.scores],[0,0]);});
+test('All seven techniques can connect with a body',()=>{assert.equal(Object.keys(C.MOVES).length,7);for(const kind of Object.keys(C.MOVES)){const g=setup();attack(g.fighters[0],kind);run(g,150);assert(g.fighters[1].hp<C.HP,kind);}});
+test('Duel damage follows the rulebook: light −½, strong −1, never below 0, round resets to 20',()=>{
+ const light=['jab','body','sweep'],strongKinds=['lunge','kick','side','air'];
+ for(const kind of Object.keys(C.MOVES)){const g=setup();attack(g.fighters[0],kind);run(g,150);assert.equal(g.fighters[1].hp,C.HP-(light.includes(kind)?.5:1),kind);assert.equal(C.MOVES[kind].damage,light.includes(kind)?.5:1);}
+ assert.deepEqual(strongKinds.map(k=>C.MOVES[k].damage),[1,1,1,1]);
+ let g=setup();g.fighters[1].hp=.5;attack(g.fighters[0],'kick');run(g,150);assert.equal(g.fighters[1].hp,0);assert.equal(g.phase,'break');
+ g=setup();g.fighters[1].hp=19.5;attack(g.fighters[0],'kick');run(g,150);assert.equal(g.fighters[1].hp,18.5);
+ g=setup();g.fighters[1].hp=.5;attack(g.fighters[0],'jab');run(g,150);assert.equal(g.phase,'break');run(g,400);assert.equal(g.fighters[1].hp,C.HP);assert.equal(g.round,2);
+});
+test('No damage beyond the visible limb',()=>{const g=setup(180);attack(g.fighters[0],'jab');run(g);assert.equal(g.fighters[1].hp,C.HP);});
+test('Every contact originates at the visible striking limb',()=>{for(const kind of Object.keys(C.MOVES))for(const face of [1,-1]){const g=setup();if(face<0){g.fighters[0].x=545;g.fighters[1].x=450;g.fighters[0].face=-1;g.fighters[1].face=1;}attack(g.fighters[0],kind);for(let n=0;n<150;n++){const before=g.eventId;tick(g);for(const e of g.events.filter(e=>e.id>before&&e.type==='hit')){assert(Number.isFinite(e.x)&&Number.isFinite(e.y));assert(Math.abs(e.x-g.fighters[0].x)<150);}}assert(g.fighters[1].hp<C.HP,kind+' mirrored '+face);}});
+test('A jumping opponent clears a low sweep',()=>{const g=setup();attack(g.fighters[0],'sweep',.3);g.fighters[1].y=240;g.fighters[1].vy=200;run(g,25);assert.equal(g.fighters[1].hp,C.HP);});
+test('Correct high block and low block stop matching attacks',()=>{for(const kind of ['jab','sweep']){const g=setup();attack(g.fighters[0],kind);run(g,130,C.blank(),{...C.blank(),block:true,down:kind==='sweep'});assert.equal(g.fighters[1].hp,C.HP);assert(g.events.some(e=>e.type==='block'||e.type==='parry'));}});
+test('Wrong block height leaves an opening',()=>{const g=setup();attack(g.fighters[0],'sweep');run(g,130,C.blank(),{...C.blank(),block:true});assert(g.fighters[1].hp<C.HP);});
+test('One attack cannot damage twice',()=>{const g=setup();attack(g.fighters[0],'jab');run(g);assert.equal(g.fighters[1].hp,19.5);});
+test('Simultaneous lethal contacts replay the round without scoring',()=>{const g=setup();for(const f of g.fighters){f.hp=.5;attack(f,'jab',C.MOVES.jab.wind-C.DT);}tick(g);assert.equal(g.phase,'break');assert.equal(g.roundWinner,-1);assert.deepEqual([...g.scores],[0,0]);});
 test('Late buffered input executes exactly once',()=>{const g=setup(300),a=g.fighters[0];attack(a,'jab',C.MOVES.jab.duration-.06);tick(g,C.blank(),{...C.blank(),kick:true});run(g,10);assert.equal(a.attack.kind,'kick');run(g,160);assert.equal(a.attack,null);assert.equal(g.events.filter(e=>e.type==='swing').length,1);});
 test('Early input expires instead of becoming a surprise attack',()=>{const g=setup(300);attack(g.fighters[0],'side');tick(g,C.blank(),{...C.blank(),punch:true});run(g,150);assert.equal(g.fighters[0].attack,null);assert(!g.events.some(e=>e.type==='swing'));});
 test('Held attack does not auto-repeat',()=>{const g=setup(300),held={...C.blank(),punch:true};tick(g,held,held);run(g,200,held);assert.equal(g.events.filter(e=>e.type==='swing').length,1);});
@@ -52,7 +60,7 @@ test('Both legs keep support grounded and can hit on either facing',()=>{
  for(const kind of ['kick','side','sweep'])for(const leg of [0,1])for(const face of [1,-1]){
   const g=setup(90),a=g.fighters[0];a.face=face;g.fighters[1].x=a.x+90*face;g.fighters[1].face=-face;attack(a,kind);a.attack.leg=leg;
   for(let n=0;n<130;n++){if(a.attack){const p=R.pose(a),foot=leg?p.frontLeg[2]:p.backLeg[2];assert(Math.abs(foot[0]-(leg?42:-43))<.001);assert(Math.abs(foot[1]+4)<.001);}tick(g);}
-  assert(g.fighters[1].hp<100,kind+' leg '+leg+' face '+face);
+  assert(g.fighters[1].hp<C.HP,kind+' leg '+leg+' face '+face);
  }
 });
 test('Interrupted steps retain the support foot throughout the kick',()=>{
@@ -70,9 +78,9 @@ test('An interrupted step settles its feet when blocking',()=>{
 test('Repeated kicks alternate both legs without holding to auto-repeat',()=>{
  const g=setup(400),a=g.fighters[0],legs=[];for(let n=0;n<4;n++){tick(g,C.blank(),{...C.blank(),kick:true});legs.push(a.attack.leg);run(g,130);}assert.deepEqual(legs,[0,1,0,1]);
 });
-function winPoint(g,winner=0){g.phase='fight';g.fighters=[C.fighter(0),C.fighter(1)];g.fighters[0].x=450;g.fighters[1].x=545;g.fighters[1-winner].hp=10;attack(g.fighters[winner],'jab',C.MOVES.jab.wind-C.DT);tick(g);}
+function winPoint(g,winner=0){g.phase='fight';g.fighters=[C.fighter(0),C.fighter(1)];g.fighters[0].x=450;g.fighters[1].x=545;g.fighters[1-winner].hp=.5;attack(g.fighters[winner],'jab',C.MOVES.jab.wind-C.DT);tick(g);}
 test('Two points end the match; a point resets health and start positions',()=>{
- const g=C.create({mode:'points'});winPoint(g);assert.equal(g.phase,'break');assert.deepEqual([...g.scores],[1,0]);run(g,450);assert.equal(g.fighters[1].hp,100);assert.equal(g.fighters[1].x,830);winPoint(g);assert.equal(g.phase,'over');assert.equal(g.winner,0);
+ const g=C.create({mode:'points'});winPoint(g);assert.equal(g.phase,'break');assert.deepEqual([...g.scores],[1,0]);run(g,450);assert.equal(g.fighters[1].hp,C.HP);assert.equal(g.fighters[1].x,830);winPoint(g);assert.equal(g.phase,'over');assert.equal(g.winner,0);
 });
 test('Three-point option and two-round life mode keep their own targets',()=>{
  for(const mode of ['duel','points']){const g=C.create({mode,pointsToWin:3});winPoint(g);run(g,450);assert.equal(g.round,mode==='duel'?2:1);winPoint(g);assert.equal(g.phase,mode==='duel'?'over':'break');if(mode==='points'){run(g,450);winPoint(g);assert.equal(g.phase,'over');}}
@@ -92,8 +100,12 @@ test('The classic map distinguishes attacks and high/low guards on both sides',(
  m=M.classic({action:true},false,face);assert(!m.edge.punch,'held action repeats');
  }
 });
-test('Point mode disables the combo while preserving perfect blocks',()=>{
- const g=C.create({mode:'points'});g.phase='fight';const a=g.fighters[0];a.comboReady=true;tick(g,C.blank(),{...C.blank(),combo:true});assert.equal(a.attack,null);
+test('Timed duel: more hit points win, equal hit points go to overtime (10,5 : 10 and 10 : 10)',()=>{
+ let g=C.create({timeLimit:60});g.phase='fight';g.clock=C.DT/2;g.fighters[0].hp=10.5;g.fighters[1].hp=10;tick(g);assert.equal(g.phase,'break');assert.equal(g.roundWinner,0);
+ g=C.create({timeLimit:60});g.phase='fight';g.clock=C.DT/2;g.fighters[0].hp=10;g.fighters[1].hp=10;tick(g);assert(g.suddenDeath);assert.equal(g.phase,'fight');
+});
+test('Point mode preserves perfect blocks',()=>{
+ const g=C.create({mode:'points'});g.phase='fight';const a=g.fighters[0];
  g.fighters[1].x=a.x+95;attack(a,'jab',C.MOVES.jab.wind-.02);tick(g,C.blank(),C.blank(),{...C.blank(),block:true});assert(g.events.some(e=>e.type==='parry'));assert.equal(g.scores[0],0);
 });
 console.log(checks+' combat, movement and rules checks passed');

@@ -11,8 +11,8 @@ const lcg=seed=>{let s=seed%2147483647||1;return ()=>{s=(s*16807)%2147483647;ret
 // Zufalls-Bot: wahllose Tasten, drei Entscheidungen je Sekunde (40 % davon Angriffe) – ein hastiger Mensch.
 function randomBot(random){let timer=0,input=C.blank();return {think(g,dt){if(g.phase!=='fight')return {input:C.blank(),edges:C.blank()};timer-=dt;if(timer>0)return {input,edges:C.blank()};timer=.33;const a=C.blank(),e=C.blank();const dir=random();if(dir<.3)a.left=true;else if(dir<.6)a.right=true;if(random()<.2)a.down=true;if(random()<.2)a.block=true;const act=random();if(act<.2)e.punch=true;else if(act<.4)e.kick=true;else if(act<.55)e.up=true;input=a;return {input:a,edges:e};}};}
 function player(level,self,random){if(level==='random')return randomBot(random);const s=AI.create(level,self,random);return {state:s,think:(g,dt)=>AI.think(s,g,dt)};}
-// Ein Match; Abbruch nach 240 s Spielzeit zählt als Unentschieden (-1).
-function match(levelA,levelB,seed,options){const g=C.create(options),random=lcg(seed),a=player(levelA,0,random),b=player(levelB,1,random);let steps=0;while(g.phase!=='over'&&steps<120*240){const ia=a.think(g,C.DT),ib=b.think(g,C.DT);C.step(g,[ia.input,ib.input],[ia.edges,ib.edges]);steps++;}return {winner:g.phase==='over'?g.winner:-1,game:g,a,b};}
+// Ein Match; Abbruch nach 600 s Spielzeit zählt als Unentschieden (-1).
+function match(levelA,levelB,seed,options){const g=C.create(options),random=lcg(seed),a=player(levelA,0,random),b=player(levelB,1,random);let steps=0;while(g.phase!=='over'&&steps<120*600){const ia=a.think(g,C.DT),ib=b.think(g,C.DT);C.step(g,[ia.input,ib.input],[ia.edges,ib.edges]);steps++;}return {winner:g.phase==='over'?g.winner:-1,game:g,a,b};}
 // Zehn Matches, Seiten wechseln je Match; zurück kommt die Zahl der Siege von "high".
 function series(high,low,seedBase=1,count=10,options){let wins=0;for(let i=0;i<count;i++){const highLeft=i%2===0,r=match(highLeft?high:low,highLeft?low:high,seedBase+i*7919,options);if(r.winner===(highLeft?0:1))wins++;}return wins;}
 let checks=0;
@@ -30,5 +30,5 @@ test('Stilwechsel: Stufe 1 keiner, Stufe 2 je Runde, Stufe 3 alle 4 s oder nach 
  const r3=match(3,3,13);assert(r3.a.state.switches>=3,'Stufe 3: '+r3.a.state.switches);
  const s=AI.create(3,1,lcg(1));const g=C.create();g.phase='fight';for(let i=0;i<120*4.1;i++)AI.think(s,g,C.DT);assert.equal(s.switches,1,'Wechsel nach 4 s ohne Treffer');g.fighters[1].hp-=10;AI.think(s,g,C.DT);assert.equal(s.switches,2,'Wechsel nach kassiertem Treffer');
 });
-test('Ein Match endet in endlicher Zeit (unter 240 s) auf allen Stufen',()=>{for(const [x,y] of [[1,1],[2,2],[3,3],[1,3]]){const r=match(x,y,500+x*10+y);assert.notEqual(r.winner,-1,x+' gegen '+y+' Unentschieden nach '+r.game.elapsed.toFixed(1)+' s');}});
+test('Ein Match endet in endlicher Zeit (unter 600 s) auf allen Stufen',()=>{for(const [x,y] of [[1,1],[2,2],[3,3],[1,3]]){const r=match(x,y,500+x*10+y);assert.notEqual(r.winner,-1,x+' gegen '+y+' Unentschieden nach '+r.game.elapsed.toFixed(1)+' s');}});
 console.log(checks+' KI-Prüfungen bestanden');

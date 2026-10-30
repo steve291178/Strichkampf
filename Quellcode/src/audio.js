@@ -14,15 +14,13 @@ function grunt(strong=false){
  for(const [from,to,volume] of [[650,420,.036],[1150,880,.019]]){const b=ctx.createBiquadFilter(),g=ctx.createGain();b.type='bandpass';b.Q.value=5;b.frequency.setValueAtTime(from,t);b.frequency.exponentialRampToValueAtTime(to,t+duration);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(b);b.connect(g);g.connect(master);nodes.push(b,g);}
  o.start(t);o.stop(t+duration+.01);o.onended=()=>{o.disconnect();nodes.forEach(n=>n.disconnect());};
 }
-function play(type,kind='jab',finisher=false){
+function play(type,kind='jab',strong=false){
  if(!enabled||!ctx||ctx.state!=='running')return;const kick=['kick','side','sweep','air'].includes(kind);
  if(type==='swing'){hiss(kick?.22:.135,kick?.18:.12,kick?480:720,kick?2200:2900,'bandpass',0,kick?.04:.025);}
- else if(type==='hit'){hiss(.055,kick?.48:.36,1900,700,'bandpass');tone(kick?102:155,42,kick?.24:.16,kick?.40:.29,'sine');hiss(.026,.16,3700,2100,'highpass',.013);if(kind==='body'||finisher||kick)grunt(finisher||kind==='body');}
+ else if(type==='hit'){hiss(.055,kick?.48:.36,1900,700,'bandpass');tone(kick?102:155,42,kick?.24:.16,kick?.40:.29,'sine');hiss(.026,.16,3700,2100,'highpass',.013);if(kind==='body'||strong||kick)grunt(strong||kind==='body');}
  else if(type==='block'||type==='parry'){hiss(.065,.30,1500,650,'bandpass');tone(420,210,.08,.14,'triangle');if(type==='parry'){tone(990,740,.23,.09,'sine',.012);tone(1470,1390,.16,.035,'sine',.02);}}
  else if(type==='step'||type==='land'){hiss(type==='land'?.085:.045,type==='land'?.11:.034,650,220,'lowpass');}
  else if(type==='jump')hiss(.11,.065,420,1250,'bandpass');
- else if(type==='combo')kiai();
- else if(type==='ready'){tone(523,523,.08,.045);tone(784,784,.12,.045,'sine',.08);}
  else if(type==='start'){tone(740,510,.42,.10,'sine');tone(1110,940,.3,.035,'sine');}
  else if(type==='ko'||type==='round'||type==='match'){tone(98,34,.5,.17,'triangle');hiss(.3,.1,1000,140,'lowpass');}
 }

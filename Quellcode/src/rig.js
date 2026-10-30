@@ -35,9 +35,8 @@ function pose(f,elapsed=0){
  }
  if(f.y>0){hip=[-8,-89];frontFoot=[36,-46];backFoot=[-35,-37];frontHand=[35,-153];backHand=[3,-145];lean=-.04;}
  if(atk){
-  let wind=m.wind,hand=atk.hand||0;
-  if(m.beats){let beat=0;for(let i=1;i<m.beats.length;i++)if(atk.t>=m.beats[i]-.10)beat=i;wind=m.beats[beat];hand=(hand+beat)%2;}
-  kick=!['jab','lunge','body','combo'].includes(atk.kind);
+  const wind=m.wind,hand=atk.hand||0;
+  kick=!['jab','lunge','body'].includes(atk.kind);
   extension=envelope(atk.t,wind,m.active,kick);strikeHand=hand;
   if(!kick){
    const body=atk.kind==='body',e=extension;
@@ -91,10 +90,10 @@ function pose(f,elapsed=0){
  }
  if(f.block){if(low){frontHand=[43,-79];backHand=[26,-112];}else{frontHand=[34,-174];backHand=[42,-145];}lean-=.045;}
  if(f.reactionTime>0){
-  const duration=f.reaction==='stumble'?.48:.28,age=1-clamp(f.reactionTime/duration),amount=Math.sin(Math.PI*clamp(age*1.12))*.8;
+  const duration=.28,age=1-clamp(f.reactionTime/duration),amount=Math.sin(Math.PI*clamp(age*1.12))*.8;
   if(f.reaction==='body'){lean+=.56*amount;hip[1]+=7*amount;frontHand=mix(frontHand,[37,-91],amount);backHand=mix(backHand,[24,-111],amount);}
   else if(f.reaction==='low'){hip[1]+=9*amount;frontFoot[1]-=11*amount;lean-=.12*amount;}
-  else{lean-=.30*amount;hip[0]-=6*amount;frontHand=mix(frontHand,[39,-126],amount);backHand=mix(backHand,[7,-145],amount);if(f.reaction==='stumble'){backFoot[0]-=18*amount;backFoot[1]-=7*Math.sin(age*Math.PI*2)**2;}}
+  else{lean-=.30*amount;hip[0]-=6*amount;frontHand=mix(frontHand,[39,-126],amount);backHand=mix(backHand,[7,-145],amount);}
  }else if(f.stagger>0){const amount=Math.sin(clamp(f.stagger/.55)*Math.PI*.75);lean-=amount*.35;hip[0]-=amount*4;frontHand=[42,-132];backHand=[7,-139];}
  // Reachable planted feet keep their exact targets, with knees flexing as needed.
  if(f.y===0)for(const [foot,offset] of [[frontFoot,7],[backFoot,-7]]){

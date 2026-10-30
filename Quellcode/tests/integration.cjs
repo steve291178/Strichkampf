@@ -2,14 +2,14 @@ const fs=require('fs'),vm=require('vm'),{createCanvas}=require('@napi-rs/canvas'
 const assert=require('assert');const path=require('path');const src=path.join(__dirname,'../src');const engine=fs.readFileSync(path.join(src,'engine.js'),'utf8'),source=fs.readFileSync(path.join(src,'game.js'),'utf8');
 const peers=new Map();const tasks=[];
 class Link extends EventEmitter{constructor(peer){super();this.peer=peer;this.open=false;this.dataChannel={bufferedAmount:0};}send(d){if(this.other?.open)tasks.push(()=>this.other.emit('data',structuredClone(d)));}close(){if(this.open){this.open=false;this.emit('close');if(this.other.open){this.other.open=false;this.other.emit('close');}}}}
-class Peer extends EventEmitter{constructor(id,options){super();this.id=id||'guest'+Math.random();peers.set(this.id,this);tasks.push(()=>this.emit('open',this.id));}connect(id,options){const a=new Link(id),b=new Link(this.id);a.other=b;b.other=a;b.metadata=options.metadata;tasks.push(()=>{const host=peers.get(id);if(!host){this.emit('error',{type:'peer-unavailable'});return;}host.emit('connection',b);a.open=b.open=true;b.emit('open');a.emit('open');});return a;}destroy(){peers.delete(this.id);}}
+class Peer extends EventEmitter{constructor(id,options){super();this.id=id||'guest'+Math.random();peers.set(this.id,this);tasks.push(()=>this.emit('open',this.id));}connect(id,options){const a=new Link(id),b=new Link(this.id);a.other=b;b.other=a;b.metadata=options.metadata;tasks.push(()=>{const host=peers.get(id);if(!host){this.emit('error',{type:'peer-unavailable'});return;}a.open=b.open=true;host.emit('connection',b);if(b.open){b.emit('open');a.emit('open');}});return a;}destroy(){peers.delete(this.id);}}
 function flush(){let n=0;while(tasks.length){tasks.shift()();if(++n>1000)throw Error('task loop');}}
 function environment(){
  const canvas=createCanvas(1280,720),els={},listeners={},controls=[];let raf=null,time=0;
  class Element{constructor(id){this.id=id;this.tagName='DIV';this.hidden=false;this.style={};this.dataset={};this.value='';this.textContent='';this.classList={add(){},remove(){},toggle(){}};this.handlers={};}addEventListener(k,f){(this.handlers[k]??=[]).push(f);}setAttribute(){}focus(){}click(){this.onclick?.();}setPointerCapture(){}querySelectorAll(){return [];}getBoundingClientRect(){return {left:0,top:0,width:150,height:150};}dispatch(k,e){(this.handlers[k]||[]).forEach(f=>f(e));}}
  function $(id){return els[id]??=new Element(id);}
  for(const match of fs.readFileSync(path.join(src,'shell.html'),'utf8').matchAll(/id="([^"]+)"([^>]*)/g))$(match[1]).hidden=/hidden/.test(match[2]);
- for(const action of ['block','punch','kick','combo']){const e=new Element(action);e.dataset.action=action;controls.push(e);}
+ for(const action of ['block','punch','kick']){const e=new Element(action);e.dataset.action=action;controls.push(e);}
  $('rule-select').value='duel';$('points-select').value='2';$('timer-select').value='0';$('control-select').value='direct';els.canvas=canvas;const panels=['home-panel','online-panel','lobby-panel','pause-panel','result-panel'].map($),back=[new Element('back')];
  const doc={body:new Element('body'),activeElement:null,hidden:false,getElementById:$,createElement:tag=>tag==='canvas'?createCanvas(1280,720):new Element(tag),querySelector:q=>controls.find(e=>q.includes(e.dataset.action)),querySelectorAll:q=>q==='.panel'?panels:q==='[data-action]'?controls:q==='.back-home'?back:[],addEventListener:(k,f)=>listeners[k]=f};
  const env={document:doc,window:{},navigator:{getGamepads:()=>[]},matchMedia:()=>({matches:false}),performance:{now:()=>time},crypto:require('crypto').webcrypto,structuredClone,console,localStorage:{data:{},getItem(k){return k in this.data?this.data[k]:null;},setItem(k,v){this.data[k]=String(v);}},HTMLInputElement:Element,setTimeout:()=>1,clearTimeout(){},requestAnimationFrame:f=>raf=f,addEventListener:(k,f)=>listeners[k]=f,Peer,AbortController,Math};env.window=env;env.globalThis=env;const c=vm.createContext(env);
@@ -19,11 +19,13 @@ function environment(){
 
 const host=environment(),guest=environment();host.$('rule-select').value='points';host.$('points-select').value='3';host.t.updateSettings();
 host.t.online(true);flush();guest.$('join-code').value=host.$('room-code').textContent;guest.t.online(false);flush();host.$('fight-online-btn').click();flush();
-for(let i=0;i<150;i++){host.frame();guest.frame();}assert.equal(guest.t.game.phase,'fight');assert.equal(guest.t.game.rules.mode,'points');assert.equal(guest.t.game.rules.pointsToWin,3);
+for(let i=0;i<150;i++){host.frame();guest.frame();}assert.equal(guest.t.game.phase,'fight');assert.equal(guest.t.game.rules.mode,'points');assert.equal(guest.t.game.rules.pointsToWin,3);assert.equal(guest.t.game.fighters[0].hp,20);
 console.log('PASS Host settings reach guest independently of local controls');
+{const room=environment();room.t.online(true);flush();assert([...peers.keys()].some(k=>k==='strichkampf-v7-'+room.$('room-code').textContent),'room uses prefix v7');const old=new room.c.Peer();flush();const link=old.connect('strichkampf-v7-'+room.$('room-code').textContent,{metadata:{version:6}});flush();assert(!link.open,'guest with protocol v6 is refused');room.t.home();}
+console.log('PASS A guest with the old protocol version is refused');
 const C=vm.runInContext('Combat',host.c);
 for(let point=1;point<=3;point++){
- const g=host.t.game;g.fighters=[C.fighter(0),C.fighter(1)];g.fighters[1].x=545;g.fighters[0].attack={kind:'jab',t:.13-C.DT,spent:[],sounded:[],hand:0};host.frame();host.t.sendState();flush();
+ const g=host.t.game;g.fighters=[C.fighter(0),C.fighter(1)];g.fighters[1].x=545;g.fighters[0].attack={kind:'jab',t:.13-C.DT,spent:[],hand:0};host.frame();host.t.sendState();flush();
  assert.equal(g.scores[0],point);assert.equal(guest.t.game.scores[0],point);assert.equal(guest.t.game.phase,point===3?'over':'break');
  for(let i=0;i<(point===3?40:245);i++){host.frame();guest.frame();}
 }
@@ -32,7 +34,7 @@ console.log('PASS Network point scoring, falls, match result and mutual rematch'
 guest.t.setPause(true);flush();assert(host.t.game.paused[1]);host.t.setPause(true);flush();guest.t.setPause(false);flush();assert(host.t.game.paused[0]);host.t.setPause(false);flush();assert(!guest.t.game.paused.some(Boolean));
 console.log('PASS Both online players must release their own pause');
 const pad=environment();pad.t.startGame('ai');let buttons=[],axes=[0,0];pad.c.navigator.getGamepads=()=>[{id:'Simulated Standard Controller',index:0,mapping:'standard',connected:true,axes,buttons:Array.from({length:17},(_,i)=>({pressed:buttons.includes(i)}))}];
-buttons=[6];let a=pad.t.sampleInput();assert(a.block&&a.down);buttons=[4];a=pad.t.sampleInput();assert(a.block&&!a.down);buttons=[5];assert(pad.t.sampleInput().combo);assert(pad.t.takeEdges().combo);
+buttons=[6];let a=pad.t.sampleInput();assert(a.block&&a.down);buttons=[4];a=pad.t.sampleInput();assert(a.block&&!a.down);buttons=[5];assert(!Object.values(pad.t.sampleInput()).some(Boolean),'R1 is unmapped');
 pad.t.clearInput();pad.$('control-select').value='classic';pad.t.updateSettings();buttons=[0];axes=[-1,0];a=pad.t.sampleInput();assert(a.kick);assert(pad.t.takeEdges().kick);a=pad.t.sampleInput();assert(!pad.t.takeEdges().kick);buttons=[];axes=[-1,-1];a=pad.t.sampleInput();assert(a.block&&!a.down);axes=[-1,1];a=pad.t.sampleInput();assert(a.block&&a.down);
 pad.c.navigator.getGamepads=()=>[];pad.t.sampleInput();assert(pad.t.game.paused[0]);
 console.log('PASS Direct/classic controller mappings, no held repeat, disconnect pause');
@@ -46,7 +48,7 @@ console.log('PASS Delayed computer decisions complete a two-round match');
 // Gürtel: nur ein eigener Sieg gegen den Computer zählt und landet im Speicher; Online-Siege und KI-Siege nicht.
 assert.equal(host.c.localStorage.data['strichkampf.siege'],undefined);assert.equal(solo.c.localStorage.data['strichkampf.siege'],undefined);
 const belt=environment();belt.$('ai-btn').click();assert(belt.$('belt-line').textContent.includes('Dein Gürtel: Weiß'),belt.$('belt-line').textContent);assert(belt.$('belt-line').textContent.includes('noch 2 Siege bis Weiß-Gelb'));
-{const g=belt.t.game;g.scores[0]=1;g.phase='fight';g.fighters=[C.fighter(0),C.fighter(1)];g.fighters[1].x=545;g.fighters[1].hp=10;g.fighters[0].attack={kind:'jab',t:.13-C.DT,spent:[],sounded:[],hand:0};belt.frame();assert.equal(g.phase,'over');assert.equal(g.winner,0);belt.run(200);}
+{const g=belt.t.game;g.scores[0]=1;g.phase='fight';g.fighters=[C.fighter(0),C.fighter(1)];g.fighters[1].x=545;g.fighters[1].hp=.5;g.fighters[0].attack={kind:'jab',t:.13-C.DT,spent:[],hand:0};belt.frame();assert.equal(g.phase,'over');assert.equal(g.winner,0);belt.run(200);}
 assert.equal(belt.c.localStorage.data['strichkampf.siege'],'1');assert(belt.$('belt-line').textContent.includes('noch 1 Sieg bis Weiß-Gelb'));assert(!belt.$('result-panel').hidden);assert(belt.$('belt-result').textContent.includes('Gürtel: Weiß'));
 belt.$('belt-reset').click();belt.$('belt-reset').click();assert.equal(belt.c.localStorage.data['strichkampf.siege'],'0');assert(belt.$('belt-line').textContent.includes('noch 2 Siege'));
 console.log('PASS Belt progress counts only own wins against the computer, is stored and can be reset');
