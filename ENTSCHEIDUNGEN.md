@@ -43,3 +43,4 @@ Stefan kann jede Zeile kippen: Zeile nennen, Claude baut zurück (Commit der Zei
 | 30.10.2026 | 5a | Kiai-Variante | A (langes „Wataaa“) aktiv, B („Hyah“) als Hörprobe | kleine Geschmacksfrage | H9 klein (Variante, Stefan wählt) | schritt-5b |
 | 30.10.2026 | 6 | Schlusstest im Browser trotz verstecktem Tab | Bildschleife im Test per Zeitgeber angetrieben, Spielcode unverändert | im Hintergrund-Tab liefert der Browser nur ein Bild je 2 s; Spiel selbst pausiert bei Tabwechsel wie gewollt | K1 (Prüfung ohne Änderung am Produkt) | schritt-6 |
 | 30.10.2026 | 6 | Versionsname | „DOJO / 08“ | neuer Spielstand mit Regelwerk-Schritten 2–5 | Plan (von Stefan freigegeben) | schritt-6 |
+| 30.10.2026 | nach 6 | Push auf GitHub und GitHub Pages | Stand DOJO / 08 gepusht (main + Tags); Pages aus `main`, Wurzel: https://steve291178.github.io/Strichkampf/ | Stefans Ja im Chat („Ja, pushen“, „ja bitte“) | H6 | ad9c7f8 |
