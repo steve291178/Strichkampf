@@ -1,17 +1,17 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142424"><meta name="description" content="Strichkampf: 2D-Karate im Abendlicht. Gegen den Computer oder online per Raumcode. Mit Tastatur, Controller und Touch."><title>Strichkampf · Dojo im Abendlicht</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23142424'/%3E%3Ccircle cx='16' cy='8' r='4' fill='none' stroke='%2386d9c5' stroke-width='2'/%3E%3Cpath d='M16 12v9m0-6-9 3m9-3 9-5m-9 11-7 8m7-8 7 8' stroke='%23ff896e' stroke-width='2.5' fill='none'/%3E%3C/svg%3E"><style>
-*{box-sizing:border-box} :root{color-scheme:dark;--ink:#f6efd9;--mint:#98dec8;--coral:#ff9a79;--dark:#142424;--muted:#c0c9b9}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1214;font:16px/1.5 system-ui,-apple-system,sans-serif;color:var(--ink)}body{display:grid;place-items:center}button,input{font:inherit}button{cursor:pointer;color:inherit;border:1px solid #e7e9cf55;background:#192f2fcc;border-radius:6px;padding:12px 20px;transition:background .15s}button:hover{background:#35504a}button:focus-visible,input:focus-visible{outline:3px solid var(--mint);outline-offset:3px}button:disabled{opacity:.5;cursor:default}.primary{background:var(--mint);color:#153a31;border-color:var(--mint);font-weight:750}.primary:hover{background:#b4efdb}.ghost{background:transparent}#stage{position:relative;width:min(100vw,177.7778vh);width:min(100vw,177.7778dvh);aspect-ratio:16/9;overflow:hidden;container-type:inline-size;background:#2b4440}canvas{width:100%;height:100%;display:block}.topbar{position:absolute;left:3.3%;right:3.3%;top:3.2%;display:flex;justify-content:space-between;align-items:center;z-index:4;pointer-events:none}.wordmark{letter-spacing:.24em;font-size:clamp(12px,1.35cqw,18px);font-weight:800}.version{font-size:12px;letter-spacing:.1em;color:#cad0bc;margin-left:12px;font-weight:400}.tools{display:flex;gap:8px;pointer-events:auto}.tools button{padding:6px 11px;font-size:clamp(12px,1.1cqw,15px);background:#19312b70;border-color:#dce6cf40}.playing .wordmark{visibility:hidden}.playing .tools{position:absolute;left:50%;top:0;transform:translateX(-50%);margin:0;gap:5px}.playing .tools button{padding:3px 7px}.playing .topbar{top:2%}.panel{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(90deg,#102a2a22,#102a2a66,#102a2a22);z-index:3}.panel[hidden], [hidden]{display:none!important}.panel-inner{width:min(550px,62%);max-height:82%;overflow:auto;text-align:center;padding:16px 22px;scrollbar-width:thin}.tag{font-size:clamp(12px,1.15cqw,16px);letter-spacing:.26em;color:#dce7c8;text-transform:uppercase;margin-bottom:10px}.title{font-size:clamp(34px,6.5cqw,92px);line-height:.96;letter-spacing:-.065em;margin:0 0 18px;font-weight:850;text-shadow:0 4px 40px #10302c50}.title em{font-style:normal;color:var(--mint)}.panel p{font-size:clamp(13px,1.4cqw,18px);color:#e2e5d2;margin:12px 0 19px}.choices{display:flex;gap:10px;justify-content:center}.choices button{flex:1;font-size:clamp(14px,1.45cqw,20px);padding:13px 10px;min-height:48px}.quiet{font-size:clamp(12px,1.1cqw,15px);color:#ced8c4;margin-top:16px}.textbutton{border:0;background:transparent;font-size:clamp(12px,1.1cqw,15px);padding:8px 14px;text-decoration:underline;text-underline-offset:4px}.mini-title{font-size:clamp(25px,3.6cqw,46px);line-height:1.1;margin:0 0 12px;letter-spacing:-.04em}.room-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.room-actions>div{padding:18px 14px;border:1px solid #d5dec450;border-radius:7px;background:#142c2be8}.room-actions p{margin:0 0 14px;font-size:clamp(13px,1.2cqw,16px)}.room-actions button{padding:10px;font-size:clamp(13px,1.2cqw,16px);width:100%}.room-actions input{background:#091e1d;border:1px solid #aec8ba80;border-radius:5px;color:var(--ink);width:100%;min-width:0;padding:9px 7px;text-align:center;text-transform:uppercase;font-weight:750;letter-spacing:.17em;margin:0 0 8px;font-size:clamp(14px,1.5cqw,20px)}.roomcode{font-size:clamp(29px,5cqw,68px);letter-spacing:.17em;color:var(--mint);font-weight:800;margin:7px 0 10px;user-select:all}.hint{min-height:1.5em}.bottom-line{position:absolute;bottom:3.2%;left:3.3%;right:3.3%;display:flex;align-items:center;justify-content:space-between;color:#d7dfc9;font-size:clamp(12px,1.05cqw,15px);z-index:4;gap:20px;pointer-events:none}.bottom-line span{background:#152c284d;border-radius:3px;padding:2px 5px}#net-status{text-align:right}.playing.touch-on .bottom-line{bottom:26%}.playing:not(.touch-on) #input-tip{opacity:.85}.error{color:#ffb49c!important}#help{position:absolute;inset:8% 13%;background:#112927f5;border:1px solid #b3cdb46b;z-index:8;border-radius:10px;padding:25px 30px;overflow:auto;box-shadow:0 30px 100px #061c22b3}#help h2{font-size:clamp(23px,2.5cqw,34px);margin:0 0 15px}#help h3{font-size:clamp(15px,1.4cqw,20px);color:var(--mint);margin:15px 0 7px}.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}#help p,#help td,#help th{font-size:clamp(13px,1.2cqw,17px)}#help p{margin:7px 0}#help table{width:100%;border-collapse:collapse}#help td,#help th{text-align:left;padding:5px 0;border-bottom:1px solid #b9ccb326}#help th{color:var(--mint);font-weight:600}.close-help{position:absolute;right:15px;top:15px;padding:4px 12px}kbd{font:inherit;border:1px solid #a6b8a970;border-radius:3px;padding:0 4px}.help-links{color:var(--muted);font-size:13px;margin-top:14px}.help-links a{color:var(--mint)}.touch-controls{display:none;position:absolute;inset:77% 3% 2%;z-index:5;pointer-events:none;touch-action:none;user-select:none;-webkit-user-select:none}.playing.touch-on .touch-controls{display:block}.stick{position:absolute;left:1%;bottom:0;width:14cqw;height:14cqw;max-width:175px;max-height:175px;min-width:82px;min-height:82px;border-radius:50%;background:#112f2b70;border:2px solid #dce7ce70;pointer-events:auto;touch-action:none}.stick::before{content:'↑';position:absolute;top:3%;left:46%;opacity:.6}.stick::after{content:'↓';position:absolute;bottom:3%;left:46%;opacity:.6}.knob{position:absolute;left:31%;top:31%;width:38%;height:38%;border-radius:50%;background:#b1d8be65;border:2px solid #dce7caaa;pointer-events:none}.touch-buttons{position:absolute;right:0;bottom:0;display:flex;gap:1.5cqw;align-items:center}.touch-buttons button{pointer-events:auto;touch-action:none;width:9cqw;height:9cqw;min-width:52px;min-height:52px;max-width:110px;max-height:110px;border-radius:50%;background:#173b35b3;border:2px solid #dee7ca90;padding:0;font-size:clamp(13px,1.35cqw,18px);font-weight:700}.touch-buttons button[data-action=kick]{border-color:var(--coral);color:#ffd9c5}.touch-buttons button[data-action=punch]{border-color:var(--mint);color:#c5ffe7}#combo-touch{position:absolute;right:0;bottom:calc(100% + 7px);pointer-events:auto;touch-action:none;border-color:#ffe9a0;background:#274539;color:#fff0b9;padding:7px 16px;font-weight:800;font-size:clamp(13px,1.4cqw,18px)}.touch-buttons button.held{background:#8caa7da6;transform:scale(.95)}#rotate{display:none;position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#b7c6bc;font-size:13px;padding:10px}#toast{position:absolute;left:50%;bottom:29%;transform:translateX(-50%);background:#112b29ed;border:1px solid #a7c4b34d;color:#f3ebd1;border-radius:7px;padding:8px 18px;max-width:85%;font-size:clamp(13px,1.4cqw,19px);z-index:10;text-align:center;pointer-events:none}#pause-panel .panel-inner,#result-panel .panel-inner{background:#142d2ce8;border:1px solid #d3dbb546;border-radius:10px}.playing #home-panel{display:none}.small-note{font-size:clamp(12px,1.05cqw,14px)!important}.download{color:#d0ddc5} @media(orientation:portrait){#rotate{display:block}.panel-inner{width:88%;max-height:87%;padding:6px 12px}.topbar{top:2%}.version{display:none}.title{font-size:9cqw}.tag{margin-bottom:5px}.panel p{margin:7px 0}.choices button{padding:7px;min-height:35px}.quiet{margin-top:7px}.bottom-line{display:none}.room-actions>div{padding:8px}.roomcode{margin:0}.tools{gap:3px}.tools button{padding:4px 6px}.help-grid{grid-template-columns:1fr;gap:5px}#help{inset:3%;padding:15px}}@media(max-height:500px) and (orientation:landscape){.panel-inner{max-height:80%;padding:8px 18px}.panel p{margin:7px 0 10px}.title{margin-bottom:10px}.quiet{margin-top:9px}.room-actions>div{padding:10px}.room-actions p{margin-bottom:6px}.choices button{padding:9px;min-height:42px}}
+*{box-sizing:border-box} :root{color-scheme:dark;--ink:#f6efd9;--mint:#98dec8;--coral:#ff9a79;--dark:#142424;--muted:#c0c9b9}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1214;font:16px/1.5 system-ui,-apple-system,sans-serif;color:var(--ink)}body{display:grid;place-items:center}button,input{font:inherit}button{cursor:pointer;color:inherit;border:1px solid #e7e9cf55;background:#192f2fcc;border-radius:6px;padding:12px 20px;transition:background .15s}button:hover{background:#35504a}button:focus-visible,input:focus-visible{outline:3px solid var(--mint);outline-offset:3px}button:disabled{opacity:.5;cursor:default}.primary{background:var(--mint);color:#153a31;border-color:var(--mint);font-weight:750}.primary:hover{background:#b4efdb}.ghost{background:transparent}#stage{position:relative;width:min(100vw,177.7778vh);width:min(100vw,177.7778dvh);aspect-ratio:16/9;overflow:hidden;container-type:inline-size;background:#2b4440}canvas{width:100%;height:100%;display:block}.topbar{position:absolute;left:3.3%;right:3.3%;top:3.2%;display:flex;justify-content:space-between;align-items:center;z-index:4;pointer-events:none}.wordmark{letter-spacing:.24em;font-size:clamp(12px,1.35cqw,18px);font-weight:800}.version{font-size:12px;letter-spacing:.1em;color:#cad0bc;margin-left:12px;font-weight:400}.tools{display:flex;gap:8px;pointer-events:auto}.tools button{padding:6px 11px;font-size:clamp(12px,1.1cqw,15px);background:#19312b70;border-color:#dce6cf40}.playing .wordmark{visibility:hidden}.playing .tools{position:absolute;left:50%;top:0;transform:translateX(-50%);margin:0;gap:5px}.playing .tools button{padding:3px 7px}.playing .topbar{top:2%}.panel{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(90deg,#102a2a22,#102a2a66,#102a2a22);z-index:3}.panel[hidden], [hidden]{display:none!important}.panel-inner{width:min(550px,62%);max-height:82%;overflow:auto;text-align:center;padding:16px 22px;scrollbar-width:thin}.tag{font-size:clamp(12px,1.15cqw,16px);letter-spacing:.26em;color:#dce7c8;text-transform:uppercase;margin-bottom:10px}.title{font-size:clamp(34px,6.5cqw,92px);line-height:.96;letter-spacing:-.065em;margin:0 0 18px;font-weight:850;text-shadow:0 4px 40px #10302c50}.title em{font-style:normal;color:var(--mint)}.panel p{font-size:clamp(13px,1.4cqw,18px);color:#e2e5d2;margin:12px 0 19px}.choices{display:flex;gap:10px;justify-content:center}.choices button{flex:1;font-size:clamp(14px,1.45cqw,20px);padding:13px 10px;min-height:48px}.quiet{font-size:clamp(12px,1.1cqw,15px);color:#ced8c4;margin-top:16px}.textbutton{border:0;background:transparent;font-size:clamp(12px,1.1cqw,15px);padding:8px 14px;text-decoration:underline;text-underline-offset:4px}.mini-title{font-size:clamp(25px,3.6cqw,46px);line-height:1.1;margin:0 0 12px;letter-spacing:-.04em}.room-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.room-actions>div{padding:18px 14px;border:1px solid #d5dec450;border-radius:7px;background:#142c2be8}.room-actions p{margin:0 0 14px;font-size:clamp(13px,1.2cqw,16px)}.room-actions button{padding:10px;font-size:clamp(13px,1.2cqw,16px);width:100%}.room-actions input{background:#091e1d;border:1px solid #aec8ba80;border-radius:5px;color:var(--ink);width:100%;min-width:0;padding:9px 7px;text-align:center;text-transform:uppercase;font-weight:750;letter-spacing:.17em;margin:0 0 8px;font-size:clamp(14px,1.5cqw,20px)}.roomcode{font-size:clamp(29px,5cqw,68px);letter-spacing:.17em;color:var(--mint);font-weight:800;margin:7px 0 10px;user-select:all}.hint{min-height:1.5em}.bottom-line{position:absolute;bottom:3.2%;left:3.3%;right:3.3%;display:flex;align-items:center;justify-content:space-between;color:#d7dfc9;font-size:clamp(12px,1.05cqw,15px);z-index:4;gap:20px;pointer-events:none}.bottom-line span{background:#152c284d;border-radius:3px;padding:2px 5px}#net-status{text-align:right}.playing.touch-on .bottom-line{bottom:26%}.playing:not(.touch-on) #input-tip{opacity:.85}.error{color:#ffb49c!important}#help{position:absolute;inset:8% 13%;background:#112927f5;border:1px solid #b3cdb46b;z-index:8;border-radius:10px;padding:25px 30px;overflow:auto;box-shadow:0 30px 100px #061c22b3}#help h2{font-size:clamp(23px,2.5cqw,34px);margin:0 0 15px}#help h3{font-size:clamp(15px,1.4cqw,20px);color:var(--mint);margin:15px 0 7px}.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}#help p,#help td,#help th{font-size:clamp(13px,1.2cqw,17px)}#help p{margin:7px 0}#help table{width:100%;border-collapse:collapse}#help td,#help th{text-align:left;padding:5px 0;border-bottom:1px solid #b9ccb326}#help th{color:var(--mint);font-weight:600}.close-help{position:absolute;right:15px;top:15px;padding:4px 12px}kbd{font:inherit;border:1px solid #a6b8a970;border-radius:3px;padding:0 4px}.help-links{color:var(--muted);font-size:13px;margin-top:14px}.help-links a{color:var(--mint)}.touch-controls{display:none;position:absolute;inset:77% 3% 2%;z-index:5;pointer-events:none;touch-action:none;user-select:none;-webkit-user-select:none}.playing.touch-on .touch-controls{display:block}.stick{position:absolute;left:1%;bottom:0;width:14cqw;height:14cqw;max-width:175px;max-height:175px;min-width:82px;min-height:82px;border-radius:50%;background:#112f2b70;border:2px solid #dce7ce70;pointer-events:auto;touch-action:none}.stick::before{content:'↑';position:absolute;top:3%;left:46%;opacity:.6}.stick::after{content:'↓';position:absolute;bottom:3%;left:46%;opacity:.6}.knob{position:absolute;left:31%;top:31%;width:38%;height:38%;border-radius:50%;background:#b1d8be65;border:2px solid #dce7caaa;pointer-events:none}.touch-buttons{position:absolute;right:0;bottom:0;display:flex;gap:1.5cqw;align-items:center}.touch-buttons button{pointer-events:auto;touch-action:none;width:9cqw;height:9cqw;min-width:52px;min-height:52px;max-width:110px;max-height:110px;border-radius:50%;background:#173b35b3;border:2px solid #dee7ca90;padding:0;font-size:clamp(13px,1.35cqw,18px);font-weight:700}.touch-buttons button[data-action=kick]{border-color:var(--coral);color:#ffd9c5}.touch-buttons button[data-action=punch]{border-color:var(--mint);color:#c5ffe7}.touch-buttons button.held{background:#8caa7da6;transform:scale(.95)}#rotate{display:none;position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#b7c6bc;font-size:13px;padding:10px}#toast{position:absolute;left:50%;bottom:29%;transform:translateX(-50%);background:#112b29ed;border:1px solid #a7c4b34d;color:#f3ebd1;border-radius:7px;padding:8px 18px;max-width:85%;font-size:clamp(13px,1.4cqw,19px);z-index:10;text-align:center;pointer-events:none}#pause-panel .panel-inner,#result-panel .panel-inner{background:#142d2ce8;border:1px solid #d3dbb546;border-radius:10px}.playing #home-panel{display:none}.small-note{font-size:clamp(12px,1.05cqw,14px)!important}.download{color:#d0ddc5} @media(orientation:portrait){#rotate{display:block}.panel-inner{width:88%;max-height:87%;padding:6px 12px}.topbar{top:2%}.version{display:none}.title{font-size:9cqw}.tag{margin-bottom:5px}.panel p{margin:7px 0}.choices button{padding:7px;min-height:35px}.quiet{margin-top:7px}.bottom-line{display:none}.room-actions>div{padding:8px}.roomcode{margin:0}.tools{gap:3px}.tools button{padding:4px 6px}.help-grid{grid-template-columns:1fr;gap:5px}#help{inset:3%;padding:15px}}@media(max-height:500px) and (orientation:landscape){.panel-inner{max-height:80%;padding:8px 18px}.panel p{margin:7px 0 10px}.title{margin-bottom:10px}.quiet{margin-top:9px}.room-actions>div{padding:10px}.room-actions p{margin-bottom:6px}.choices button{padding:9px;min-height:42px}}
 
-.match-settings{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;margin:14px 0}.match-settings label{font-size:14px;color:#e1e5d6}.match-settings select{width:100%;font:inherit;font-size:15px;background:#122c28;color:#f6efd9;border:1px solid #80978b;border-radius:5px;padding:8px 6px;min-height:38px}.match-settings label[hidden]{display:none}.match-summary{font-size:14px!important;line-height:1.35;margin:7px 0 13px!important}.home-settings .title{font-size:clamp(30px,5cqw,64px);margin-bottom:9px}.home-settings.panel-inner{max-height:84%;width:min(570px,64%)}.home-settings .tag{margin-bottom:5px}.home-settings>p{margin:7px 0}.home-settings .quiet{margin-top:8px}@media(max-height:550px){.match-settings{gap:5px;margin:8px 0}.match-settings select{padding:4px;min-height:30px}.home-settings .title{font-size:4.5cqw}.home-settings.panel-inner{max-height:82%}}@media(orientation:portrait){.home-settings.panel-inner{width:88%;max-height:90%}.home-settings .tag{display:none}.home-settings .title{font-size:6cqw}.match-settings{margin:4px 0}.match-settings label{font-size:12px}.match-settings select{font-size:13px;min-height:28px;padding:2px}.match-summary{display:none}.home-settings .quiet{display:none}}
+.match-settings{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;margin:14px 0}.match-settings label{font-size:14px;color:#e1e5d6}.match-settings select{width:100%;font:inherit;font-size:15px;background:#122c28;color:#f6efd9;border:1px solid #80978b;border-radius:5px;padding:8px 6px;min-height:38px}.match-settings label[hidden]{display:none}.match-summary{font-size:14px!important;line-height:1.35;margin:7px 0 6px!important}.belt-line{font-size:clamp(12px,1.15cqw,15px)!important;color:#ffe9a0;margin:0 0 12px!important}.belt-result{color:#ffe9a0}.home-settings .title{font-size:clamp(30px,5cqw,64px);margin-bottom:9px}.home-settings.panel-inner{max-height:84%;width:min(570px,64%)}.home-settings .tag{margin-bottom:5px}.home-settings>p{margin:7px 0}.home-settings .quiet{margin-top:8px}@media(max-height:550px){.match-settings{gap:5px;margin:8px 0}.match-settings select{padding:4px;min-height:30px}.home-settings .title{font-size:4.5cqw}.home-settings.panel-inner{max-height:82%}}@media(orientation:portrait){.home-settings.panel-inner{width:88%;max-height:90%}.home-settings .tag{display:none}.home-settings .title{font-size:6cqw}.match-settings{margin:4px 0}.match-settings label{font-size:12px}.match-settings select{font-size:13px;min-height:28px;padding:2px}.match-summary{display:none}.home-settings .quiet{display:none}.belt-line{margin:0 0 6px!important}}
 </style></head><body>
 <main id="stage" aria-label="Strichkampf Karate-Spiel"><canvas id="canvas" width="1280" height="720" aria-label="Karate-Arena: Koralle gegen Jade"></canvas>
-<div class="topbar"><div class="wordmark">STRICHKAMPF <span class="version">DOJO / 07</span></div><div class="tools"><button id="pause-btn" hidden title="Pause (Esc)">Ⅱ</button><button id="help-btn" aria-label="Steuerung anzeigen">?</button><button id="sound-btn" aria-pressed="true">Ton an</button><button id="touch-btn" aria-pressed="false">Touch</button><button id="full-btn" title="Vollbild">⛶</button></div></div>
-<section class="panel" id="home-panel"><div class="panel-inner home-settings"><div class="tag">DOJO IM ABENDLICHT</div><h1 class="title">STRICH<br><em>KAMPF.</em></h1><p>Ein guter Treffer beginnt mit dem richtigen Abstand.</p><div class="match-settings"><label>Spielmodus<select id="rule-select"><option value="duel">Duell · Lebensbalken</option><option value="points">Punktkampf · ein Treffer</option></select></label><label>Deine Steuerung<select id="control-select"><option value="direct">Direkt · Schlag / Tritt / Block</option><option value="classic">Klassik · Richtung + Aktion</option></select></label><label>Zeitlimit<select id="timer-select"><option value="0">Ohne Zeitlimit</option><option value="60">60 Sekunden</option><option value="90">90 Sekunden</option></select></label><label id="point-setting" hidden>Punkte zum Matchsieg<select id="points-select"><option value="2">2 Punkte</option><option value="3">3 Punkte</option></select></label></div><p id="match-summary" class="match-summary">Zwei Rundensiege gewinnen das Match.</p><div class="choices"><button class="primary" id="ai-btn">Gegen Computer</button><button id="online-btn">Online-Duell</button></div><div class="quiet">Tastatur · Controller · Touch</div><button class="textbutton" id="learn-btn">Steuerung ansehen</button></div></section>
+<div class="topbar"><div class="wordmark">STRICHKAMPF <span class="version">DOJO / 08</span></div><div class="tools"><button id="pause-btn" hidden title="Pause (Esc)">Ⅱ</button><button id="help-btn" aria-label="Steuerung anzeigen">?</button><button id="sound-btn" aria-pressed="true">Ton an</button><button id="touch-btn" aria-pressed="false">Touch</button><button id="full-btn" title="Vollbild">⛶</button></div></div>
+<section class="panel" id="home-panel"><div class="panel-inner home-settings"><div class="tag">DOJO IM ABENDLICHT</div><h1 class="title">STRICH<br><em>KAMPF.</em></h1><p>Ein guter Treffer beginnt mit dem richtigen Abstand.</p><div class="match-settings"><label>Spielmodus<select id="rule-select"><option value="duel">Duell · 20 Trefferpunkte</option><option value="points">Punktkampf · ein Treffer</option></select></label><label>Deine Steuerung<select id="control-select"><option value="direct">Direkt · Schlag / Tritt / Block</option><option value="classic">Klassik · Richtung + Aktion</option></select></label><label>Zeitlimit<select id="timer-select"><option value="0">Ohne Zeitlimit</option><option value="60">60 Sekunden</option><option value="90">90 Sekunden</option></select></label><label id="point-setting" hidden>Punkte zum Matchsieg<select id="points-select"><option value="2">2 Punkte</option><option value="3">3 Punkte</option></select></label></div><p id="match-summary" class="match-summary">Duell · 20 Trefferpunkte · zwei Rundensiege</p><p id="belt-line" class="belt-line"></p><div class="choices"><button class="primary" id="ai-btn">Gegen Computer</button><button id="online-btn">Online-Duell</button></div><div class="quiet">Tastatur · Controller · Touch</div><button class="textbutton" id="learn-btn">Steuerung ansehen</button></div></section>
 <section class="panel" id="online-panel" hidden><div class="panel-inner"><div class="tag">ZWEI ORTE · EIN DUELL</div><h2 class="mini-title">Ab auf die Matte.</h2><div class="room-actions"><div><p>Lade deinen Gegner ein.</p><button id="create-btn" class="primary">Raum eröffnen</button></div><div><label for="join-code" class="small-note">Du hast einen Raumcode?</label><input id="join-code" maxlength="6" autocomplete="off" spellcheck="false" placeholder="ABC123" aria-label="Sechsstelliger Raumcode"><button id="join-btn">Beitreten</button></div></div><p class="small-note hint" id="online-hint" role="status">Ihr braucht beide eine Internetverbindung.</p><button class="textbutton back-home">Zurück</button></div></section>
 <section class="panel" id="lobby-panel" hidden><div class="panel-inner"><div class="tag" id="lobby-tag">DEIN RAUMCODE</div><h2 class="mini-title" id="lobby-title">Dein Gegner fehlt noch.</h2><div class="roomcode" id="room-code"></div><button id="copy-btn">Code kopieren</button><p id="lobby-hint" role="status">Gib diesen Code an deinen Mitspieler weiter.</p><p class="small-note" id="lobby-rules"></p><button class="primary" id="fight-online-btn" hidden>Kampf starten</button><p class="small-note" id="file-hint">Dein Mitspieler öffnet dieselbe Spieldatei oder einen für ihn freigegebenen Spiel-Link.</p><button class="textbutton back-home">Raum verlassen</button></div></section>
 <section class="panel" id="pause-panel" hidden><div class="panel-inner"><div class="tag">PAUSE</div><h2 class="mini-title">Durchatmen.</h2><p id="pause-message">Bereit für den nächsten Schlag?</p><div class="choices"><button id="resume-btn" class="primary">Weiterkämpfen</button><button class="back-home">Duell verlassen</button></div></div></section>
-<section class="panel" id="result-panel" hidden><div class="panel-inner"><div class="tag">K. O.</div><h2 class="mini-title" id="result-title">Koralle gewinnt.</h2><p id="result-description"></p><div class="choices"><button id="rematch-btn" class="primary">Revanche</button><button class="back-home">Zum Menü</button></div><p class="small-note" id="rematch-hint"></p></div></section>
-<section id="help" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden><button class="close-help" id="close-help" aria-label="Steuerung schließen">×</button><h2 id="help-title">Wenige Tasten. Gute Reflexe.</h2><div class="help-grid"><div><h3>Direkte Steuerung</h3><table><tr><th>Aktion</th><th>Tastatur</th><th>PS / Xbox</th></tr><tr><td>Vor / zurück</td><td>F / D</td><td>Linker Stick</td></tr><tr><td>Sprung</td><td>W oder ↑</td><td>↑ oder ✕ / A</td></tr><tr><td>Ducken</td><td>↓</td><td>↓</td></tr><tr><td>Schlag links / rechts</td><td>J abwechselnd</td><td>□ / X</td></tr><tr><td>Tritt links / rechts</td><td>K abwechselnd</td><td>○ / B</td></tr><tr><td>Block oben</td><td>S halten</td><td>L1 / LB</td></tr><tr><td>Block unten</td><td>Leertaste halten</td><td>L2 / LT</td></tr><tr><td>Dreier-Serie</td><td>J + K zusammen</td><td>R1 / RB</td></tr></table><p><b>F</b> macht einen Schritt zum Gegner, <b>D</b> einen zurück — auch nach einem Seitenwechsel. Antippen: ein Schritt. Halten: ruhige Schrittfolge. <b>J</b> wechselt bei jedem Faustschlag die Hand, <b>K</b> bei jedem Tritt das Bein. Zum Angreifen die Blocktaste loslassen. Die Pfeiltasten bleiben als Alternative verfügbar.</p><p id="pad-status">Controller per USB oder Bluetooth verbinden, ins Spiel klicken und eine Taste auf dem Controller drücken.</p><p>Linker Stick oder Steuerkreuz: Schritte; ↑ oder ✕/A: Sprung. L1/LB: hoher Block, L2/LT: tiefer Block. R1/RB oder □+○ / X+B: bereitstehende Serie. Menütaste: Pause / Weiter. Unterstützt werden vom Browser als Standard-Gamepad erkannte Controller.</p><p>Auf Touch: links bewegen, rechts schlagen, treten und blocken. Mehrere Finger gleichzeitig funktionieren.</p><h3>Klassik: Richtung + eine Aktionstaste</h3><p>Wähle „Klassik“ vor dem Start oder Beitritt. Pfeiltasten oder Stick/Steuerkreuz wählen die Richtung. <b>J oder Leertaste</b>, am Controller <b>✕ / A</b>, ist die Aktionstaste. Die Richtungen vor/zurück gelten zum Gegner. F/D bleiben als Alternative.</p><p><b>Ohne Aktion:</b> vor/zurück gehen; oben springen; unten ducken. <b>Zurück + oben:</b> hoher Block. <b>Zurück + unten:</b> tiefer Block.</p><p><b>Mit Aktion:</b> neutral = Gerade; vor = Schrittgerade; zurück = Fronttritt; unten = Körperschlag; unten + seitlich = Beinfeger; oben = Seitwärtstritt; oben + vor = Sprungtritt. Jede neue Aktion braucht einen neuen Tastendruck. Im Lebensmodus löst <b>K oder R1/RB</b> die freigeschaltete Serie aus. Auf Touch: Richtung + „Aktion“; „Block“ bleibt als Hilfe.</p><p>Eine eigene, vereinfachte Klassik-Belegung — angelehnt an Joystick-Karatespiele.</p><h3>Richtung verändert den direkten Angriff</h3><p><b>Ohne Richtung:</b> schnelle Gerade oder Körpertritt.<br><b>Zum Gegner:</b> Schrittgerade oder hoher Seitwärtstritt.<br><b>Nach unten:</b> Körperschlag oder Beinfeger.<br><b>Im Sprung:</b> Sprungtritt.</p></div><div><h3>Treffen, ausweichen, gewinnen.</h3><p><b>Duell:</b> 100 Leben pro Runde. Leichte Treffer kosten 10, starke 20. Zwei Rundensiege gewinnen das Match. Leben und Serie werden nach jeder Runde zurückgesetzt. Ein gleichzeitiger K. o. zählt für keinen; die Runde wird wiederholt.</p><p><b>Punktkampf:</b> Ein ungeblockter Treffer wirft den Gegner um und bringt einen Punkt. Zwei Punkte gewinnen standardmäßig das Match; alternativ sind drei wählbar. Nach jedem Punkt starten beide wieder in der Grundposition. Gleichzeitige Treffer geben keinen Punkt. Die Dreier-Serie ist hier aus, der perfekte Block bleibt.</p><p><b>Optionaler Timer:</b> Im Duell gilt das Zeitlimit pro Runde, im Punktkampf für das Match (nur Kampfzeit). Nach Ablauf entscheiden Leben bzw. Punkte. Bei Gleichstand entscheidet in der Verlängerung der nächste eindeutige Treffer. Ein Doppeltreffer entscheidet nicht. Steuerung und Spielmodus kannst du unabhängig kombinieren.</p><p>Block hält hohe Angriffe ab. Gegen Körperschlag und Beinfeger brauchst du <b>Leertaste</b> oder am Controller <b>L2 / LT</b>. Ein geblockter Treffer kostet kein Leben.</p><p>Ducken verändert deine Trefferfläche; ob ein hoher Angriff vorbeigeht, hängt vom tatsächlichen Kontakt ab. Über Beinfeger kannst du springen. Starke Angriffe holen länger aus. Während eines Angriffs kannst du nicht blocken.</p><h3>Die neuen Techniken</h3><p><b>Drei Treffer in Folge:</b> Die drei Punkte unter deinem Lebensbalken füllen sich. Dann löst <b>J + K</b>, <b>R1/RB</b> oder auf Touch die Taste <b>Serie</b> drei schnelle Faustschläge aus. Jeder kostet 10 Leben, kann aber geblockt werden. Ein eigener kassierter Treffer löscht die Serie und ihre Freischaltung.</p><p><b>Perfekter Block:</b> Setze den passenden Block erst kurz vor dem Treffer. Ein goldenes Aufblitzen zeigt den Erfolg; der Angreifer taumelt etwa eine halbe Sekunde. Gedrückthalten blockt normal. Hastiges Wiederholen oder bloßes Wechseln der Blockhöhe erneuert das perfekte Zeitfenster nicht beliebig.</p><p><b>Sound:</b> Eigene, synthetisch erzeugte Schlag-, Tritt- und Blockeffekte im Stil alter Kung-Fu-Filme. Mit „Ton an/aus“ oben schaltest du sie um.</p><h3>Online miteinander spielen</h3><p>Nutzt beide die aktuelle Spieldatei. Einer eröffnet den Raum, der andere gibt den Code ein. Der Gastgeber startet. Für eine Revanche müssen beide bereit sein. Beim Tabwechsel pausiert das Duell.</p><p>Diese erste Version verbindet eure Browser direkt. Strenge Router oder Firmennetze können die Verbindung verhindern; dann ein anderes Netz versuchen. Es ist noch kein zusätzlicher Relay-Dienst eingerichtet.</p><p>Die Internetverbindung wird nur für Online-Duelle benötigt. Der Computergegner funktioniert auch offline.</p></div></div><div class="help-links"><a href="https://peerjs.com/client/getting-started" target="_blank" rel="noreferrer">PeerJS-Verbindung</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API" target="_blank" rel="noreferrer">Controller-Unterstützung</a> · <a class="download" href="./Strichkampf.html" download>Spieldatei herunterladen</a></div></section>
-<div class="touch-controls" aria-label="Touchsteuerung"><div class="stick" id="stick" role="group" aria-label="Bewegen, springen und ducken"><div class="knob" id="knob"></div></div><button id="combo-touch" data-action="combo" hidden>Serie · 3×</button><div class="touch-buttons"><button data-action="block">Block</button><button data-action="punch">Schlag</button><button data-action="kick">Tritt</button></div></div>
+<section class="panel" id="result-panel" hidden><div class="panel-inner"><div class="tag">K. O.</div><h2 class="mini-title" id="result-title">Koralle gewinnt.</h2><p id="result-description"></p><p class="small-note belt-result" id="belt-result"></p><div class="choices"><button id="rematch-btn" class="primary">Revanche</button><button class="back-home">Zum Menü</button></div><p class="small-note" id="rematch-hint"></p></div></section>
+<section id="help" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden><button class="close-help" id="close-help" aria-label="Steuerung schließen">×</button><h2 id="help-title">Wenige Tasten. Gute Reflexe.</h2><div class="help-grid"><div><h3>Direkte Steuerung</h3><table><tr><th>Aktion</th><th>Tastatur</th><th>PS / Xbox</th></tr><tr><td>Vor / zurück</td><td>F / D</td><td>Linker Stick</td></tr><tr><td>Sprung</td><td>W oder ↑</td><td>↑ oder ✕ / A</td></tr><tr><td>Ducken</td><td>↓</td><td>↓</td></tr><tr><td>Schlag links / rechts</td><td>J abwechselnd</td><td>□ / X</td></tr><tr><td>Tritt links / rechts</td><td>K abwechselnd</td><td>○ / B</td></tr><tr><td>Block oben</td><td>S halten</td><td>L1 / LB</td></tr><tr><td>Block unten</td><td>Leertaste halten</td><td>L2 / LT</td></tr></table><p><b>F</b> macht einen Schritt zum Gegner, <b>D</b> einen zurück — auch nach einem Seitenwechsel. Antippen: ein Schritt. Halten: ruhige Schrittfolge. <b>J</b> wechselt bei jedem Faustschlag die Hand, <b>K</b> bei jedem Tritt das Bein. Zum Angreifen die Blocktaste loslassen. Die Pfeiltasten bleiben als Alternative verfügbar.</p><p id="pad-status">Controller per USB oder Bluetooth verbinden, ins Spiel klicken und eine Taste auf dem Controller drücken.</p><p>Linker Stick oder Steuerkreuz: Schritte; ↑ oder ✕/A: Sprung. L1/LB: hoher Block, L2/LT: tiefer Block. Menütaste: Pause / Weiter. Unterstützt werden vom Browser als Standard-Gamepad erkannte Controller.</p><p>Auf Touch: links bewegen, rechts schlagen, treten und blocken. Mehrere Finger gleichzeitig funktionieren.</p><h3>Klassik: Richtung + eine Aktionstaste</h3><p>Wähle „Klassik“ vor dem Start oder Beitritt. Pfeiltasten oder Stick/Steuerkreuz wählen die Richtung. <b>J oder Leertaste</b>, am Controller <b>✕ / A</b>, ist die Aktionstaste. Die Richtungen vor/zurück gelten zum Gegner. F/D bleiben als Alternative.</p><p><b>Ohne Aktion:</b> vor/zurück gehen; oben springen; unten ducken. <b>Zurück + oben:</b> hoher Block. <b>Zurück + unten:</b> tiefer Block.</p><p><b>Mit Aktion:</b> neutral = Gerade; vor = Schrittgerade; zurück = Fronttritt; unten = Körperschlag; unten + seitlich = Beinfeger; oben = Seitwärtstritt; oben + vor = Sprungtritt. Jede neue Aktion braucht einen neuen Tastendruck. Auf Touch: Richtung + „Aktion“; „Block“ bleibt als Hilfe.</p><p>Eine eigene, vereinfachte Klassik-Belegung — angelehnt an Joystick-Karatespiele.</p><h3>Richtung verändert den direkten Angriff</h3><p><b>Ohne Richtung:</b> schnelle Gerade oder Körpertritt.<br><b>Zum Gegner:</b> Schrittgerade oder hoher Seitwärtstritt.<br><b>Nach unten:</b> Körperschlag oder Beinfeger.<br><b>Im Sprung:</b> Sprungtritt.</p></div><div><h3>Treffen, ausweichen, gewinnen.</h3><p><b>Duell:</b> 20 Trefferpunkte pro Runde. Leichte Techniken (Gerade, Körperschlag, Beinfeger) kosten ½ Punkt, starke (Schrittgerade, Fronttritt, Seitwärtstritt, Sprungtritt) einen ganzen. Zwei Rundensiege gewinnen das Match. Trefferpunkte und Combo werden nach jeder Runde zurückgesetzt. Ein gleichzeitiger K. o. zählt für keinen; die Runde wird wiederholt.</p><p><b>Punktkampf:</b> Ein ungeblockter Treffer wirft den Gegner um und bringt einen Punkt. Zwei Punkte gewinnen standardmäßig das Match; alternativ sind drei wählbar. Nach jedem Punkt starten beide wieder in der Grundposition. Gleichzeitige Treffer geben keinen Punkt. Combos gibt es hier nicht, der perfekte Block bleibt.</p><p><b>Optionaler Timer:</b> Im Duell gilt das Zeitlimit pro Runde, im Punktkampf für das Match (nur Kampfzeit). Nach Ablauf entscheiden Trefferpunkte bzw. Punkte. Bei Gleichstand entscheidet in der Verlängerung der nächste eindeutige Treffer. Ein Doppeltreffer entscheidet nicht. Steuerung und Spielmodus kannst du unabhängig kombinieren.</p><p>Block hält hohe Angriffe ab. Gegen Körperschlag und Beinfeger brauchst du <b>Leertaste</b> oder am Controller <b>L2 / LT</b>. Ein geblockter Treffer kostet keinen Punkt.</p><p>Ducken verändert deine Trefferfläche; ob ein hoher Angriff vorbeigeht, hängt vom tatsächlichen Kontakt ab. Über Beinfeger kannst du springen. Starke Angriffe holen länger aus. Während eines Angriffs kannst du nicht blocken.</p><h3>Combo – nur im Duell</h3><p><b>Drei Treffer in Folge</b> öffnen die Combo-Chance. Danach zeigt das HUD die nächste Taste an, Schlag und Tritt im Wechsel: Drück sie innerhalb einer halben Sekunde nach dem Kontakt, sonst bricht die Kette. Treffer 4 bis 6 kann der Gegner mit einem perfekten Block brechen (<b>Combo Breaker</b>). Ab Treffer 7 ist nichts mehr blockbar; bei Treffer 9 endet die Combo. Ein eigener kassierter Treffer setzt sie auf null.</p><h3>Perfekter Block</h3><p><b>Perfekter Block:</b> Setze den passenden Block erst kurz vor dem Treffer. Ein goldenes Aufblitzen zeigt den Erfolg; der Angreifer taumelt etwa eine halbe Sekunde. Gedrückthalten blockt normal. Hastiges Wiederholen oder bloßes Wechseln der Blockhöhe erneuert das perfekte Zeitfenster nicht beliebig.</p><p><b>Sound:</b> Alle Klänge entstehen im Spiel selbst (Web Audio) – kein fremdes Material: Schlag-„Wusch“, krachende Treffer je nach Trefferart, Kiai-Schreie bei starken Techniken und ein Ansager mit synthetischer Stimme, der Kampfstart, Combo, Combo Breaker, K. o. und neuen Gürtel ausruft (die Rufe stehen immer auch als Text im Bild). Mit „Ton an/aus“ oben schaltest du alles um.</p><h3>Gürtel gegen den Computer</h3><p>Nur Siege gegen den Computer zählen. Drei Siege bringen die nächste volle Farbe; nach dem zweiten Sieg zeigt sich der Zwischengürtel. Elf Stufen: Weiß, Weiß-Gelb, Gelb, Gelb-Orange, Orange, Orange-Grün, Grün, Grün-Schwarz, Schwarz, Meister 1, Meister 2. Der Gegner ist immer die Stufe über dir: Grün bis zum grünen Gürtel, dann Schwarz, ab dem schwarzen Gürtel Meister 2. Der Gürtel bleibt in diesem Browser gespeichert.</p><button class="textbutton" id="belt-reset">Gürtel zurücksetzen</button><h3>Online miteinander spielen</h3><p>Nutzt beide die aktuelle Spieldatei. Einer eröffnet den Raum, der andere gibt den Code ein. Der Gastgeber startet. Für eine Revanche müssen beide bereit sein. Beim Tabwechsel pausiert das Duell.</p><p>Diese erste Version verbindet eure Browser direkt. Strenge Router oder Firmennetze können die Verbindung verhindern; dann ein anderes Netz versuchen. Es ist noch kein zusätzlicher Relay-Dienst eingerichtet.</p><p>Die Internetverbindung wird nur für Online-Duelle benötigt. Der Computergegner funktioniert auch offline.</p></div></div><div class="help-links"><a href="https://peerjs.com/client/getting-started" target="_blank" rel="noreferrer">PeerJS-Verbindung</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API" target="_blank" rel="noreferrer">Controller-Unterstützung</a> · <a class="download" href="./Strichkampf.html" download>Spieldatei herunterladen</a></div></section>
+<div class="touch-controls" aria-label="Touchsteuerung"><div class="stick" id="stick" role="group" aria-label="Bewegen, springen und ducken"><div class="knob" id="knob"></div></div><div class="touch-buttons"><button data-action="block">Block</button><button data-action="punch">Schlag</button><button data-action="kick">Tritt</button></div></div>
 <div class="bottom-line"><span id="input-tip">F vor · D zurück · J Schlag · K Tritt · S Block · Leertaste Block unten · W Sprung</span><span id="net-status">SOLO & ONLINE</span></div><div id="toast" role="status" hidden></div></main><div id="rotate">Für die ganze Arena: Gerät ins Querformat drehen.</div>
 <script>
 /*!
@@ -53,18 +53,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 'use strict';
 const Combat=(()=>{
 const W=1280,FLOOR=542,DT=1/120,STEP_TIME=.36,STEP_REST=.07,PARRY_WINDOW=.14;
+// Regelwerk §5, Combo (nur Duell): Treffer 1–3 öffnen die Chance, 4–6 laufen nur im Takt mit der
+// angezeigten Taste weiter (Combo Breaker = perfekter Block), 7–9 sind nicht blockbar, Ende bei 9.
+const COMBO_BEAT=.5,COMBO_CHAIN=3,COMBO_SHOW=6,COMBO_MAX=9;
+// Hit reactions (Übergabe §4): [visible duration, seconds without block or attack].
+// head = light high hit, body = Körperschlag, knee = strong hit drops to one knee, down = Beinfeger knocks down.
+const REACTIONS={head:[.28,.21],body:[.32,.21],knee:[.45,.30],down:[.65,.50]};
+// Regelwerk §4: Duell startet mit 20 Trefferpunkten, leichte Technik −½, starke −1.
+const HP=20;
 const MOVES={
- jab:{damage:10,duration:.38,wind:.13,active:.085,reach:88,height:153,level:'high',label:'Gerade'},
- lunge:{damage:20,duration:.68,wind:.27,active:.09,reach:105,height:153,level:'high',label:'Schrittgerade'},
- body:{damage:10,duration:.44,wind:.17,active:.09,reach:88,height:83,level:'low',label:'Körperschlag'},
- kick:{damage:20,duration:.76,wind:.32,active:.105,reach:110,height:113,level:'high',label:'Fronttritt'},
- side:{damage:20,duration:.9,wind:.4,active:.11,reach:120,height:148,level:'high',label:'Seitwärtstritt'},
- sweep:{damage:10,duration:.79,wind:.34,active:.11,reach:103,height:18,level:'low',label:'Beinfeger'},
- air:{damage:20,duration:.7,wind:.23,active:.11,reach:117,height:73,level:'high',label:'Sprungtritt'},
- combo:{damage:10,duration:1.06,wind:.14,active:.075,beats:[.14,.39,.64],reach:101,height:151,level:'high',label:'Dreier-Serie'}
+ jab:{damage:.5,duration:.38,wind:.13,active:.085,reach:88,height:153,level:'high',label:'Gerade'},
+ lunge:{damage:1,duration:.68,wind:.27,active:.09,reach:105,height:153,level:'high',label:'Schrittgerade'},
+ body:{damage:.5,duration:.44,wind:.17,active:.09,reach:88,height:83,level:'low',label:'Körperschlag'},
+ kick:{damage:1,duration:.76,wind:.32,active:.105,reach:110,height:113,level:'high',label:'Fronttritt'},
+ side:{damage:1,duration:.9,wind:.4,active:.11,reach:120,height:148,level:'high',label:'Seitwärtstritt'},
+ sweep:{damage:.5,duration:.79,wind:.34,active:.11,reach:103,height:18,level:'low',label:'Beinfeger'},
+ air:{damage:1,duration:.7,wind:.23,active:.11,reach:117,height:73,level:'high',label:'Sprungtritt'}
 };
-const blank=()=>({left:false,right:false,up:false,down:false,punch:false,kick:false,block:false,combo:false});
-const fighter=i=>({id:i,x:i?830:450,y:0,vy:0,hp:100,face:i?-1:1,nextHand:0,nextLeg:0,attack:null,stun:0,invuln:0,crouch:false,block:false,walk:0,move:0,hit:0,stride:null,settle:null,stepRest:0,guardAge:9,guardRelease:1,blockHeld:false,parryCooldown:0,parryFlash:0,stagger:0,streak:0,comboReady:false,buffer:null,reaction:null,reactionTime:0,knockback:0,fall:0});
+const PUNCHES=['jab','lunge','body'];
+const strong=m=>m.damage>=1;
+const blank=()=>({left:false,right:false,up:false,down:false,punch:false,kick:false,block:false});
+const fighter=i=>({id:i,x:i?830:450,y:0,vy:0,hp:HP,face:i?-1:1,nextHand:0,nextLeg:0,attack:null,stun:0,invuln:0,crouch:false,block:false,walk:0,move:0,hit:0,stride:null,settle:null,stepRest:0,guardAge:9,guardRelease:1,blockHeld:false,parryCooldown:0,parryFlash:0,stagger:0,buffer:null,reaction:null,reactionTime:0,knockback:0,fall:0,combo:0,comboClock:0,comboKey:null});
 const rules=options=>({mode:options?.mode==='points'?'points':'duel',pointsToWin:options?.pointsToWin===3?3:2,roundsToWin:2,timeLimit:[60,90].includes(options?.timeLimit)?options.timeLimit:0});
 const create=options=>{const r=rules(options);return {phase:'countdown',countdown:2.1,elapsed:0,paused:[false,false],fighters:[fighter(0),fighter(1)],winner:null,eventId:0,events:[],rules:r,scores:[0,0],round:1,clock:r.timeLimit,suddenDeath:false,freeze:0,breakTime:0,roundWinner:null,roundReason:'',exchange:0,freezeQueue:[null,null]};};
 function resetExchange(g){g.fighters=[fighter(0),fighter(1)];g.phase='countdown';g.countdown=1.5;g.freeze=0;g.freezeQueue=[null,null];g.exchange++;g.roundWinner=null;if(g.rules.mode==='duel'&&g.roundReason!=='double'){g.clock=g.rules.timeLimit;g.suddenDeath=false;}event(g,{type:'reset'});}
@@ -81,7 +90,11 @@ function advanceFall(g,dt){for(const f of g.fighters)if(f.fall>0)f.fall=Math.min
 
 const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 function event(g,e){g.events.push({...e,id:++g.eventId});if(g.events.length>32)g.events.shift();}
-function beginAttack(g,f,kind){const punching=['jab','lunge','body','combo'].includes(kind),hand=punching?f.nextHand:0;if(punching)f.nextHand=(f.nextHand+(kind==='combo'?3:1))%2;const leg=punching?0:f.nextLeg;if(!punching)f.nextLeg=1-f.nextLeg;const stance=f.stride||f.settle?KarateRig.pose(f):null;f.attack={kind,t:0,spent:[],hand,leg,sounded:[],stance:stance?{front:stance.frontLeg[2],back:stance.backLeg[2]}:null};f.crouch=kind==='body'||kind==='sweep';f.block=false;f.stride=null;f.settle=null;f.buffer=null;if(kind==='combo'){f.comboReady=false;f.streak=0;event(g,{type:'combo',who:f.id});}event(g,{type:'swing',who:f.id,kind});}
+function dropCombo(g,f){if(f.combo>=COMBO_CHAIN)event(g,{type:'drop',who:f.id,count:f.combo});f.combo=0;f.comboKey=null;}
+function beginAttack(g,f,kind){const punching=PUNCHES.includes(kind),hand=punching?f.nextHand:0;
+ // Chain phase: the next technique must start within the beat and use the announced key.
+ if(f.combo>=COMBO_CHAIN&&(f.comboClock>COMBO_BEAT||(punching?'punch':'kick')!==f.comboKey))dropCombo(g,f);
+if(punching)f.nextHand=(f.nextHand+1)%2;const leg=punching?0:f.nextLeg;if(!punching)f.nextLeg=1-f.nextLeg;const stance=f.stride||f.settle?KarateRig.pose(f):null;f.attack={kind,t:0,spent:[],hand,leg,stance:stance?{front:stance.frontLeg[2],back:stance.backLeg[2]}:null};f.crouch=kind==='body'||kind==='sweep';f.block=false;f.stride=null;f.settle=null;f.buffer=null;event(g,{type:'swing',who:f.id,kind});}
 // Recover an interrupted stance with two short foot placements, never a teleport.
 function settleFeet(f,p){
  const front=p.frontLeg[2],back=p.backLeg[2];
@@ -94,21 +107,20 @@ function tickFighter(g,f,o,input,edge,dt){
  if(f.knockback){const move=f.knockback*(1-Math.exp(-15*dt));f.x+=move;f.knockback-=move;if(Math.abs(f.knockback)<.05)f.knockback=0;}
  f.guardAge+=dt;const releasedFor=f.guardRelease;f.guardRelease=input.block?0:f.guardRelease+dt;
  if(f.buffer){f.buffer.ttl-=dt;if(f.buffer.ttl<=0)f.buffer=null;}
- if(f.attack){f.attack.t+=dt;const m=MOVES[f.attack.kind];if(m.beats)for(let i=1;i<m.beats.length;i++){if(f.attack.t>=m.beats[i]-.075&&!f.attack.sounded.includes(i)){f.attack.sounded.push(i);event(g,{type:'swing',who:f.id,kind:'jab'});}}if(f.attack.t>=m.duration){const ending=KarateRig.pose(f);f.attack=null;if(f.y===0)settleFeet(f,ending);}}
+ f.comboClock=Math.min(9,f.comboClock+dt);
+ if(f.attack){f.attack.t+=dt;const m=MOVES[f.attack.kind];if(f.attack.t>=m.duration){const ending=KarateRig.pose(f);f.attack=null;if(f.y===0)settleFeet(f,ending);}}
  if(!f.attack)f.face=o.x>=f.x?1:-1;
- const ground=f.y===0,comboRequested=g.rules.mode==='duel'&&edge.combo&&f.comboReady;
- // The second key of a near-simultaneous J+K press may replace the initial wind-up.
- if(comboRequested&&f.attack&&f.attack.t<.085&&['jab','kick','lunge','side'].includes(f.attack.kind))f.attack=null;
+ const ground=f.y===0;
  const free=!f.attack&&f.stun===0;
  if(input.block&&!f.blockHeld&&releasedFor>=.12&&free&&ground&&f.parryCooldown===0)f.guardAge=0;
  f.blockHeld=input.block;f.crouch=ground&&input.down&&free;f.block=ground&&input.block&&free;f.move=0;
  if((f.block||f.crouch||f.stun>0)&&f.stride){const ending=KarateRig.pose(f);f.stride=null;settleFeet(f,ending);}
- if(edge.punch||edge.kick||comboRequested){f.buffer={punch:!!edge.punch,kick:!!edge.kick,combo:!!comboRequested,down:!!input.down,forward:f.face===1?input.right:input.left,ttl:.12};}
+ if(edge.punch||edge.kick){f.buffer={punch:!!edge.punch,kick:!!edge.kick,down:!!input.down,forward:f.face===1?input.right:input.left,ttl:.12};}
  if(input.block)f.buffer=null;
  if(free){
   if(edge.up&&ground&&!f.block){f.vy=625;f.y=.01;f.crouch=false;f.stride=null;f.settle=null;event(g,{type:'jump',who:f.id});}
   let kind=null;const q=f.buffer;
-  if(q&&!f.block){if(q.combo&&f.comboReady&&ground)kind='combo';else if(q.punch&&ground)kind=q.down?'body':q.forward?'lunge':'jab';else if(q.kick)kind=f.y>0?'air':q.down?'sweep':q.forward?'side':'kick';}
+  if(q&&!f.block){if(q.punch&&ground)kind=q.down?'body':q.forward?'lunge':'jab';else if(q.kick)kind=f.y>0?'air':q.down?'sweep':q.forward?'side':'kick';}
   if(kind)beginAttack(g,f,kind);
   else if(!f.block&&!f.crouch){
    const dir=Number(input.right)-Number(input.left);
@@ -122,18 +134,18 @@ function tickFighter(g,f,o,input,edge,dt){
  if(f.y>0||f.vy>0){f.y+=f.vy*dt;f.vy-=1850*dt;if(f.y<0){f.y=0;f.vy=0;event(g,{type:'land',who:f.id});}}
  f.x=Math.max(75,Math.min(W-75,f.x));
 }
-function collision(a,b){
- const atk=a.attack;if(!atk||b.invuln>0)return null;const m=MOVES[atk.kind],beats=m.beats||[m.wind];
+function collision(a,b,duel){
+ const atk=a.attack;if(!atk||b.invuln>0||atk.spent.length)return null;const m=MOVES[atk.kind];
  // Contact begins during the final extension, not only once the limb is fully out.
- const beat=beats.findIndex((start,i)=>!atk.spent.includes(i)&&atk.t>=start-.055&&atk.t<=start+m.active);if(beat<0)return null;
+ if(atk.t<m.wind-.055||atk.t>m.wind+m.active)return null;
  const dx=(b.x-a.x)*a.face;if(dx<0)return null;
  const strike=KarateRig.geometry(a).strike,target=KarateRig.geometry(b);if(!strike)return null;
  const facing=(a.x-b.x)*b.face>=0;
- const guarded=b.block&&facing&&(m.level==='low'?b.crouch:!b.crouch);
+ const guarded=b.block&&facing&&(m.level==='low'?b.crouch:!b.crouch)&&!(duel&&a.combo>=COMBO_SHOW);
  const guardContact=guarded&&target.guard.some(part=>KarateRig.touches(strike,part));
  if(!guardContact&&!target.body.some(part=>KarateRig.touches(strike,part)))return null;
- atk.spent.push(beat);
- return {a,b,m,beat,kind:atk.kind,blocked:guarded,x:(strike.a[0]+strike.b[0])/2,y:(strike.a[1]+strike.b[1])/2};
+ atk.spent.push(0);
+ return {a,b,m,kind:atk.kind,blocked:guarded,x:(strike.a[0]+strike.b[0])/2,y:(strike.a[1]+strike.b[1])/2};
 }
 function step(g,inputs,edges,dt=DT){
  if(g.paused.some(Boolean))return;
@@ -141,31 +153,36 @@ function step(g,inputs,edges,dt=DT){
  g.elapsed+=dt;
  if(g.phase==='break'){advanceFall(g,dt);g.breakTime-=dt;if(g.breakTime<=0){if(g.rules.mode==='duel'&&g.roundWinner>=0)g.round++;resetExchange(g);}return;}
  if(g.freeze>0){
-  for(let i=0;i<2;i++){if(inputs[i].block)g.freezeQueue[i]=null;else if(['up','punch','kick','combo'].some(k=>edges[i][k]))g.freezeQueue[i]={input:{...inputs[i]},edge:{...edges[i]}};}
+  for(let i=0;i<2;i++){if(inputs[i].block)g.freezeQueue[i]=null;else if(['up','punch','kick'].some(k=>edges[i][k]))g.freezeQueue[i]={input:{...inputs[i]},edge:{...edges[i]}};}
   g.freeze=Math.max(0,g.freeze-dt);return;
  }
  inputs=inputs.slice();edges=edges.slice();
- for(let i=0;i<2;i++){const pending=g.freezeQueue[i];if(pending&&!inputs[i].block&&!['up','punch','kick','combo'].some(k=>edges[i][k])){inputs[i]=pending.input;edges[i]=pending.edge;}g.freezeQueue[i]=null;}
+ for(let i=0;i<2;i++){const pending=g.freezeQueue[i];if(pending&&!inputs[i].block&&!['up','punch','kick'].some(k=>edges[i][k])){inputs[i]=pending.input;edges[i]=pending.edge;}g.freezeQueue[i]=null;}
  if(g.phase==='countdown'){g.countdown-=dt;if(g.countdown<=0){g.phase='fight';event(g,{type:'start'});}return;}
  const [a,b]=g.fighters;tickFighter(g,a,b,inputs[0],edges[0],dt);tickFighter(g,b,a,inputs[1],edges[1],dt);
  const dx=b.x-a.x,min=56;if(Math.abs(dx)<min&&Math.abs(a.y-b.y)<140){const dir=dx>=0?1:-1,shift=(min-Math.abs(dx))/2;a.x-=dir*shift;b.x+=dir*shift;}for(const f of g.fighters)f.x=Math.max(75,Math.min(W-75,f.x));
- const contacts=[collision(a,b),collision(b,a)].filter(Boolean);
- const damaged=new Set(contacts.filter(c=>!c.blocked).map(c=>c.b.id));
+ const duel=g.rules.mode==='duel',contacts=[collision(a,b,duel),collision(b,a,duel)].filter(Boolean);
  // Resolve both collected contacts together so a simultaneous KO stays possible.
- for(const {a:att,b:def,m,kind,beat,blocked,x,y} of contacts){
-  if(blocked){const perfect=def.guardAge<=PARRY_WINDOW&&def.parryCooldown===0;
+ for(const {a:att,b:def,m,kind,blocked,x,y} of contacts){
+  if(blocked){const perfect=def.guardAge<=PARRY_WINDOW&&def.parryCooldown===0,breaker=perfect&&duel&&att.combo>=COMBO_CHAIN;
    if(perfect){att.stun=.55;att.stagger=.55;att.attack=null;att.stride=null;att.settle=null;att.buffer=null;def.parryFlash=.48;def.parryCooldown=.65;def.guardAge=9;}
-   att.knockback-=att.face*(perfect?18:7);g.freeze=Math.max(g.freeze,perfect?.045:.02);
-   event(g,{type:perfect?'parry':'block',x,y,who:def.id,kind});
+   att.knockback-=att.face*(breaker?26:perfect?18:7);g.freeze=Math.max(g.freeze,perfect?.045:.02);
+   if(duel&&att.combo>=COMBO_CHAIN){att.combo=0;att.comboKey=null;}
+   event(g,{type:breaker?'breaker':perfect?'parry':'block',x,y,who:def.id,kind});
   }else{
-   const finisher=kind==='combo'&&beat===2;
    def.hp=g.rules.mode==='points'||g.suddenDeath?0:Math.max(0,def.hp-m.damage);
-   def.stun=finisher?.36:m.beats?.12:.21;def.invuln=m.beats?.14:.24;def.hit=.22;
-   def.reaction=kind==='body'?'body':kind==='sweep'?'low':finisher?'stumble':'high';def.reactionTime=finisher?.48:.28;
-   g.freeze=Math.max(g.freeze,finisher?.065:m.damage===20?.045:.03);def.block=false;def.attack=null;def.stride=null;def.settle=null;def.buffer=null;def.streak=0;def.comboReady=false;
-   def.knockback+=att.face*(finisher?28:m.beats?4:m.damage===20?16:9);
-   if(g.rules.mode==='duel'&&!m.beats&&!damaged.has(att.id)){att.streak=Math.min(3,att.streak+1);if(att.streak===3&&!att.comboReady){att.comboReady=true;event(g,{type:'ready',who:att.id});}}
-   event(g,{type:'hit',x,y,who:att.id,damage:m.damage,label:m.label,kind,finisher});
+   def.reaction=kind==='body'?'body':kind==='sweep'?'down':strong(m)?'knee':'head';
+   def.reactionTime=REACTIONS[def.reaction][0];def.stun=REACTIONS[def.reaction][1];def.invuln=.24;def.hit=.22;
+   g.freeze=Math.max(g.freeze,strong(m)?.045:.03);def.block=false;def.attack=null;def.stride=null;def.settle=null;def.buffer=null;
+   let combo=0;
+   if(duel){
+    att.combo++;att.comboClock=0;combo=att.combo;att.comboKey=combo>=COMBO_CHAIN?(PUNCHES.includes(kind)?'kick':'punch'):null;
+    def.combo=0;def.comboKey=null;
+   }
+   // Inside a combo the defender stays close, so the beat remains reachable.
+   def.knockback+=att.face*(combo>COMBO_CHAIN?4:strong(m)?16:9);
+   event(g,{type:'hit',x,y,who:att.id,damage:m.damage,label:m.label,kind,strong:strong(m),combo});
+   if(combo>=COMBO_CHAIN){event(g,{type:'combo',who:att.id,count:combo,phase:combo===COMBO_CHAIN?'chance':combo<=COMBO_SHOW?'chain':'show'});if(combo>=COMBO_MAX){att.combo=0;att.comboKey=null;}}
   }
  }
  if(a.hp===0||b.hp===0){finishExchange(g,a.hp===b.hp?-1:a.hp>0?0:1,a.hp===b.hp?'double':g.rules.mode==='points'?'point':'ko');return;}
@@ -178,13 +195,14 @@ function step(g,inputs,edges,dt=DT){
   }
  }
 }
-return {W,FLOOR,DT,MOVES,STEP_TIME,STEP_REST,PARRY_WINDOW,blank,fighter,create,rules,step};
+return {W,FLOOR,DT,HP,MOVES,REACTIONS,STEP_TIME,STEP_REST,PARRY_WINDOW,COMBO_BEAT,COMBO_CHAIN,COMBO_SHOW,COMBO_MAX,blank,fighter,create,rules,step};
 })();
 
 </script>
 <script>
 'use strict';
 // Two-bone limbs keep upper/lower arm and leg lengths fixed throughout each move.
+// Weight sits over the planted foot during steps; hit reactions bend, kneel and knock down the figure.
 const KarateRig=(()=>{
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const smooth=v=>{v=clamp(v);return v*v*(3-2*v);};
@@ -195,6 +213,13 @@ function envelope(t,wind,active,kick=false){
  if(t<wind)return smooth((t-wind+launch)/launch);
  return 1-smooth((t-wind-hold)/recover);
 }
+// Reaction profiles: how far into the pose the figure is at a given age (0 = contact, 1 = done).
+const REACT_SHAPE={
+ head:age=>Math.sin(Math.PI*clamp(age*1.12))*.8,
+ body:age=>Math.sin(Math.PI*clamp(age*1.1))*.85,
+ knee:age=>age<.3?smooth(age/.3):age<.62?1:1-smooth((age-.62)/.38),
+ down:age=>age<.38?smooth(age/.38):age<.55?1:1-smooth((age-.55)/.45)
+};
 function pose(f,elapsed=0){
  const atk=f.attack,m=atk?Combat.MOVES[atk.kind]:null;
  const lowAttack=['body','sweep'].includes(atk?.kind);
@@ -208,8 +233,9 @@ function pose(f,elapsed=0){
   const firstLift=Math.sin(clamp(p*2)*Math.PI)*5,secondLift=Math.sin(clamp(p*2-1)*Math.PI)*4;
   frontFoot=[42+rel*((frontFirst?lead:follow)-travel),-4-(frontFirst?firstLift:secondLift)];
   backFoot=[-43+rel*((frontFirst?follow:lead)-travel),-4-(frontFirst?secondLift:firstLift)];
-  // The grounded foot stays fixed in world space as the pelvis passes over it.
-  hip[0]-=rel*3*Math.sin(p*Math.PI);hip[1]+=Math.sin(p*Math.PI)*2;
+  // The grounded foot stays fixed in world space; the pelvis carries the weight over it while the other foot is in the air.
+  const support=p<.5?(frontFirst?backFoot:frontFoot):(frontFirst?frontFoot:backFoot),transfer=Math.sin(Math.PI*((p*2)%1));
+  hip[0]+=(support[0]-hip[0])*.65*transfer;hip[1]+=Math.sin(p*Math.PI)*2;
   lean+=rel*.035*Math.sin(p*Math.PI);
  }
  if(f.settle&&!atk&&f.y===0){
@@ -220,9 +246,8 @@ function pose(f,elapsed=0){
  }
  if(f.y>0){hip=[-8,-89];frontFoot=[36,-46];backFoot=[-35,-37];frontHand=[35,-153];backHand=[3,-145];lean=-.04;}
  if(atk){
-  let wind=m.wind,hand=atk.hand||0;
-  if(m.beats){let beat=0;for(let i=1;i<m.beats.length;i++)if(atk.t>=m.beats[i]-.10)beat=i;wind=m.beats[beat];hand=(hand+beat)%2;}
-  kick=!['jab','lunge','body','combo'].includes(atk.kind);
+  const wind=m.wind,hand=atk.hand||0;
+  kick=!['jab','lunge','body'].includes(atk.kind);
   extension=envelope(atk.t,wind,m.active,kick);strikeHand=hand;
   if(!kick){
    const body=atk.kind==='body',e=extension;
@@ -275,11 +300,25 @@ function pose(f,elapsed=0){
   }
  }
  if(f.block){if(low){frontHand=[43,-79];backHand=[26,-112];}else{frontHand=[34,-174];backHand=[42,-145];}lean-=.045;}
- if(f.reactionTime>0){
-  const duration=f.reaction==='stumble'?.48:.28,age=1-clamp(f.reactionTime/duration),amount=Math.sin(Math.PI*clamp(age*1.12))*.8;
-  if(f.reaction==='body'){lean+=.56*amount;hip[1]+=7*amount;frontHand=mix(frontHand,[37,-91],amount);backHand=mix(backHand,[24,-111],amount);}
-  else if(f.reaction==='low'){hip[1]+=9*amount;frontFoot[1]-=11*amount;lean-=.12*amount;}
-  else{lean-=.30*amount;hip[0]-=6*amount;frontHand=mix(frontHand,[39,-126],amount);backHand=mix(backHand,[7,-145],amount);if(f.reaction==='stumble'){backFoot[0]-=18*amount;backFoot[1]-=7*Math.sin(age*Math.PI*2)**2;}}
+ let reaction=null;
+ if(f.reactionTime>0&&Combat.REACTIONS[f.reaction]){
+  const kind=f.reaction,duration=Combat.REACTIONS[kind][0],age=1-clamp(f.reactionTime/duration),amount=REACT_SHAPE[kind](age);
+  reaction={kind,amount};
+  if(kind==='body'){
+   // Körpertreffer: the stomach caves in, the torso folds forward, both hands go to the belly.
+   lean+=.7*amount;hip[1]+=12*amount;hip[0]-=10*amount;frontHand=mix(frontHand,[30,-86],amount);backHand=mix(backHand,[16,-96],amount);
+  }else if(kind==='knee'){
+   // Schwerer Treffer: the figure drops onto the rear knee, the shin lies on the floor, one hand props on the thigh.
+   hip=mix(hip,[-25,-56],amount);backFoot=mix(backFoot,[-62,-4],amount);frontFoot=mix(frontFoot,[40,-4],amount);lean+=.32*amount;
+   frontHand=mix(frontHand,[24,-100],amount);backHand=mix(backHand,[-14,-70],amount);
+  }else if(kind==='down'){
+   // Beinfeger: both feet fly forward, the figure lands on its back and pushes itself up again.
+   hip=mix(hip,[-30,-14],amount);lean=lean*(1-amount)-1.3*amount;frontFoot=mix(frontFoot,[58,-22],amount);backFoot=mix(backFoot,[22,-14],amount);
+   frontHand=mix(frontHand,[-90,-6],amount);backHand=mix(backHand,[-30,-12],amount);
+  }else{
+   // Head hit: the head snaps back, the hands come up late.
+   lean-=.36*amount;hip[0]-=7*amount;frontHand=mix(frontHand,[39,-126],amount);backHand=mix(backHand,[7,-145],amount);
+  }
  }else if(f.stagger>0){const amount=Math.sin(clamp(f.stagger/.55)*Math.PI*.75);lean-=amount*.35;hip[0]-=amount*4;frontHand=[42,-132];backHand=[7,-139];}
  // Reachable planted feet keep their exact targets, with knees flexing as needed.
  if(f.y===0)for(const [foot,offset] of [[frontFoot,7],[backFoot,-7]]){
@@ -294,7 +333,7 @@ function pose(f,elapsed=0){
  const fh=joint(frontShoulder,frontHand,37,36,1),bh=joint(backShoulder,backHand,37,36,1);
  const frontHip=[hip[0]+7,hip[1]],backHip=[hip[0]-7,hip[1]];
  const fl=joint(frontHip,frontFoot,55,55,-1),bl=joint(backHip,backFoot,55,55,-1);
- return {hip,shoulder,neck,head,frontArm:[frontShoulder,fh.mid,fh.end],backArm:[backShoulder,bh.mid,bh.end],frontLeg:[frontHip,fl.mid,fl.end],backLeg:[backHip,bl.mid,bl.end],strike:strike==='hand'?(strikeHand?bh.end:fh.end):strike==='foot'?(strikeLeg?bl.end:fl.end):null,kick,strikeLeg,extension,lean,turn};
+ return {hip,shoulder,neck,head,frontArm:[frontShoulder,fh.mid,fh.end],backArm:[backShoulder,bh.mid,bh.end],frontLeg:[frontHip,fl.mid,fl.end],backLeg:[backHip,bl.mid,bl.end],strike:strike==='hand'?(strikeHand?bh.end:fh.end):strike==='foot'?(strikeLeg?bl.end:fl.end):null,kick,strikeLeg,extension,lean,turn,reaction};
 }
 // Collision geometry shares the exact pose used by the canvas renderer.
 function geometry(f){
@@ -334,9 +373,8 @@ const ControlMap=(()=>{
   }else if(back&&(raw.up||raw.down)){
    input.block=true;input.down=!!raw.down;
   }else{input.left=!!raw.left;input.right=!!raw.right;input.down=!!raw.down;input.up=!!raw.up;}
-  // Touch has a direct block helper; specials remain available in the life mode.
+  // Touch has a direct block helper.
   if(raw.block){input.block=true;input.down=!!raw.down;edge.punch=edge.kick=edge.up=false;}
-  input.combo=!!raw.combo;
   return {input,edge};
  }
  return {classic};
@@ -345,34 +383,261 @@ const ControlMap=(()=>{
 </script>
 <script>
 'use strict';
-// Original procedural foley: short mono cracks, filtered swishes and a synthetic kiai.
-// No film recordings or external audio files are used.
+// Computer opponent (Regelwerk §6). It reads the fight with a delay and presses the same
+// keys a human could; it never touches the engine directly. Randomness is injectable so
+// simulated matches repeat exactly for a given seed.
+const DojoAI=(()=>{
+// Level table: reaction = seconds of delay before the opponent's state is "seen",
+// tick = seconds between decisions (min/max), block = chance to answer a seen attack with a block,
+// guard = chance to keep the guard up while the opponent is close, punish = chance to strike
+// right after the opponent's technique ends, chain = chance to continue an open combo in the beat.
+// Reaction and tick fall, block rises, from level to level.
+const LEVELS={
+ 1:{name:'Grün',belt:'green',reaction:.18,tick:[.14,.24],block:.70,guard:.40,punish:.55,chain:0,jumpSweep:.12,styles:['kicker'],switchEvery:0},
+ 2:{name:'Schwarz',belt:'black',reaction:.11,tick:[.09,.15],block:.82,guard:.50,punish:.75,chain:.5,jumpSweep:.22,styles:['kicker','boxer'],switchEvery:'round'},
+ 3:{name:'Meister 2',belt:'black',reaction:.05,tick:[.05,.08],block:.92,guard:.60,punish:.95,chain:1,jumpSweep:.32,styles:['kicker','boxer','counter'],switchEvery:4}
+};
+// Fighting styles: preferred distance and how an open moment is spent (weights sum to 1).
+const STYLES={
+ kicker:{range:114,weights:[['back',.09],['forward',.08],['sweep',.12],['punch',.14],['kick',.37],['air',.10],['block',.10]]},
+ boxer:{range:94,weights:[['back',.05],['forward',.16],['sweep',.05],['punch',.46],['kick',.14],['air',.03],['block',.11]]},
+ counter:{range:120,weights:[['back',.18],['forward',.05],['sweep',.14],['punch',.12],['kick',.14],['air',.05],['block',.32]]}
+};
+// Broken level values (0, 4, -1, null, "x", 2.5) fall back quietly to level 1.
+function level(value){const n=Number(value);return Number.isInteger(n)&&LEVELS[n]?n:1;}
+function create(wanted,self=1,random=Math.random){
+ const n=level(wanted);
+ return {level:n,params:LEVELS[n],self,random,timer:0,input:Combat.blank(),memory:[],style:0,styleClock:0,switches:0,exchange:-1,lastHp:null,sawAttack:false};
+}
+function switchStyle(s){const count=s.params.styles.length;if(count<2)return;s.style=(s.style+1)%count;s.styleClock=0;s.switches++;}
+function think(s,g,dt){
+ const idle={input:Combat.blank(),edges:Combat.blank()};
+ if(!g||!g.fighters)return idle;
+ const me=g.fighters[s.self],foe=g.fighters[1-s.self];
+ if(g.exchange!==s.exchange){
+  // New exchange: forget the old fight, level 2 changes its style every round.
+  const first=s.exchange<0;s.exchange=g.exchange;s.memory=[];s.timer=0;s.input=Combat.blank();s.lastHp=me.hp;s.sawAttack=false;
+  if(!first&&s.params.switchEvery==='round')switchStyle(s);
+ }
+ if(g.phase!=='fight'||g.freeze>0)return idle;
+ if(typeof s.params.switchEvery==='number'&&s.params.switchEvery>0){
+  s.styleClock+=dt;
+  if(s.styleClock>=s.params.switchEvery||me.hp<s.lastHp)switchStyle(s);
+  s.lastHp=me.hp;
+ }
+ s.memory.push({at:g.elapsed,x:foe.x,y:foe.y,attack:foe.attack?foe.attack.kind:null,crouch:foe.crouch,hit:foe.hit>0});
+ while(s.memory.length>120)s.memory.shift();
+ s.timer-=dt;
+ // Nothing old enough to have been seen yet: the AI is still blind right after a reset.
+ const seen=s.memory.findLast(o=>o.at<=g.elapsed-s.params.reaction);
+ if(!seen)return {input:s.input,edges:Combat.blank()};
+ // Like a human, the AI reacts to an event (an attack starts or ends) at once; otherwise it decides on its own clock.
+ const eventSeen=!!seen.attack!==s.sawAttack;
+ if(s.timer>0&&!eventSeen)return {input:s.input,edges:Combat.blank()};
+ const [tMin,tMax]=s.params.tick;s.timer=tMin+s.random()*(tMax-tMin);
+ const style=STYLES[s.params.styles[s.style]],distance=Math.abs(seen.x-me.x);
+ const forward=seen.x>me.x?'right':'left',back=forward==='right'?'left':'right';
+ const a=Combat.blank(),e=Combat.blank(),r=s.random;
+ const free=!me.attack&&me.stun===0;
+ const justRecovered=s.sawAttack&&!seen.attack;s.sawAttack=!!seen.attack;
+ const inRange=distance<128,threat=seen.attack&&distance<160;
+ if(me.combo>=Combat.COMBO_CHAIN&&me.comboKey&&free&&me.comboClock<Combat.COMBO_BEAT&&r()<s.params.chain){
+  // Open combo: press the announced key in the beat, with a forward step when the opponent is far.
+  if(me.comboKey==='punch'){e.punch=true;if(distance>96)a[forward]=true;else if(r()<.3)a.down=true;}
+  else{e.kick=true;if(distance>108)a[forward]=true;else if(r()<.25)a.down=true;}
+ }
+ else if(threat){
+  // Never swing into a running attack: block it (as a short tap, so a fresh guard can be
+  // a perfect block), hop over a sweep, or step out of range.
+  if(r()<s.params.block){a.block=true;a.down=Combat.MOVES[seen.attack].level==='low';s.timer=.22;if(a.down&&r()<s.params.jumpSweep){a.block=false;e.up=true;}}
+  else if(free&&distance>105)a[back]=true;
+ }
+ else if(seen.hit&&free&&r()<.5)a[back]=true;
+ else if(justRecovered&&free&&distance<135&&r()<s.params.punish){if(distance>96){a[forward]=true;e.punch=true;}else e.punch=true;}
+ else if(inRange&&free&&r()<s.params.guard){a.block=true;a.down=r()<.3;s.timer=.26;}
+ else if(distance>style.range+6){a[forward]=true;if(distance>280&&r()<.10)e.up=true;}
+ else if(free){
+  let pick='block',roll=r(),acc=0;for(const [action,w] of style.weights){acc+=w;if(roll<acc){pick=action;break;}}
+  if(pick==='back')a[back]=true;
+  else if(pick==='forward')a[forward]=true;
+  else if(pick==='sweep'){a.down=true;e.kick=true;}
+  else if(pick==='punch'&&distance>110){e.kick=true;a[forward]=true;}
+  else if(pick==='punch'){e.punch=true;if(distance>96)a[forward]=true;else if(r()<.35)a.down=true;}
+  else if(pick==='kick'){e.kick=true;if(distance>108)a[forward]=true;}
+  else if(pick==='air'){e.up=true;e.kick=true;}
+  else{a.block=true;a.down=r()<.4;s.timer=.26;}
+ }
+ s.input=a;return {input:a,edges:e};
+}
+return {LEVELS,STYLES,level,create,think};
+})();
+
+</script>
+<script>
+'use strict';
+// Player progress (Regelwerk §6): eleven belts, three wins per full colour, the in-between
+// belt shows after the second win. Only wins against the computer count; nothing else is stored.
+const Progress=(()=>{
+const BELTS=[
+ {name:'Weiß',wins:0,colors:['#f2eee2']},
+ {name:'Weiß-Gelb',wins:2,colors:['#f2eee2','#e9c43a']},
+ {name:'Gelb',wins:3,colors:['#e9c43a']},
+ {name:'Gelb-Orange',wins:5,colors:['#e9c43a','#e07a2a']},
+ {name:'Orange',wins:6,colors:['#e07a2a']},
+ {name:'Orange-Grün',wins:8,colors:['#e07a2a','#3f9a4e']},
+ {name:'Grün',wins:9,colors:['#3f9a4e']},
+ {name:'Grün-Schwarz',wins:11,colors:['#3f9a4e','#1d1f22']},
+ {name:'Schwarz',wins:12,colors:['#1d1f22']},
+ {name:'Meister 1',wins:15,colors:['#1d1f22'],stripes:1},
+ {name:'Meister 2',wins:18,colors:['#1d1f22'],stripes:2}
+];
+const MAX=18,KEY='strichkampf.siege';
+// Broken values (empty, null, -1, 101, "abc", 2.5) become a safe number between 0 and 18.
+function clean(value){const n=typeof value==='string'&&value.trim()!==''?Number(value):value;return Number.isInteger(n)?Math.max(0,Math.min(MAX,n)):0;}
+function belt(wins){
+ wins=clean(wins);let i=0;for(let k=0;k<BELTS.length;k++)if(wins>=BELTS[k].wins)i=k;
+ const b=BELTS[i],next=BELTS[i+1]||null;
+ return {index:i,name:b.name,colors:b.colors,stripes:b.stripes||0,wins,next:next?{name:next.name,at:next.wins,remaining:next.wins-wins}:null};
+}
+// The opponent is the computer level above the player's belt: Grün up to 8 wins, Schwarz up to 11, then Meister 2.
+function level(wins){wins=clean(wins);return wins>=12?3:wins>=9?2:1;}
+function load(storage){try{return clean(storage?.getItem(KEY));}catch{return 0;}}
+function save(storage,wins){try{if(!storage)return false;storage.setItem(KEY,String(clean(wins)));return true;}catch{return false;}}
+function recordWin(storage,wins){const before=belt(wins),after=belt(clean(wins)+1);save(storage,after.wins);return {wins:after.wins,belt:after,newBelt:after.index>before.index};}
+function reset(storage){save(storage,0);return 0;}
+return {BELTS,MAX,KEY,clean,belt,level,load,save,recordWin,reset};
+})();
+
+</script>
+<script>
+'use strict';
+// Original procedural foley in the spirit of 80s kung-fu cinema: filtered swishes, cracking hits,
+// synthetic kiai shouts and an arena announcer built from formant synthesis.
+// Everything is generated with Web Audio at play time. No film recordings or external audio files are used.
 const DojoAudio=(()=>{
-let ctx=null,master=null,compressor=null,enabled=true,noise=null,lastVoice=-1;
-function open(){if(!enabled)return null;try{if(!ctx){ctx=new(window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.38;compressor=ctx.createDynamicsCompressor();compressor.threshold.value=-14;compressor.ratio.value=6;compressor.attack.value=.002;compressor.release.value=.12;master.connect(compressor);compressor.connect(ctx.destination);noise=ctx.createBuffer(1,Math.ceil(ctx.sampleRate),ctx.sampleRate);const data=noise.getChannelData(0);let n=93;for(let i=0;i<data.length;i++){n=(n*16807)%2147483647;data[i]=(n/1073741823.5)-1;}}if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx;}catch{return null;}}
-function tone(f1,f2,duration,volume,type='sine',delay=0){if(!ctx||!enabled)return;const t=ctx.currentTime+delay,o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+duration);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),t+.003);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(g);g.connect(master);o.start(t);o.stop(t+duration+.01);o.onended=()=>{o.disconnect();g.disconnect();};}
-function hiss(duration,volume,f1,f2,type='bandpass',delay=0,attack=.005){if(!ctx||!noise||!enabled)return;const t=ctx.currentTime+delay,s=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=noise;filter.type=type;filter.Q.value=type==='bandpass'?.8:.7;filter.frequency.setValueAtTime(f1,t);filter.frequency.exponentialRampToValueAtTime(Math.max(40,f2),t+duration);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(volume,.0002),t+attack);g.gain.exponentialRampToValueAtTime(.0001,t+duration);s.connect(filter);filter.connect(g);g.connect(master);s.start(t);s.stop(t+duration+.01);s.onended=()=>{s.disconnect();filter.disconnect();g.disconnect();};}
-function kiai(){if(!ctx||!enabled)return;const t=ctx.currentTime,o=ctx.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(165,t);o.frequency.exponentialRampToValueAtTime(104,t+.24);const nodes=[];for(const [freq,gain] of [[780,.05],[1180,.033],[2500,.01]]){const b=ctx.createBiquadFilter(),g=ctx.createGain();b.type='bandpass';b.frequency.value=freq;b.Q.value=6;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.035);g.gain.exponentialRampToValueAtTime(.0001,t+.25);o.connect(b);b.connect(g);g.connect(master);nodes.push(b,g);}o.start(t);o.stop(t+.27);o.onended=()=>{o.disconnect();nodes.forEach(n=>n.disconnect());};}
+let ctx=null,master=null,compressor=null,room=null,enabled=true,noise=null,lastVoice=-1,lastKiai=-1;
+// Variant for Stefan (H9): 'A' = long rising "wataaa", 'B' = short sharp "hyah".
+let kiaiVariant='A';
+const announcer={busyUntil:0,pending:null};
+// Loudness per sound family, calibrated with tests/hoerprobe.html so peaks land between −12 and −1 dBFS.
+const LEVEL={master:.9,hiss:5,tone:2.5,thump:1,voice:1,kiai:1,grunt:1,say:1};
+function build(context){
+ ctx=context;master=ctx.createGain();master.gain.value=LEVEL.master;compressor=ctx.createDynamicsCompressor();compressor.threshold.value=-10;compressor.knee.value=4;compressor.ratio.value=4;compressor.attack.value=.002;compressor.release.value=.12;master.connect(compressor);compressor.connect(ctx.destination);
+ // A short slap-back echo gives announcer and big hits an arena feel.
+ room=ctx.createGain();room.gain.value=.22;const delay=ctx.createDelay(.5);delay.delayTime.value=.11;const feedback=ctx.createGain();feedback.gain.value=.28;const damp=ctx.createBiquadFilter();damp.type='lowpass';damp.frequency.value=2200;room.connect(delay);delay.connect(damp);damp.connect(feedback);feedback.connect(delay);damp.connect(master);
+ noise=ctx.createBuffer(1,Math.ceil(ctx.sampleRate),ctx.sampleRate);const data=noise.getChannelData(0);let n=93;for(let i=0;i<data.length;i++){n=(n*16807)%2147483647;data[i]=(n/1073741823.5)-1;}
+}
+function open(){if(!enabled)return null;try{if(!ctx)build(new(window.AudioContext||window.webkitAudioContext)());if(ctx.state==='suspended')ctx.resume().catch(()=>{});return ctx;}catch{return null;}}
+// Tests and the listening page attach their own (offline) context.
+function attach(context){ctx=null;build(context);announcer.busyUntil=0;announcer.pending=null;lastVoice=-1;lastKiai=-1;}
+const ready=()=>enabled&&ctx&&ctx.state!=='closed';
+function env(g,t,attack,duration,volume,delay=0){g.gain.setValueAtTime(.0001,t+delay);g.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),t+delay+attack);g.gain.exponentialRampToValueAtTime(.0001,t+delay+duration);}
+function tone(f1,f2,duration,volume,type='sine',delay=0,echo=0){if(!ready())return;const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(f1,t+delay);o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+delay+duration);env(g,t,.003,duration,volume*LEVEL.tone,delay);o.connect(g);g.connect(master);if(echo)g.connect(room);o.start(t+delay);o.stop(t+delay+duration+.01);o.onended=()=>{o.disconnect();g.disconnect();};}
+function hiss(duration,volume,f1,f2,type='bandpass',delay=0,attack=.005,q=null){if(!ready()||!noise)return;const t=ctx.currentTime,s=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=noise;s.loop=true;filter.type=type;filter.Q.value=q??(type==='bandpass'?.8:.7);filter.frequency.setValueAtTime(f1,t+delay);filter.frequency.exponentialRampToValueAtTime(Math.max(40,f2),t+delay+duration);env(g,t,attack,duration,volume*LEVEL.hiss,delay);s.connect(filter);filter.connect(g);g.connect(master);s.start(t+delay);s.stop(t+delay+duration+.01);s.onended=()=>{s.disconnect();filter.disconnect();g.disconnect();};}
+// A soft-clipped low thump: the "crack" body of every impact.
+function thump(f1,f2,duration,volume,delay=0,drive=2.5){if(!ready())return;const t=ctx.currentTime,o=ctx.createOscillator(),shaper=ctx.createWaveShaper(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(f1,t+delay);o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+delay+duration);const curve=new Float32Array(256);for(let i=0;i<256;i++){const x=i/127.5-1;curve[i]=Math.tanh(x*drive);}shaper.curve=curve;env(g,t,.004,duration,volume*LEVEL.thump,delay);o.connect(shaper);shaper.connect(g);g.connect(master);g.connect(room);o.start(t+delay);o.stop(t+delay+duration+.02);o.onended=()=>{o.disconnect();shaper.disconnect();g.disconnect();};}
+// Voice source: a sawtooth through parallel formant filters, lightly overdriven.
+function formantVoice(t,pitchFrom,pitchTo,duration,formants,volume,{vibrato=0,growl=false,delay=0,type='sawtooth'}={}){
+ if(!ready())return;const o=ctx.createOscillator(),nodes=[];o.type=type;o.frequency.setValueAtTime(pitchFrom,t+delay);o.frequency.exponentialRampToValueAtTime(Math.max(30,pitchTo),t+delay+duration);
+ if(vibrato){const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=5.5;lg.gain.value=vibrato;lfo.connect(lg);lg.connect(o.frequency);lfo.start(t+delay);lfo.stop(t+delay+duration+.02);nodes.push(lfo,lg);}
+ let source=o;if(growl){const am=ctx.createOscillator(),ag=ctx.createGain(),amp=ctx.createGain();am.frequency.value=28;ag.gain.value=.45;amp.gain.value=.55;am.connect(ag);ag.connect(amp.gain);o.connect(amp);am.start(t+delay);am.stop(t+delay+duration+.02);source=amp;nodes.push(am,ag,amp);}
+ volume*=LEVEL.voice;
+ // A low-passed copy of the source gives the voice a chest; the formants above it shape the vowel.
+ const body=ctx.createBiquadFilter(),bg=ctx.createGain();body.type='lowpass';body.frequency.value=1000;env(bg,t,.02,duration,.3*volume,delay);source.connect(body);body.connect(bg);bg.connect(master);bg.connect(room);nodes.push(body,bg);
+ for(const [freq,gain,q] of formants){const b=ctx.createBiquadFilter(),g=ctx.createGain();b.type='bandpass';b.frequency.setValueAtTime(freq[0],t+delay);b.frequency.exponentialRampToValueAtTime(freq[1]||freq[0],t+delay+duration);b.Q.value=q||5;env(g,t,.02,duration,gain*volume,delay);source.connect(b);b.connect(g);g.connect(master);g.connect(room);nodes.push(b,g);}
+ o.start(t+delay);o.stop(t+delay+duration+.02);o.onended=()=>{o.disconnect();nodes.forEach(n=>n.disconnect());};
+}
+function kiai(strong=false){
+ if(!ready()||ctx.currentTime-lastKiai<.5)return;lastKiai=ctx.currentTime;const t=ctx.currentTime;
+ if(kiaiVariant==='A'){
+  // "Wataaa": starts with a breathy W, opens into a long bright A that falls at the end.
+  hiss(.07,.08,900,1400,'bandpass',0,.01);
+  formantVoice(t,230,300,.16,[[[600,700],1],[[1000,1150],.5],[[2400,2500],.2]],(strong?.9:.7)*LEVEL.kiai,{delay:.03,vibrato:0});
+  formantVoice(t,300,185,strong?.42:.32,[[[760,700],1],[[1150,1050],.6],[[2500,2450],.25]],(strong?1:.8)*LEVEL.kiai,{delay:.17,vibrato:9});
+ }else{
+  // "Hyah": sharp H burst and a short clipped A.
+  hiss(.05,.12,1200,2600,'highpass',0,.004);
+  formantVoice(t,330,170,strong?.24:.18,[[[730,650],1],[[1090,1000],.6],[[2440,2400],.2]],(strong?1:.8)*LEVEL.kiai,{delay:.03,vibrato:4});
+ }
+}
 function grunt(strong=false){
- if(!ctx||ctx.currentTime-lastVoice<.42)return;lastVoice=ctx.currentTime;
- const t=ctx.currentTime,duration=strong?.24:.16,o=ctx.createOscillator(),nodes=[];
- o.type='sawtooth';o.frequency.setValueAtTime(strong?132:151,t);o.frequency.exponentialRampToValueAtTime(72,t+duration);
- for(const [from,to,volume] of [[650,420,.036],[1150,880,.019]]){const b=ctx.createBiquadFilter(),g=ctx.createGain();b.type='bandpass';b.Q.value=5;b.frequency.setValueAtTime(from,t);b.frequency.exponentialRampToValueAtTime(to,t+duration);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(b);b.connect(g);g.connect(master);nodes.push(b,g);}
- o.start(t);o.stop(t+duration+.01);o.onended=()=>{o.disconnect();nodes.forEach(n=>n.disconnect());};
+ if(!ready()||ctx.currentTime-lastVoice<.42)return;lastVoice=ctx.currentTime;const t=ctx.currentTime,duration=strong?.24:.16;
+ formantVoice(t,strong?132:151,72,duration,[[[650,420],1],[[1150,880],.5]],LEVEL.grunt,{vibrato:0});
 }
-function play(type,kind='jab',finisher=false){
- if(!enabled||!ctx||ctx.state!=='running')return;const kick=['kick','side','sweep','air'].includes(kind);
- if(type==='swing'){hiss(kick?.22:.135,kick?.18:.12,kick?480:720,kick?2200:2900,'bandpass',0,kick?.04:.025);}
- else if(type==='hit'){hiss(.055,kick?.48:.36,1900,700,'bandpass');tone(kick?102:155,42,kick?.24:.16,kick?.40:.29,'sine');hiss(.026,.16,3700,2100,'highpass',.013);if(kind==='body'||finisher||kick)grunt(finisher||kind==='body');}
- else if(type==='block'||type==='parry'){hiss(.065,.30,1500,650,'bandpass');tone(420,210,.08,.14,'triangle');if(type==='parry'){tone(990,740,.23,.09,'sine',.012);tone(1470,1390,.16,.035,'sine',.02);}}
- else if(type==='step'||type==='land'){hiss(type==='land'?.085:.045,type==='land'?.11:.034,650,220,'lowpass');}
+// --- Announcer ---------------------------------------------------------------------------------
+// Phonemes: vowels as formant triples (Hz), consonants as noise bursts or short voiced buzzes.
+const VOWELS={A:[730,1090,2440],E:[530,1840,2480],I:[270,2290,3010],O:[570,840,2410],U:[300,870,2240],AE:[660,1720,2410],ER:[490,1350,1690],AI:[[730,270],[1090,2290],[2440,3010]],EI:[[530,270],[1840,2290],[2480,3010]],OU:[[570,300],[840,870],[2410,2240]]};
+const CONSONANTS={F:['noise',.07,1400,3200,'highpass'],S:['noise',.09,4200,6500,'highpass'],SH:['noise',.09,2200,3600,'bandpass'],T:['burst',.035,2800,1800],K:['burst',.045,1400,900],P:['burst',.035,500,300],B:['burst',.04,420,260,true],D:['burst',.035,1800,1200,true],G:['burst',.04,1100,700,true],M:['nasal',.07,250,1000],N:['nasal',.07,280,1500],R:['growl',.08,420,1300],L:['growl',.07,400,1200],W:['nasal',.06,300,700],H:['noise',.05,900,1600,'bandpass'],V:['growl',.06,300,1000],'_':['pause',.07]};
+const PHRASES={
+ fight:[['F',.07],['AI',.28],['T',.05]],
+ ko:[['K',.05],['EI',.22],['_',.05],['OU',.34]],
+ combo:[['K',.05],['O',.16],['M',.06],['B',.05],['OU',.22]],
+ breaker:[['K',.05],['O',.14],['M',.06],['B',.05],['OU',.16],['_',.06],['B',.05],['R',.06],['EI',.2],['K',.05],['ER',.2]],
+ perfect:[['P',.05],['ER',.14],['F',.06],['E',.12],['K',.05],['T',.05]],
+ seven:[['S',.08],['E',.16],['V',.06],['E',.1],['N',.08]],
+ eight:[['EI',.26],['T',.06]],
+ nine:[['N',.07],['AI',.3],['N',.08]],
+ winner:[['W',.06],['I',.14],['N',.07],['ER',.22]],
+ belt:[['N',.06],['U',.16],['_',.06],['B',.05],['E',.14],['L',.06],['T',.06]],
+ time:[['T',.05],['AI',.3],['M',.1]],
+ double:[['D',.05],['A',.14],['B',.05],['L',.1],['_',.06],['K',.05],['EI',.2],['_',.05],['OU',.3]],
+ final:[['F',.07],['AI',.18],['N',.06],['L',.1],['_',.06],['H',.05],['I',.2],['T',.06]]
+};
+function say(name){
+ if(!ready()||!PHRASES[name])return 0;const now=ctx.currentTime;
+ if(now<announcer.busyUntil){announcer.pending={name,at:announcer.busyUntil};return 0;}
+ const t=now;let at=0;const pitch=96;
+ for(const [ph,dur] of PHRASES[name]){
+  if(VOWELS[ph]){const f=VOWELS[ph].map(v=>Array.isArray(v)?v:[v,v]);formantVoice(t,pitch*1.08,pitch*.9,dur,[[f[0],1,6],[f[1],.55,7],[f[2],.22,7]],LEVEL.say,{vibrato:3,growl:true,delay:at});}
+  else{const c=CONSONANTS[ph]||CONSONANTS._;
+   if(c[0]==='noise')hiss(c[1],.25*LEVEL.say,c[2],c[3],c[4],at,.008);
+   else if(c[0]==='burst'){hiss(c[1],.3*LEVEL.say,c[2],c[3],'bandpass',at,.002,1.5);if(c[4])formantVoice(t,pitch,pitch*.85,c[1],[[[c[3],c[3]],.7,5]],LEVEL.say,{delay:at,growl:true});}
+   else if(c[0]==='nasal')formantVoice(t,pitch,pitch*.95,c[1],[[[c[2],c[2]],.8,6],[[c[3],c[3]],.2,7]],LEVEL.say,{delay:at,growl:true});
+   else if(c[0]==='growl')formantVoice(t,pitch*.95,pitch,c[1],[[[c[2],c[2]],.8,5],[[c[3],c[3]],.35,6]],LEVEL.say,{delay:at,growl:true});
+  }
+  at+=dur;
+ }
+ announcer.busyUntil=t+at+.12;return at;
+}
+function tick(){if(!ready()||!announcer.pending)return;if(ctx.currentTime>=announcer.pending.at){const name=announcer.pending.name;announcer.pending=null;say(name);}}
+function sting(kind){
+ if(!ready())return;
+ if(kind==='gong'){thump(180,60,.9,.35,0,1.6);tone(392,392,.7,.08,'triangle',0,1);tone(587,560,.6,.05,'sine',.02,1);}
+ else if(kind==='chance'){tone(523,523,.07,.06);tone(659,659,.07,.06,'sine',.07);tone(784,784,.14,.07,'sine',.14,1);}
+ else if(kind==='chain'){tone(440,660,.08,.16,'square');}
+ else if(kind==='drop'){tone(520,180,.18,.16,'triangle');}
+ else if(kind==='belt'){for(const [i,f] of [523,659,784,1047].entries())tone(f,f,.22,.07,'sine',i*.11,1);}
+ else if(kind==='round'){thump(160,50,.6,.3,0,1.8);hiss(.3,.1,1000,140,'lowpass');}
+}
+const KICKS=['kick','side','sweep','air'];
+function play(e){
+ if(!e||!ready()||ctx.state!=='running'&&!ctx.length)return;
+ const type=typeof e==='string'?e:e.type,kind=e.kind||'jab',strong=!!e.strong,kick=KICKS.includes(kind);
+ if(type==='swing'){hiss(kick?.24:.14,kick?.2:.18,kick?420:700,kick?2400:3100,'bandpass',0,kick?.045:.025);if(kick)hiss(.18,.06,200,900,'lowpass',.02,.03);}
+ else if(type==='hit'){
+  const reaction=kind==='body'?'body':kind==='sweep'?'down':strong?'knee':'head';
+  hiss(.05,kick?.5:.38,1900,700,'bandpass');hiss(.024,.18,3700,2100,'highpass',.012);
+  if(reaction==='head')thump(kick?104:158,42,.17,.32);
+  else if(reaction==='body'){thump(96,36,.26,.42,0,3.5);grunt(true);}
+  else if(reaction==='knee'){thump(120,38,.24,.44,0,3);thump(70,30,.3,.3,.09,2);}
+  else{thump(110,34,.22,.38);thump(55,24,.45,.4,.12,2);hiss(.3,.09,500,90,'lowpass',.1,.02);grunt(false);}
+  if(strong||e.combo>=7)kiai(strong);
+  if(e.combo>=7&&e.combo<=9)say(['seven','eight','nine'][e.combo-7]);
+ }
+ else if(type==='block'){hiss(.065,.3,1500,650,'bandpass');tone(420,210,.08,.14,'triangle');}
+ else if(type==='parry'){hiss(.065,.3,1500,650,'bandpass');tone(420,210,.08,.14,'triangle');tone(990,740,.23,.09,'sine',.012,1);tone(1470,1390,.16,.035,'sine',.02,1);say('perfect');}
+ else if(type==='breaker'){hiss(.08,.36,1600,500,'bandpass');tone(1180,880,.3,.1,'sine',0,1);tone(1760,1600,.22,.05,'sine',.02,1);thump(140,28,.5,.42,.02,2);say('breaker');}
+ else if(type==='step'||type==='land'){hiss(type==='land'?.085:.045,type==='land'?.11:.052,650,220,'lowpass');}
  else if(type==='jump')hiss(.11,.065,420,1250,'bandpass');
- else if(type==='combo')kiai();
- else if(type==='ready'){tone(523,523,.08,.045);tone(784,784,.12,.045,'sine',.08);}
- else if(type==='start'){tone(740,510,.42,.10,'sine');tone(1110,940,.3,.035,'sine');}
- else if(type==='ko'||type==='round'||type==='match'){tone(98,34,.5,.17,'triangle');hiss(.3,.1,1000,140,'lowpass');}
+ else if(type==='combo'){if(e.phase==='chance'){sting('chance');say('combo');}else if(e.phase==='chain')sting('chain');}
+ else if(type==='drop')sting('drop');
+ else if(type==='start'){sting('gong');say('fight');}
+ else if(type==='round'){sting('round');say(e.reason==='double'?'double':e.reason==='time'?'time':'ko');}
+ else if(type==='match'){sting('round');if(e.reason==='time')say('time');else say('winner');}
+ else if(type==='sudden')say('final');
+ else if(type==='belt'){sting('belt');say('belt');}
 }
-return {unlock:open,setEnabled:value=>{enabled=value;if(master)master.gain.setTargetAtTime(value?.38:0,ctx.currentTime,.03);if(value)open();},play};
+return {unlock:open,attach,tick,say,parts:{tone,hiss,thump,formantVoice,kiai,grunt,sting},levels:LEVEL,setEnabled:value=>{enabled=value;if(master)master.gain.setTargetAtTime(value?LEVEL.master:0,ctx.currentTime,.03);if(value)open();},setKiaiVariant:v=>{kiaiVariant=v==='B'?'B':'A';},play,PHRASES};
 })();
 
 </script>
@@ -381,13 +646,24 @@ return {unlock:open,setEnabled:value=>{enabled=value;if(master)master.gain.setTa
 (()=>{
 const $=id=>document.getElementById(id),stage=$('stage'),canvas=$('canvas'),ctx=canvas.getContext('2d');
 const {W,FLOOR,DT,MOVES,blank,create,step}=Combat,H=720,COLORS=['#bd8064','#83a99d'];
-let game=null,mode='menu',localId=0,lastEvent=0,acc=0,nowTime=0,lastFrame=0,particles=[],trails=[],hitStop=0,shake=0;
+let game=null,mode='menu',localId=0,lastEvent=0,acc=0,nowTime=0,lastFrame=0,effects=[],trails=[[],[]],shake=0,shakeStrength=0;
 let muted=false,touchEnabled=matchMedia('(pointer:coarse)').matches,lastDevice='keyboard',selectedPad=null,padMenu=false;
 let peer=null,conn=null,generation=0,connectTimer=null,roomCode='',remoteInput=blank(),remoteEdges=blank(),remoteSeq=-1,sequence=0,lastSend=0,lastSnapshot=0,lastReceived=0,lastPing=0,ping=0,ready=[false,false],remoteRematch=false,localRematch=false;
 let classicActionQueued=false,classicWasAction=false,classicWasUp=false;
-let renderFighters=null,aiTimer=0,aiInput=blank(),aiMemory=[],wasHelpPaused=false,helpFocus=null;
+let renderFighters=null,aiState=null,wasHelpPaused=false,helpFocus=null;
 const keys=new Set(),touch=blank(),prevInput=blank();let queuedEdges=blank(),observedInput=blank(),toastTimer=null;
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+// Belt progress lives in this browser only; a missing or blocked store just keeps it for the session.
+const store=(()=>{try{return window.localStorage||null;}catch{return null;}})();
+let wins=Progress.load(store),promotion=null,resetArmed=null;
+const aiLevel=()=>Progress.level(wins);
+// Variant for Stefan (H9): the figure wears the earned belt against the computer; false keeps the fighter colour.
+const BELT_ON_GI=true;
+// Variant for Stefan (H9): kiai 'A' = long "wataaa", 'B' = short "hyah".
+const KIAI_VARIANT='A';DojoAudio.setKiaiVariant(KIAI_VARIANT);
+function beltColors(f){if(mode!=='ai'||!BELT_ON_GI||!aiState)return null;if(f.id===0)return Progress.belt(wins);return {colors:[DojoAI.LEVELS[aiState.level].belt==='green'?'#3f9a4e':'#1d1f22'],stripes:aiState.level===3?2:0};}
+function updateBelt(){const b=Progress.belt(wins),lv=DojoAI.LEVELS[aiLevel()];$('belt-line').textContent=`Dein Gürtel: ${b.name} · Gegner: ${lv.name} (KI-Stufe ${aiLevel()})`+(b.next?` · noch ${b.next.remaining} ${b.next.remaining===1?'Sieg':'Siege'} bis ${b.next.name}`:' · höchster Gürtel erreicht');}
+$('belt-reset').onclick=()=>{if(resetArmed){clearTimeout(resetArmed);resetArmed=null;wins=Progress.reset(store);updateBelt();$('belt-reset').textContent='Gürtel zurücksetzen';showToast('Gürtel zurückgesetzt: Weiß.');}else{$('belt-reset').textContent='Wirklich? Noch einmal tippen.';resetArmed=setTimeout(()=>{resetArmed=null;$('belt-reset').textContent='Gürtel zurücksetzen';},4000);}};
 function showToast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3000);}
 function panels(id){for(const p of document.querySelectorAll('.panel'))p.hidden=p.id!==id;}
 function setTouch(v){touchEnabled=v;stage.classList.toggle('touch-on',v);$('touch-btn').setAttribute('aria-pressed',String(v));}
@@ -395,21 +671,21 @@ setTouch(touchEnabled);
 function unlock(){DojoAudio.unlock();}
 stage.addEventListener('pointerdown',unlock,{passive:true});
 function selectedRules(){return Combat.rules({mode:$('rule-select').value,pointsToWin:Number($('points-select').value),timeLimit:Number($('timer-select').value)});}
-function ruleText(r){return r.mode==='points'?`Punktkampf · ${r.pointsToWin} Punkte zum Matchsieg${r.timeLimit?' · '+r.timeLimit+' Sekunden':''}`:`Duell · zwei Rundensiege${r.timeLimit?' · '+r.timeLimit+' Sekunden pro Runde':''}`;}
+function ruleText(r){return r.mode==='points'?`Punktkampf · ${r.pointsToWin} Punkte zum Matchsieg${r.timeLimit?' · '+r.timeLimit+' Sekunden':''}`:`Duell · 20 Trefferpunkte · zwei Rundensiege${r.timeLimit?' · '+r.timeLimit+' Sekunden pro Runde':''}`;}
 function classicControls(){return $('control-select').value==='classic';}
 function updateSettings(){const r=selectedRules();$('point-setting').hidden=r.mode!=='points';$('match-summary').textContent=ruleText(r);document.querySelector('[data-action="kick"]').hidden=classicControls();document.querySelector('[data-action="punch"]').textContent=classicControls()?'Aktion':'Schlag';}
 $('rule-select').onchange=()=>{$('control-select').value=$('rule-select').value==='points'?'classic':'direct';updateSettings();};
 for(const id of ['control-select','timer-select','points-select'])$(id).onchange=updateSettings;
-updateSettings();
+updateSettings();updateBelt();
 function clearInput(){classicActionQueued=false;classicWasAction=false;classicWasUp=false;if(game){game.freezeQueue=[null,null];for(const f of game.fighters)f.buffer=null;}keys.clear();Object.assign(touch,blank());Object.assign(prevInput,blank());queuedEdges=blank();observedInput=blank();$('knob').style.transform='';document.querySelectorAll('.held').forEach(e=>e.classList.remove('held'));}
 function closeNetwork(){generation++;clearTimeout(connectTimer);const c=conn,p=peer;conn=null;peer=null;c?.close();p?.destroy();remoteInput=blank();remoteEdges=blank();remoteSeq=-1;ready=[false,false];lastReceived=0;roomCode='';}
-function home(){closeNetwork();game=null;mode='menu';clearInput();renderFighters=null;particles=[];trails=[];stage.classList.remove('playing');$('pause-btn').hidden=true;$('help').hidden=true;panels('home-panel');$('net-status').textContent='SOLO & ONLINE';$('create-btn').disabled=false;$('join-btn').disabled=false;$('ai-btn').focus({preventScroll:true});}
-function startGame(selectedMode){mode=selectedMode;localId=mode==='guest'?1:0;game=create(selectedRules());renderFighters=null;lastEvent=0;particles=[];trails=[];aiTimer=0;aiInput=blank();aiMemory=[];lastFrame=performance.now();acc=0;ready=[false,false];localRematch=false;remoteRematch=false;remoteInput=blank();remoteEdges=blank();clearInput();stage.classList.add('playing');$('pause-btn').hidden=false;panels(null);unlock();if(mode==='host')sendState();if(mode==='ai')$('net-status').textContent='DU: KORALLE · COMPUTER: JADE';}
+function home(){closeNetwork();game=null;mode='menu';clearInput();renderFighters=null;effects=[];trails=[[],[]];stage.classList.remove('playing');$('pause-btn').hidden=true;$('help').hidden=true;panels('home-panel');$('net-status').textContent='SOLO & ONLINE';updateBelt();$('create-btn').disabled=false;$('join-btn').disabled=false;$('ai-btn').focus({preventScroll:true});}
+function startGame(selectedMode){mode=selectedMode;localId=mode==='guest'?1:0;game=create(selectedRules());renderFighters=null;lastEvent=0;effects=[];trails=[[],[]];aiState=mode==='ai'?DojoAI.create(aiLevel(),1):null;lastFrame=performance.now();acc=0;ready=[false,false];localRematch=false;remoteRematch=false;remoteInput=blank();remoteEdges=blank();clearInput();stage.classList.add('playing');$('pause-btn').hidden=false;panels(null);unlock();if(mode==='host')sendState();promotion=null;if(mode==='ai')$('net-status').textContent=`DU: KORALLE · ${Progress.belt(wins).name.toUpperCase()} · COMPUTER: JADE · ${DojoAI.LEVELS[aiState.level].name.toUpperCase()}`;}
 $('ai-btn').onclick=()=>{closeNetwork();startGame('ai');};
 $('online-btn').onclick=()=>{panels('online-panel');$('online-hint').textContent='Ihr braucht beide eine Internetverbindung.';$('online-hint').classList.remove('error');$('create-btn').disabled=false;$('join-btn').disabled=false;};
 document.querySelectorAll('.back-home').forEach(b=>b.onclick=home);
 $('touch-btn').onclick=()=>setTouch(!touchEnabled);
-$('sound-btn').onclick=()=>{muted=!muted;$('sound-btn').textContent=muted?'Ton aus':'Ton an';$('sound-btn').setAttribute('aria-pressed',String(!muted));DojoAudio.setEnabled(!muted);unlock();DojoAudio.play('block');};
+$('sound-btn').onclick=()=>{muted=!muted;$('sound-btn').textContent=muted?'Ton aus':'Ton an';$('sound-btn').setAttribute('aria-pressed',String(!muted));DojoAudio.setEnabled(!muted);unlock();DojoAudio.play({type:'block'});};
 $('full-btn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else showToast('Vollbild ist in diesem Browser nicht verfügbar.');}catch{showToast('Vollbild ist hier nicht verfügbar. Das Spiel bleibt spielbar.');}};
 function pausedUI(){if(!game)return;if(game.phase==='over'){if(game.fighters.every(f=>f.hp>0||f.fall>=.85))showResult();return;}if(game.paused.some(Boolean)){panels('pause-panel');const own=game.paused[localId],other=game.paused[1-localId];$('pause-message').textContent=other?'Dein Gegner hat pausiert. Ihr müsst beide bereit sein.':'Bereit für den nächsten Schlag?';$('resume-btn').disabled=!own;$('resume-btn').textContent=own?'Weiterkämpfen':'Warte auf deinen Gegner';}else panels(null);}
 function setPause(value){if(!game||game.phase==='over')return;clearInput();game.paused[localId]=value;if(mode==='guest')send({type:'pause',value});else if(mode==='host')sendState();pausedUI();}
@@ -418,7 +694,7 @@ $('pause-btn').onclick=togglePause;$('resume-btn').onclick=()=>setPause(false);
 function openHelp(){helpFocus=document.activeElement;wasHelpPaused=!!game?.paused[localId];if(game)setPause(true);$('help').hidden=false;$('close-help').focus();}
 function closeHelp(){$('help').hidden=true;if(game&&!wasHelpPaused)setPause(false);helpFocus?.focus?.({preventScroll:true});}
 $('help-btn').onclick=openHelp;$('learn-btn').onclick=openHelp;$('close-help').onclick=closeHelp;
-function showResult(){panels('result-panel');const w=game.winner;$('result-title').textContent=w===-1?'Unentschieden':(w===0?'Koralle':'Jade')+' gewinnt das Match.';$('result-description').textContent=`${game.scores[0]} : ${game.scores[1]} ${game.rules.mode==='points'?'Punkte':'Runden'}${game.roundReason==='time'?' · nach Zeitablauf':''}.`;$('rematch-btn').disabled=localRematch;$('rematch-hint').textContent=localRematch?'Du bist bereit. Warte auf deinen Gegner.':remoteRematch?'Dein Gegner möchte eine Revanche.':'';}
+function showResult(){panels('result-panel');const w=game.winner;$('result-title').textContent=w===-1?'Unentschieden':(w===0?'Koralle':'Jade')+' gewinnt das Match.';$('result-description').textContent=`${game.scores[0]} : ${game.scores[1]} ${game.rules.mode==='points'?'Punkte':'Runden'}${game.roundReason==='time'?' · nach Zeitablauf':''}.`;$('belt-result').textContent=mode!=='ai'?'':promotion?`Neuer Gürtel: ${promotion.name}!`:w===0?`Gürtel: ${Progress.belt(wins).name}`+(Progress.belt(wins).next?` · noch ${Progress.belt(wins).next.remaining} bis ${Progress.belt(wins).next.name}`:''):'';$('rematch-btn').disabled=localRematch;$('rematch-hint').textContent=localRematch?'Du bist bereit. Warte auf deinen Gegner.':remoteRematch?'Dein Gegner möchte eine Revanche.':'';}
 $('rematch-btn').onclick=()=>{if(mode==='ai')startGame('ai');else{localRematch=true;send({type:'rematch'});if(mode==='host'&&remoteRematch)startGame('host');else showResult();}};
 const bindings={KeyF:'forward',KeyD:'back',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',ArrowUp:'up',ArrowDown:'down',KeyJ:'punch',KeyK:'kick',KeyS:'highBlock',Space:'lowBlock'};
 addEventListener('keydown',e=>{
@@ -442,30 +718,23 @@ let padWarned=false,padName='';
 function sampleInput(){let a=blank();const isClassic=classicControls();let padAction=false;
  const self=game?.fighters[localId],opponent=game?.fighters[1-localId];
  const toward=(self&&opponent?opponent.x>=self.x:localId===0)?'right':'left';
- for(const code of keys){const k=bindings[code];if(k==='forward')a[toward]=true;else if(k==='back')a[toward==='right'?'left':'right']=true;else if(k in a)a[k]=true;}for(const k in a)a[k] ||=touch[k];const ps=gamepads(),valid=ps.filter(p=>p.mapping==='standard');if(selectedPad!==null&&!valid.some(p=>p.index===selectedPad)){selectedPad=null;const label=$('pad-status');if(label)label.textContent='Controller getrennt. Tastatur und Touch bleiben verfügbar.';if(game)loseFocus();showToast('Controller getrennt. Tastatur und Touch bleiben verfügbar.');}if(selectedPad===null&&valid.length){selectedPad=valid[0].index;padName=valid[0].id||'Gamepad';const label=$('pad-status');if(label)label.textContent='Verbunden: '+padName;showToast(isClassic?'Controller bereit · Stick + ✕/A für Techniken':'Controller bereit · □/X Schlag · ○/B Tritt · R1/RB Serie');}
-const p=valid.find(p=>p.index===selectedPad);if(p){const b=n=>!!p.buttons[n]?.pressed;const active=p.buttons.some(b=>b.pressed)||p.axes.some(v=>Math.abs(v)>.3);if(active){lastDevice='pad';if(touchEnabled)setTouch(false);}a.left ||=p.axes[0]<-.3||b(14);a.right ||=p.axes[0]>.3||b(15);a.up ||=p.axes[1]<-.55||b(12)||(!isClassic&&b(0));padAction=b(0);a.down ||=p.axes[1]>.55||b(13);a.punch ||=b(2);a.kick ||=b(1);a.block ||=b(4);if(b(6)){a.down=true;a.block=true;}a.combo ||=b(5);if(active)unlock();const menu=b(9);if(menu&&!padMenu){unlock();if(!$('help').hidden)closeHelp();else if(game)togglePause();else if(mode==='menu'&&!$('home-panel').hidden)$('ai-btn').click();}padMenu=menu;
+ for(const code of keys){const k=bindings[code];if(k==='forward')a[toward]=true;else if(k==='back')a[toward==='right'?'left':'right']=true;else if(k in a)a[k]=true;}for(const k in a)a[k] ||=touch[k];const ps=gamepads(),valid=ps.filter(p=>p.mapping==='standard');if(selectedPad!==null&&!valid.some(p=>p.index===selectedPad)){selectedPad=null;const label=$('pad-status');if(label)label.textContent='Controller getrennt. Tastatur und Touch bleiben verfügbar.';if(game)loseFocus();showToast('Controller getrennt. Tastatur und Touch bleiben verfügbar.');}if(selectedPad===null&&valid.length){selectedPad=valid[0].index;padName=valid[0].id||'Gamepad';const label=$('pad-status');if(label)label.textContent='Verbunden: '+padName;showToast(isClassic?'Controller bereit · Stick + ✕/A für Techniken':'Controller bereit · □/X Schlag · ○/B Tritt · L1/L2 Block');}
+const p=valid.find(p=>p.index===selectedPad);if(p){const b=n=>!!p.buttons[n]?.pressed;const active=p.buttons.some(b=>b.pressed)||p.axes.some(v=>Math.abs(v)>.3);if(active){lastDevice='pad';if(touchEnabled)setTouch(false);}a.left ||=p.axes[0]<-.3||b(14);a.right ||=p.axes[0]>.3||b(15);a.up ||=p.axes[1]<-.55||b(12)||(!isClassic&&b(0));padAction=b(0);a.down ||=p.axes[1]>.55||b(13);a.punch ||=b(2);a.kick ||=b(1);a.block ||=b(4);if(b(6)){a.down=true;a.block=true;}if(active)unlock();const menu=b(9);if(menu&&!padMenu){unlock();if(!$('help').hidden)closeHelp();else if(game)togglePause();else if(mode==='menu'&&!$('home-panel').hidden)$('ai-btn').click();}padMenu=menu;
 }else if(ps.length&&!padWarned){padWarned=true;showToast('Controller ohne Standard-Layout erkannt. Nutze bitte Tastatur oder Touch.');}
 if(isClassic){
  const action=keys.has('KeyJ')||keys.has('Space')||touch.punch||padAction;
- const raw={...a,action,block:touch.block,combo:a.combo||keys.has('KeyK')};
+ const raw={...a,action,block:touch.block};
  const pressed=classicActionQueued||(action&&!classicWasAction),mapped=ControlMap.classic(raw,pressed,toward==='right'?1:-1);
  if(raw.up&&!classicWasUp&&!action&&!mapped.input.block)mapped.edge.up=true;
- if(raw.combo&&!observedInput.combo)mapped.edge.combo=true;
  classicActionQueued=false;classicWasAction=action;classicWasUp=raw.up;a=mapped.input;
  for(const k in mapped.edge)queuedEdges[k] ||=mapped.edge[k];
 }else{
  if(keys.has('Space')){a.block=true;a.down=true;}else if(keys.has('KeyS')){a.block=true;a.down=false;}
- a.combo ||=a.punch&&a.kick;
- for(const k of ['up','punch','kick','combo'])if(a[k]&&!observedInput[k])queuedEdges[k]=true;
+ for(const k of ['up','punch','kick'])if(a[k]&&!observedInput[k])queuedEdges[k]=true;
 }
 observedInput={...a};
 return a;}
 function takeEdges(){const e=queuedEdges;queuedEdges=blank();return e;}
-function ai(dt){if(game.phase!=='fight'||game.freeze>0)return {input:blank(),edges:blank()};aiTimer-=dt;aiMemory.push({at:game.elapsed,x:game.fighters[0].x,y:game.fighters[0].y,attack:game.fighters[0].attack?.kind||null,crouch:game.fighters[0].crouch});while(aiMemory.length>80)aiMemory.shift();if(aiTimer>0)return {input:aiInput,edges:blank()};aiTimer=.16+Math.random()*.12;const seen=aiMemory.findLast(o=>o.at<=game.elapsed-.18)||aiMemory[0],self=game.fighters[1],distance=Math.abs(seen.x-self.x),forward=seen.x>self.x?'right':'left',back=forward==='right'?'left':'right',a=blank(),e=blank();
-if(seen.attack&&distance<150&&Math.random()<.6){a.block=true;a.down=MOVES[seen.attack].level==='low';if(a.down&&Math.random()<.13){a.block=false;e.up=true;}}
-else if(distance>112){a[forward]=true;if(distance>280&&Math.random()<.10)e.up=true;}
-else if(!self.attack&&self.stun===0){if(self.comboReady&&distance<103&&Math.random()<.6){e.combo=true;aiInput=a;return {input:a,edges:e};}const choice=Math.random();if(choice<.16){a[back]=true;}else if(choice<.28){a[forward]=true;}else if(choice<.39){a.down=true;e.kick=true;}else if(choice<.54&&distance<103){e.punch=true;a.down=Math.random()<.35;}else if(choice<.79){e.kick=true;if(distance>108)a[forward]=true;}else if(choice<.89){e.up=true;e.kick=true;}else a.block=true;}
-aiInput=a;return {input:a,edges:e};}
 function send(data){if(!conn?.open)return;try{if(conn.dataChannel?.bufferedAmount>256000)return;conn.send(data);}catch{}}
 function sendState(){if(game)send({type:'state',game});}
 function netFail(message){closeNetwork();game=null;mode='menu';stage.classList.remove('playing');$('pause-btn').hidden=true;panels('online-panel');$('online-hint').textContent=message;$('online-hint').classList.add('error');$('create-btn').disabled=false;$('join-btn').disabled=false;clearInput();}
@@ -473,30 +742,30 @@ const randomCode=()=>{const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',a=new Ui
 function online(host){unlock();if(!host&&!/^[A-Z2-9]{6}$/.test($('join-code').value.trim().toUpperCase())){$('online-hint').textContent='Bitte den sechsstelligen Raumcode eingeben (ohne 0 und 1).';return;}
 closeNetwork();mode=host?'host':'guest';localId=host?0:1;const gen=generation;roomCode=host?randomCode():$('join-code').value.trim().toUpperCase();$('create-btn').disabled=true;$('join-btn').disabled=true;$('online-hint').classList.remove('error');$('online-hint').textContent='Verbindung wird vorbereitet …';
 if(typeof Peer==='undefined'){netFail('Die Verbindungskomponente fehlt. Bitte die vollständige Spieldatei neu öffnen.');return;}
-try{peer=new Peer(host?'strichkampf-v6-'+roomCode:undefined,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun.cloudflare.com:3478'}]}});}catch{netFail('Dieser Browser kann die Online-Verbindung nicht öffnen.');return;}
+try{peer=new Peer(host?'strichkampf-v7-'+roomCode:undefined,{debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun.cloudflare.com:3478'}]}});}catch{netFail('Dieser Browser kann die Online-Verbindung nicht öffnen.');return;}
 connectTimer=setTimeout(()=>{if(gen===generation)netFail('Keine Verbindung möglich. Code prüfen, Raum neu eröffnen oder ein anderes Netz versuchen. Manche Router benötigen einen zusätzlichen Relay-Dienst.');},20000);
 peer.on('open',()=>{if(gen!==generation)return;panels('lobby-panel');$('room-code').textContent=roomCode;$('fight-online-btn').hidden=true;$('copy-btn').hidden=!host;$('lobby-tag').textContent=host?'DEIN RAUMCODE':'RAUMCODE';$('lobby-title').textContent=host?'Dein Gegner fehlt noch.':'Gegner wird gesucht …';$('lobby-hint').textContent=host?'Gib diesen Code an deinen Mitspieler weiter.':'Die Verbindung zum Gastgeber wird aufgebaut.';
  if(host){clearTimeout(connectTimer);$('net-status').textContent='WARTE AUF GEGNER';}
- else{const c=peer.connect('strichkampf-v6-'+roomCode,{reliable:true,serialization:'json',metadata:{version:6}});attachConnection(c,gen);}
+ else{const c=peer.connect('strichkampf-v7-'+roomCode,{reliable:true,serialization:'json',metadata:{version:7}});attachConnection(c,gen);}
 });
-peer.on('connection',c=>{if(gen!==generation||!host||conn){c.on('open',()=>{try{c.send({type:'busy'});}catch{}setTimeout(()=>c.close(),100);});return;}if(c.metadata?.version!==6){c.close();return;}attachConnection(c,gen);});
+peer.on('connection',c=>{if(gen!==generation||!host||conn){c.on('open',()=>{try{c.send({type:'busy'});}catch{}setTimeout(()=>c.close(),100);});return;}if(c.metadata?.version!==7){c.close();return;}attachConnection(c,gen);});
 peer.on('error',err=>{if(gen!==generation)return;if(conn?.open){showToast('Raumvermittlung unterbrochen; das laufende Duell bleibt verbunden.');return;}const messages={'peer-unavailable':'Raum nicht gefunden. Nutzt beide die neue Spieldatei, prüft den Code und lasst den Raum geöffnet.','unavailable-id':'Dieser Raumcode ist schon belegt. Bitte erneut einen Raum eröffnen.','network':'Der Verbindungsdienst ist nicht erreichbar. Bitte später erneut versuchen.','browser-incompatible':'Dieser Browser unterstützt die Online-Verbindung nicht.'};netFail(messages[err.type]||'Online-Verbindung fehlgeschlagen. Bitte Raum neu eröffnen oder ein anderes Netz versuchen.');});
 peer.on('disconnected',()=>{if(gen===generation&&!conn?.open)netFail('Die Verbindung zum Raumdienst wurde unterbrochen. Bitte erneut versuchen.');});
 }
-function attachConnection(c,gen){conn=c;c.on('open',()=>{if(gen!==generation)return;clearTimeout(connectTimer);lastReceived=performance.now();$('lobby-title').textContent='Ihr seid verbunden.';$('lobby-hint').textContent=mode==='host'?'Du spielst Koralle. Dein Gegner spielt Jade.':'Du spielst Jade. Der Gastgeber startet das Duell.';$('fight-online-btn').hidden=mode!=='host';$('net-status').textContent='VERBUNDEN';$('lobby-rules').textContent=mode==='host'?ruleText(selectedRules()):'Spielregeln werden vom Gastgeber übernommen.';send({type:'hello',version:6});if(mode==='host')send({type:'settings',rules:selectedRules()});});c.on('data',d=>{if(gen!==generation||!d||typeof d!=='object')return;lastReceived=performance.now();receive(d);});c.on('close',()=>{if(gen===generation)netFail('Dein Gegner hat die Verbindung beendet. Du kannst einen neuen Raum eröffnen.');});c.on('error',()=>{if(gen===generation)netFail('Die direkte Verbindung ist abgebrochen. Bitte erneut verbinden.');});}
-function validGame(g){return g&&['countdown','fight','break','over'].includes(g.phase)&&g.rules&&['duel','points'].includes(g.rules.mode)&&[2,3].includes(g.rules.pointsToWin)&&[0,60,90].includes(g.rules.timeLimit)&&Array.isArray(g.scores)&&g.scores.length===2&&g.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&Number.isFinite(g.clock)&&Number.isFinite(g.freeze)&&Number.isFinite(g.breakTime)&&Number.isFinite(g.elapsed)&&Number.isFinite(g.countdown)&&Array.isArray(g.paused)&&g.paused.length===2&&g.paused.every(v=>typeof v==='boolean')&&Array.isArray(g.fighters)&&g.fighters.length===2&&g.fighters.every(f=>f&&['x','y','hp','face','walk','stun','hit','vy','invuln','guardAge','parryCooldown','parryFlash','stagger','streak','reactionTime','knockback','fall'].every(k=>Number.isFinite(f[k]))&&f.x>=0&&f.x<=1280&&f.y>=0&&f.y<600&&f.hp>=0&&f.hp<=100&&(!f.attack||(MOVES[f.attack.kind]&&Number.isFinite(f.attack.t)&&Array.isArray(f.attack.spent)))&&(!f.stride||['t','duration','dir','length'].every(k=>Number.isFinite(f.stride[k]))))&&Number.isInteger(g.eventId)&&Array.isArray(g.events)&&g.events.length<=32;}
+function attachConnection(c,gen){conn=c;c.on('open',()=>{if(gen!==generation)return;clearTimeout(connectTimer);lastReceived=performance.now();$('lobby-title').textContent='Ihr seid verbunden.';$('lobby-hint').textContent=mode==='host'?'Du spielst Koralle. Dein Gegner spielt Jade.':'Du spielst Jade. Der Gastgeber startet das Duell.';$('fight-online-btn').hidden=mode!=='host';$('net-status').textContent='VERBUNDEN';$('lobby-rules').textContent=mode==='host'?ruleText(selectedRules()):'Spielregeln werden vom Gastgeber übernommen.';send({type:'hello',version:7});if(mode==='host')send({type:'settings',rules:selectedRules()});});c.on('data',d=>{if(gen!==generation||!d||typeof d!=='object')return;lastReceived=performance.now();receive(d);});c.on('close',()=>{if(gen===generation)netFail('Dein Gegner hat die Verbindung beendet. Du kannst einen neuen Raum eröffnen.');});c.on('error',()=>{if(gen===generation)netFail('Die direkte Verbindung ist abgebrochen. Bitte erneut verbinden.');});}
+function validGame(g){return g&&['countdown','fight','break','over'].includes(g.phase)&&g.rules&&['duel','points'].includes(g.rules.mode)&&[2,3].includes(g.rules.pointsToWin)&&[0,60,90].includes(g.rules.timeLimit)&&Array.isArray(g.scores)&&g.scores.length===2&&g.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&Number.isFinite(g.clock)&&Number.isFinite(g.freeze)&&Number.isFinite(g.breakTime)&&Number.isFinite(g.elapsed)&&Number.isFinite(g.countdown)&&Array.isArray(g.paused)&&g.paused.length===2&&g.paused.every(v=>typeof v==='boolean')&&Array.isArray(g.fighters)&&g.fighters.length===2&&g.fighters.every(f=>f&&['x','y','hp','face','walk','stun','hit','vy','invuln','guardAge','parryCooldown','parryFlash','stagger','reactionTime','knockback','fall','combo','comboClock'].every(k=>Number.isFinite(f[k]))&&(f.comboKey===null||['punch','kick'].includes(f.comboKey))&&(f.reaction===null||f.reaction in Combat.REACTIONS)&&f.x>=0&&f.x<=1280&&f.y>=0&&f.y<600&&f.hp>=0&&f.hp<=Combat.HP&&(!f.attack||(MOVES[f.attack.kind]&&Number.isFinite(f.attack.t)&&Array.isArray(f.attack.spent)))&&(!f.stride||['t','duration','dir','length'].every(k=>Number.isFinite(f.stride[k]))))&&Number.isInteger(g.eventId)&&Array.isArray(g.events)&&g.events.length<=32;}
 function receive(d){
  if(d.type==='hello'&&mode==='host'){send({type:'settings',rules:selectedRules()});return;}
  if(d.type==='settings'&&mode==='guest'){$('lobby-rules').textContent=ruleText(Combat.rules(d.rules));return;}
  if(d.type==='busy'){netFail('Dieser Raum ist bereits voll. Bitte einen neuen Raum eröffnen.');return;}
  if(d.type==='ping'){send({type:'pong',at:d.at});return;}if(d.type==='pong'&&Number.isFinite(d.at)){ping=Math.max(0,Math.round(performance.now()-d.at));return;}
  if(mode==='host'){
-  if(d.type==='input'&&Number.isInteger(d.seq)&&d.seq>remoteSeq){remoteSeq=d.seq;for(const k in blank()){const next=d.input?.[k]===true;if(['up','punch','kick','combo'].includes(k)&&d.edges?.[k]===true)remoteEdges[k]=true;remoteInput[k]=next;}}
+  if(d.type==='input'&&Number.isInteger(d.seq)&&d.seq>remoteSeq){remoteSeq=d.seq;for(const k in blank()){const next=d.input?.[k]===true;if(['up','punch','kick'].includes(k)&&d.edges?.[k]===true)remoteEdges[k]=true;remoteInput[k]=next;}}
   if(d.type==='pause'&&game&&typeof d.value==='boolean'){game.paused[1]=d.value;game.freezeQueue=[null,null];for(const f of game.fighters)f.buffer=null;remoteInput=blank();remoteEdges=blank();pausedUI();sendState();}
   if(d.type==='rematch'&&game?.phase==='over'){remoteRematch=true;if(localRematch)startGame('host');else showResult();}
  }else if(mode==='guest'){
   if(d.type==='state'&&validGame(d.game)){
-   const fresh=!game||d.game.elapsed<game.elapsed-.5,wasOver=game?.phase==='over';if(fresh){lastEvent=0;particles=[];trails=[];renderFighters=null;localRematch=false;remoteRematch=false;clearInput();}
+   const fresh=!game||d.game.elapsed<game.elapsed-.5,wasOver=game?.phase==='over';if(fresh){lastEvent=0;effects=[];trails=[[],[]];renderFighters=null;localRematch=false;remoteRematch=false;clearInput();}
    game=d.game;stage.classList.add('playing');$('pause-btn').hidden=false;pausedUI();consumeEvents();if(wasOver&&game.phase!=='over')panels(null);
   }
   if(d.type==='rematch'&&game?.phase==='over'){remoteRematch=true;showResult();}
@@ -507,15 +776,56 @@ $('copy-btn').onclick=async()=>{try{await navigator.clipboard.writeText(roomCode
 function networkTick(now,input){if(!conn?.open)return;if(now-lastPing>1000){lastPing=now;send({type:'ping',at:now});}if(lastReceived&&now-lastReceived>12000){netFail('Die Verbindung antwortet nicht mehr. Bitte einen neuen Raum eröffnen.');return;}
 if(game){$('net-status').textContent=(localId===0?'DU: KORALLE':'DU: JADE')+' · '+(ping?ping+' ms':'ONLINE')+(ping>160?' · VERZÖGERUNG':'');if(mode==='guest'&&now-lastSend>=1000/60){lastSend=now;send({type:'input',seq:++sequence,input:game.paused.some(Boolean)?blank():input,edges:takeEdges()});}if(mode==='host'&&now-lastSnapshot>=1000/30){lastSnapshot=now;sendState();}}
 }
-function burst(x,y,color,n){if(!Number.isFinite(x)||!Number.isFinite(y))return;for(let i=0;i<n;i++){const angle=Math.random()*Math.PI*2,s=80+Math.random()*200;particles.push({x,y,vx:Math.cos(angle)*s,vy:Math.sin(angle)*s,life:.38,max:.38,color});}}
-function consumeEvents(){if(!game)return;for(const e of game.events){if(e.id<=lastEvent)continue;lastEvent=e.id;DojoAudio.play(e.type,e.kind,e.finisher);
- if(e.type==='hit'){burst(e.x,e.y,COLORS[e.who]||'#f2e8bd',reduce?2:7);shake=reduce?0:e.finisher?.08:.04;rumble(e.who!==localId?.35:.10,75);}
- else if(e.type==='block'||e.type==='parry'){burst(e.x,e.y,e.type==='parry'?'#fff0ad':'#f8eac5',reduce?3:e.type==='parry'?17:7);if(e.who===localId)rumble(e.type==='parry'?.55:.17,e.type==='parry'?140:45);}
- else if(e.type==='ready'&&e.who===localId){showToast(lastDevice==='pad'?'Dreier-Serie bereit! R1 / RB drücken.':lastDevice==='touch'?'Dreier-Serie bereit! Tippe auf Serie.':'Dreier-Serie bereit! J + K zusammen drücken.');}
+// Effects (Plan 4c): sparks fly from the contact, a ring and impact lines mark it, big hits flash the screen,
+// combo counts float up and the show phase leaves a glowing trail on the striking limb. Reduced motion halves it all.
+const EFFECT_LIMIT=400;
+function addEffect(e){effects.push(e);if(effects.length>EFFECT_LIMIT)effects.splice(0,effects.length-EFFECT_LIMIT);}
+function sparks(x,y,color,n,speed=1){if(!Number.isFinite(x)||!Number.isFinite(y))return;for(let i=0;i<n;i++){const angle=Math.random()*Math.PI*2,s=(90+Math.random()*240)*speed;addEffect({type:'spark',x,y,vx:Math.cos(angle)*s,vy:Math.sin(angle)*s-60,life:.34+Math.random()*.12,max:.42,color,width:1.5+Math.random()*2});}}
+function ring(x,y,color,radius,life=.22){if(!Number.isFinite(x)||!Number.isFinite(y))return;addEffect({type:'ring',x,y,color,radius,life,max:life});}
+function impactLines(x,y,color,n,length){if(!Number.isFinite(x)||!Number.isFinite(y))return;for(let i=0;i<n;i++){const angle=Math.random()*Math.PI*2;addEffect({type:'line',x,y,angle,length:length*(.6+Math.random()*.6),color,life:.14,max:.14});}}
+function flash(color,life=.12){addEffect({type:'flash',color,life,max:life});}
+function floatText(x,y,label,size,color,life=.55){if(!Number.isFinite(x)||!Number.isFinite(y))return;addEffect({type:'text',x,y,label,size,color,life,max:life,vy:-70});}
+function bigText(label,color,life=.9){addEffect({type:'big',label,color,life,max:life});}
+function hitEffects(e){
+ const color=COLORS[e.who]||'#f2e8bd',scale=reduce?.5:1,show=e.combo>=7,strong=e.strong;
+ sparks(e.x,e.y,show?'#ffd36b':color,Math.round((show?28:strong?14:7)*scale),show?1.4:strong?1.15:1);
+ ring(e.x,e.y,show?'#ffd36b':'#fff3d0',show?70:strong?50:34);
+ impactLines(e.x,e.y,show?'#fff0ab':'#fff3d0',Math.round((show?10:strong?8:4)*scale),show?90:strong?60:40);
+ if(e.combo>=4&&!show)floatText(e.x,e.y-30,`COMBO ${e.combo}`,22,'#fff0ab');
+ if(show){if(!reduce)flash('#ffd36b22',.14);bigText(`${e.combo} TREFFER`,'#ffd36b');}
+ shake=reduce?0:show||strong?.08:.04;shakeStrength=show?9:strong?6:4;
+}
+function guardEffects(e){
+ const breaker=e.type==='breaker',perfect=e.type==='parry',scale=reduce?.5:1,color=e.type==='block'?'#f8eac5':'#fff0ad';
+ sparks(e.x,e.y,color,Math.round((breaker?26:perfect?17:7)*scale),breaker?1.3:1);ring(e.x,e.y,color,breaker?80:perfect?56:30,breaker?.3:.2);
+ if(breaker){if(!reduce)flash('#fff0ad2a',.16);bigText('COMBO BREAKER!','#fff0ad',1.1);shake=reduce?0:.08;shakeStrength=8;}
+ else if(perfect)impactLines(e.x,e.y,color,Math.round(6*scale),50);
+}
+function updateEffects(dt){
+ for(const e of effects){e.life-=dt;if(e.type==='spark'){e.x+=e.vx*dt;e.y+=e.vy*dt;e.vy+=520*dt;e.vx*=1-1.6*dt;}else if(e.type==='text')e.y+=e.vy*dt;}
+ effects=effects.filter(e=>e.life>0);
+ if(game&&game.rules.mode==='duel')for(const f of game.fighters){const t=trails[f.id];if(f.combo>=Combat.COMBO_SHOW&&f.attack){const q=KarateRig.pose(f).strike;if(q)t.push({x:f.x+q[0]*f.face,y:FLOOR-f.y+q[1],life:.25});}for(const n of t)n.life-=dt;trails[f.id]=t.filter(n=>n.life>0).slice(-14);}
+ shake=Math.max(0,shake-dt);
+}
+function drawEffects(){
+ for(let i=0;i<2;i++){const t=trails[i];if(t.length>1){ctx.strokeStyle=COLORS[i];ctx.lineCap='round';for(let k=1;k<t.length;k++){ctx.globalAlpha=t[k].life/.25*.7;ctx.lineWidth=2+t[k].life*28;ctx.beginPath();ctx.moveTo(t[k-1].x,t[k-1].y);ctx.lineTo(t[k].x,t[k].y);ctx.stroke();}}}
+ for(const e of effects){const a=e.life/e.max;
+  if(e.type==='spark'){ctx.globalAlpha=a;ctx.strokeStyle=e.color;ctx.lineWidth=e.width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.lineTo(e.x-e.vx*.03,e.y-e.vy*.03);ctx.stroke();}
+  else if(e.type==='ring'){ctx.globalAlpha=a*.8;circle(e.x,e.y,e.radius*(1-a*.8),e.color,false,2+a*3);}
+  else if(e.type==='line'){ctx.globalAlpha=a;ctx.strokeStyle=e.color;ctx.lineWidth=1+a*2.5;ctx.beginPath();const r0=e.length*(1-a)*.35+8,r1=r0+e.length*a;ctx.moveTo(e.x+Math.cos(e.angle)*r0,e.y+Math.sin(e.angle)*r0);ctx.lineTo(e.x+Math.cos(e.angle)*r1,e.y+Math.sin(e.angle)*r1);ctx.stroke();}
+  else if(e.type==='flash'){ctx.globalAlpha=a;ctx.fillStyle=e.color;ctx.fillRect(0,0,W,H);}
+  else if(e.type==='text'){ctx.globalAlpha=Math.min(1,a*1.5);text(e.label,e.x,e.y,e.size,e.color,'center',800);}
+  else if(e.type==='big'){const pop=1+Math.max(0,a-.8)*3;ctx.globalAlpha=Math.min(1,a*2);text(e.label,640,300,Math.round(54*pop),e.color,'center',900);}
+ }
+ ctx.globalAlpha=1;
+}
+function consumeEvents(){if(!game)return;for(const e of game.events){if(e.id<=lastEvent)continue;lastEvent=e.id;DojoAudio.play(e);
+ if(e.type==='hit'){hitEffects(e);rumble(e.who!==localId?(e.combo>=7?.7:.35):.10,e.combo>=7?120:75);}
+ else if(e.type==='block'||e.type==='parry'||e.type==='breaker'){guardEffects(e);if(e.who===localId)rumble(e.type==='block'?.17:.55,e.type==='block'?45:140);}
  else if(e.type==='round'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;}
- else if(e.type==='reset'){clearInput();remoteInput=blank();remoteEdges=blank();aiInput=blank();aiMemory=[];aiTimer=0;renderFighters=null;particles=[];}
+ else if(e.type==='reset'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;effects=[];trails=[[],[]];}
  else if(e.type==='sudden')showToast('Verlängerung · der nächste eindeutige Treffer entscheidet.');
- else if(e.type==='match'){clearInput();if(game.fighters.every(f=>f.hp>0))showResult();}
+ else if(e.type==='match'){clearInput();if(mode==='ai'&&e.winner===0){const r=Progress.recordWin(store,wins);wins=r.wins;promotion=r.newBelt?r.belt:null;updateBelt();if(promotion)DojoAudio.play({type:'belt'});}if(game.fighters.every(f=>f.hp>0))showResult();}
 }}
 function rumble(strength,duration){const p=gamepads().find(p=>p.index===selectedPad);try{p?.vibrationActuator?.playEffect('dual-rumble',{duration,strongMagnitude:strength,weakMagnitude:strength*.65})?.catch(()=>{});}catch{}}
 function line(points,color,width=7){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();}
@@ -536,7 +846,7 @@ let seed=17;for(let i=0;i<7000;i++){seed=(seed*16807)%2147483647;const x=seed%W;
 scene.getContext('2d').drawImage(canvas,0,0);}
 drawBackground();
 function drawFighter(f,ambient=false){
- const p=KarateRig.pose(f,nowTime/1000),color=COLORS[f.id],ink='#172521',cloth=f.id?'#879b94':'#e7e0cd',shade=f.id?'#566e67':'#b7ae97',skin='#e4bc98';
+ const p=KarateRig.pose(f,nowTime/1000),color=COLORS[f.id],ink='#172521',cloth=f.id?'#879b94':'#e7e0cd',shade=f.id?'#566e67':'#b7ae97',skin='#e4bc98',skinShade='#c9a07c';
  ctx.save();ctx.translate(f.x,FLOOR);ctx.fillStyle='#183c3438';ctx.beginPath();ctx.ellipse(0,7,49-f.y*.04,8,0,0,Math.PI*2);ctx.fill();ctx.translate(0,-f.y);ctx.scale(f.face,1);
  if(f.fall>0){
   const t=Math.min(1,f.fall),ease=t*t*(3-2*t),angle=(-Math.PI/2+.10)*ease;
@@ -547,15 +857,42 @@ function drawFighter(f,ambient=false){
  }
  function polygon(points,fill,stroke=ink,width=2){ctx.beginPath();points.forEach((v,i)=>i?ctx.lineTo(...v):ctx.moveTo(...v));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineJoin='round';ctx.stroke();}}
  function sleeve(a,b,w1,w2,fill){const d=Math.hypot(b[0]-a[0],b[1]-a[1])||1,n=[-(b[1]-a[1])/d,(b[0]-a[0])/d];polygon([[a[0]+n[0]*w1,a[1]+n[1]*w1],[b[0]+n[0]*w2,b[1]+n[1]*w2],[b[0]-n[0]*w2,b[1]-n[1]*w2],[a[0]-n[0]*w1,a[1]-n[1]*w1]],fill);}
- function leg(points,back){const [root,knee,ankle]=points,fill=back?shade:cloth,cuff=[knee[0]+(ankle[0]-knee[0])*.85,knee[1]+(ankle[1]-knee[1])*.85];line([cuff,ankle],ink,10);line([cuff,ankle],skin,6);sleeve(root,knee,15,12,fill);circle(knee[0],knee[1],11,fill);sleeve(knee,cuff,12,8,fill);const kicking=(back?1:0)===(p.strikeLeg||0)&&p.kick&&p.extension>.25;const toe=kicking?[ankle[0]+12,ankle[1]-2]:[ankle[0]+12,ankle[1]+3];line([[ankle[0]-4,ankle[1]+1],ankle,toe],ink,8);line([[ankle[0]-4,ankle[1]+1],ankle,toe],skin,5);line([[root[0]+3,root[1]+12],[knee[0]+3,knee[1]-5]],'#38584830',1.4);}
- function arm(points,back){const [root,elbow,hand]=points,cuff=[elbow[0]+(hand[0]-elbow[0])*.65,elbow[1]+(hand[1]-elbow[1])*.65],fill=back?shade:cloth;line([cuff,hand],ink,10);line([cuff,hand],skin,6);sleeve(root,elbow,12,9,fill);circle(elbow[0],elbow[1],8,fill);sleeve(elbow,cuff,9,7,fill);circle(hand[0],hand[1],6.3,ink);circle(hand[0],hand[1],4.5,skin);line([[hand[0]+2,hand[1]-2],[hand[0]+4,hand[1]]],'#796a5320',1);}
+ const along=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+ // Joints are drawn as discs with a short crease so knees and elbows read as hinges.
+ function hinge(q,r,fill,from,to){circle(q[0],q[1],r,fill);const d=Math.hypot(to[0]-from[0],to[1]-from[1])||1,n=[-(to[1]-from[1])/d,(to[0]-from[0])/d];line([[q[0]+n[0]*r*.6,q[1]+n[1]*r*.6],[q[0]-n[0]*r*.6,q[1]-n[1]*r*.6]],ink+'55',1.5);}
+ function foot(ankle,shin,kicking){const d=Math.hypot(ankle[0]-shin[0],ankle[1]-shin[1])||1,u=[(ankle[0]-shin[0])/d,(ankle[1]-shin[1])/d];
+  // Heel behind the ankle, toes ahead; a kicking foot points its toes, a planted one lies flat.
+  const heel=kicking?[ankle[0]-u[0]*4-u[1]*6,ankle[1]-u[1]*4+u[0]*6]:[ankle[0]-9,ankle[1]+3],toe=kicking?[ankle[0]+u[1]*13+u[0]*2,ankle[1]-u[0]*13+u[1]*2]:[ankle[0]+14,ankle[1]+3];
+  polygon([heel,[ankle[0]-3,ankle[1]-5],[ankle[0]+5,ankle[1]-4],toe,kicking?[toe[0]-u[1]*2+u[0]*3,toe[1]+u[0]*2+u[1]*3]:[toe[0]-1,toe[1]+3],kicking?heel:[heel[0]+2,heel[1]+3]],skin,ink,2);}
+ function leg(points,back){const [root,knee,ankle]=points,fill=back?shade:cloth,cuff=along(knee,ankle,.82);
+  sleeve(root,knee,16,12,fill);sleeve(knee,cuff,12,9,fill);hinge(knee,11,fill,root,ankle);
+  line([cuff,ankle],ink,10);line([cuff,ankle],skin,6);
+  const kicking=(back?1:0)===(p.strikeLeg||0)&&p.kick&&p.extension>.25;foot(ankle,cuff,kicking);
+  line([[root[0]+3,root[1]+12],[knee[0]+3,knee[1]-6]],'#38584830',1.4);}
+ function arm(points,back){const [root,elbow,hand]=points,cuff=along(elbow,hand,.62),fill=back?shade:cloth;
+  line([cuff,hand],ink,10);line([cuff,hand],skin,6);sleeve(root,elbow,13,10,fill);sleeve(elbow,cuff,10,8,fill);hinge(elbow,8,fill,root,hand);
+  // Fist: a knuckle ridge on the striking side.
+  circle(hand[0],hand[1],6.6,ink);circle(hand[0],hand[1],4.8,skin);line([[hand[0]+1,hand[1]-3],[hand[0]+4,hand[1]+1]],skinShade,1.6);}
  leg(p.backLeg,true);leg(p.frontLeg,false);
- const s=p.shoulder,h=p.hip;
- polygon([[s[0]-16,s[1]-3],[s[0]+16,s[1]-1],[h[0]+20,h[1]+11],[h[0]+2,h[1]+15],[h[0]-21,h[1]+10]],cloth);
+ const s=p.shoulder,h=p.hip,fs=p.frontArm[0],bs=p.backArm[0],waist=along(h,s,.42),waistWidth=14,hipWidth=20;
+ // Pelvis block under the belt, then the jacket with a tapered waist, chest and a shoulder yoke that turns with the hips.
+ polygon([[h[0]-hipWidth,h[1]-3],[h[0]+hipWidth,h[1]-3],[h[0]+hipWidth-4,h[1]+20],[h[0]+2,h[1]+24],[h[0]-hipWidth+4,h[1]+19]],cloth);
+ polygon([[bs[0]-6,bs[1]-4],[fs[0]+8,fs[1]-2],[waist[0]+waistWidth+2,waist[1]],[h[0]+hipWidth+1,h[1]+9],[h[0]+1,h[1]+13],[h[0]-hipWidth-1,h[1]+8],[waist[0]-waistWidth,waist[1]]],cloth);
  line([[s[0]-10,s[1]],[s[0]+2,s[1]+20],[h[0]+10,h[1]-9]],shade,5);line([[s[0]+11,s[1]],[s[0]+2,s[1]+20],[h[0]-6,h[1]-5]],ink,2);line([[s[0]-7,s[1]+2],[s[0]+2,s[1]+20]],'#ffffff70',2);
- line([[h[0]-19,h[1]-1],[h[0]+18,h[1]-1]],ink,9);line([[h[0]-18,h[1]-1],[h[0]+17,h[1]-1]],color,5);const sway=Math.sin(nowTime*.008+f.walk*3)*2;line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],ink,6);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],color,3);line([[h[0]+5,h[1]],[h[0]-1+sway,h[1]+19]],color,3);
- arm(p.backArm,true);arm(p.frontArm,false);line([p.shoulder,[p.head[0],p.head[1]+10]],ink,12);line([p.shoulder,[p.head[0],p.head[1]+10]],skin,7);
- circle(p.head[0],p.head[1],15.5,ink);circle(p.head[0],p.head[1],13,skin);line([[p.head[0]+8,p.head[1]-2],[p.head[0]+13,p.head[1]-1]],ink,1.7);
+ line([[waist[0]-waistWidth+3,waist[1]+1],[waist[0]+waistWidth-2,waist[1]+2]],shade+'80',2);
+ polygon([[p.neck[0]-7,p.neck[1]+2],[p.neck[0]+7,p.neck[1]+2],[fs[0]+6,fs[1]-1],[bs[0]-5,bs[1]-2]],cloth);line([[bs[0]-5,bs[1]-2],[fs[0]+6,fs[1]-1]],ink,2.5);
+ // The obi shows the earned belt against the computer (two colours for an in-between belt, red marks for Meister).
+ const belt=beltColors(f),bc=belt?belt.colors:[color],b1=bc[0],b2=bc[bc.length-1];
+ line([[h[0]-hipWidth,h[1]-1],[h[0]+hipWidth-1,h[1]-1]],ink,9);line([[h[0]-hipWidth+1,h[1]-1],[h[0],h[1]-1]],b1,5);line([[h[0],h[1]-1],[h[0]+hipWidth-2,h[1]-1]],b2,5);const sway=Math.sin(nowTime*.008+f.walk*3)*2;circle(h[0]+5,h[1],4.5,ink);circle(h[0]+5,h[1],3,b2);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],ink,6);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],b2,3);line([[h[0]+5,h[1]],[h[0]-1+sway,h[1]+19]],b1,3);
+ if(belt&&belt.stripes)for(let i=0;i<belt.stripes;i++)line([[h[0]+7+sway*.7,h[1]+16-i*4],[h[0]+11+sway*.7,h[1]+17-i*4]],'#d84a3a',2);
+ arm(p.backArm,true);
+ // Neck with a hint of trapezius, then the head: skull, jaw, ear, brow line and the headband with its tail.
+ line([p.shoulder,[p.head[0],p.head[1]+10]],ink,12);line([p.shoulder,[p.head[0],p.head[1]+10]],skin,7);
+ arm(p.frontArm,false);
+ circle(p.head[0],p.head[1],15.5,ink);circle(p.head[0],p.head[1],13,skin);
+ ctx.fillStyle=skin;ctx.beginPath();ctx.ellipse(p.head[0]+4,p.head[1]+8,9,6,.3,0,Math.PI*2);ctx.fill();ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.head[0]+4,p.head[1]+8,9,6,.3,.2,Math.PI-.5);ctx.stroke();
+ circle(p.head[0]-9,p.head[1]+1,3.2,ink);circle(p.head[0]-9,p.head[1]+1,2,skinShade);
+ line([[p.head[0]+6,p.head[1]-2],[p.head[0]+13,p.head[1]-1]],ink,1.7);line([[p.head[0]+9,p.head[1]+1.5],[p.head[0]+11,p.head[1]+1.5]],ink,2.2);
  line([[p.head[0]-13,p.head[1]-6],[p.head[0]+13,p.head[1]-6]],color,5);line([[p.head[0]-12,p.head[1]-5],[p.head[0]-30,p.head[1]+sway]],color,3);
  if(f.hit>0){circle(p.head[0],p.head[1],13,'#fff5d34f');}
  if(p.strike&&p.extension>.70&&!reduce){const q=p.strike;line([[q[0]-15,q[1]-8],[q[0]+9,q[1]-8]],color+'65',2);}
@@ -564,18 +901,25 @@ function drawFighter(f,ambient=false){
  if(f.parryFlash>0)text('PERFEKTER BLOCK',f.x,FLOOR-f.y-232,15,'#fff0ac','center',800);
  if(ambient)text(f.id?'02 / JADE':'01 / KORALLE',f.x,FLOOR+42,14,'#2e4a3b','center',650);
 }
+// Which key continues the combo, in the words of the device the local player is using.
+function comboHint(key,mine){const punch=key==='punch';if(!mine)return punch?'SCHLAG':'TRITT';if(classicControls())return punch?'AKTION':'ZURÜCK + AKTION';if(lastDevice==='pad')return punch?'SCHLAG □/X':'TRITT ○/B';if(lastDevice==='touch')return punch?'SCHLAG':'TRITT';return punch?'SCHLAG (J)':'TRITT (K)';}
 function drawHUD(){
  const points=game.rules.mode==='points',target=points?game.rules.pointsToWin:2;
  ctx.fillStyle='#143731d0';ctx.fillRect(0,0,W,125);
  for(const f of game.fighters){
-  const left=f.id?813:47,width=420,label=(f.id?'JADE':'KORALLE')+(f.id===localId?' / DU':mode==='ai'?' / COMPUTER':' / GEGNER');
+  const left=f.id?813:47,width=420,label=(f.id?'JADE':'KORALLE')+(f.id===localId?(mode==='ai'?' / DU · '+Progress.belt(wins).name.toUpperCase():' / DU'):mode==='ai'?' / COMPUTER · '+DojoAI.LEVELS[aiState.level].name.toUpperCase():' / GEGNER');
   text(label,f.id?1233:47,40,16,COLORS[f.id],f.id?'right':'left',700);
-  if(!points){ctx.fillStyle='#0d2520';ctx.fillRect(left,52,width,17);ctx.fillStyle=COLORS[f.id];ctx.fillRect(f.id?left+width-width*f.hp/100:left,52,width*f.hp/100,17);text(String(f.hp),f.id?left:left+width,91,15,'#f0ead3',f.id?'left':'right',600);}
+  if(!points){ctx.fillStyle='#0d2520';ctx.fillRect(left,52,width,17);ctx.fillStyle=COLORS[f.id];ctx.fillRect(f.id?left+width-width*f.hp/Combat.HP:left,52,width*f.hp/Combat.HP,17);text(String(f.hp).replace('.',','),f.id?left:left+width,91,15,'#f0ead3',f.id?'left':'right',600);}
   for(let n=0;n<target;n++)circle(f.id?left+width-10-n*27:left+10+n*27,points?70:87,points?9:6,n<game.scores[f.id]?COLORS[f.id]:'#b0bdb1',n<game.scores[f.id],1.5);
   if(points)text(`${game.scores[f.id]} / ${target} PUNKTE`,f.id?left+width:left,111,15,'#e4e5d1',f.id?'right':'left',600);
-  else{for(let n=0;n<3;n++)circle(f.id?left+width-6-n*15:left+6+n*15,112,3,n<f.streak?COLORS[f.id]:'#82998a',n<f.streak,1);
-   const trigger=lastDevice==='pad'?'R1/RB':lastDevice==='touch'?'SERIE':classicControls()?'K':'J + K';
-   text(f.comboReady?`SERIE · ${trigger}`:'3 TREFFER → SERIE',f.id?left+width-59:left+59,117,13,f.comboReady?'#fff0ab':'#c0cdba',f.id?'right':'left',600);}
+  else if(f.combo>=Combat.COMBO_CHAIN&&f.comboKey){
+   // Chain phase: announce the next key and show how much of the beat is left.
+   const mine=f.id===localId,show=f.combo>=Combat.COMBO_SHOW,label=show?`COMBO ${f.combo} · SHOW!`:`COMBO ${f.combo} · ${comboHint(f.comboKey,mine)}`;
+   text(label,f.id?left+width:left,114,14,show?'#ffd36b':'#fff0ab',f.id?'right':'left',800);
+   const rest=Math.max(0,1-f.comboClock/Combat.COMBO_BEAT),bar=120;ctx.fillStyle='#0d2520';ctx.fillRect(f.id?left+width-bar:left,119,bar,4);ctx.fillStyle=show?'#ffd36b':'#fff0ab';ctx.fillRect(f.id?left+width-bar*rest:left,119,bar*rest,4);
+  }
+  else if(f.combo>0)text(`${f.combo} ${f.combo===1?'TREFFER':'TREFFER IN FOLGE'}`,f.id?left+width:left,114,13,'#c0cdba',f.id?'right':'left',600);
+
  }
  const clock=game.suddenDeath?'NÄCHSTER TREFFER':game.rules.timeLimit?String(Math.ceil(game.clock)).padStart(2,'0'):'OHNE ZEITLIMIT';
  text(points?'PUNKTKAMPF':`RUNDE ${game.round}`,640,76,15,'#e8e2c9','center',700);text(clock,640,103,game.suddenDeath?13:16,'#e8e2c9','center',600);
@@ -588,15 +932,15 @@ function drawHUD(){
  }
 }
 const ambient=[{...Combat.fighter(0),x:265},{...Combat.fighter(1),x:1015}];
-function draw(dt){ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*6,(Math.random()-.5)*4);ctx.drawImage(scene,0,0);if(game){if(mode==='guest'){if(!renderFighters)renderFighters=structuredClone(game.fighters);renderFighters.forEach((r,i)=>{const f=game.fighters[i],alpha=1-Math.exp(-22*dt);const x=r.x+(f.x-r.x)*alpha,y=r.y+(f.y-r.y)*alpha;Object.assign(r,f,{x,y});drawFighter(r);});}else game.fighters.forEach(f=>drawFighter(f));drawHUD();}else ambient.forEach(f=>drawFighter(f,true));
-for(const p of particles){ctx.globalAlpha=p.life/p.max;circle(p.x,p.y,2.5,p.color);}ctx.globalAlpha=1;ctx.restore();}
+function draw(dt){ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shakeStrength*1.5,(Math.random()-.5)*shakeStrength);ctx.drawImage(scene,0,0);if(game){if(mode==='guest'){if(!renderFighters)renderFighters=structuredClone(game.fighters);renderFighters.forEach((r,i)=>{const f=game.fighters[i],alpha=1-Math.exp(-22*dt);const x=r.x+(f.x-r.x)*alpha,y=r.y+(f.y-r.y)*alpha;Object.assign(r,f,{x,y});drawFighter(r);});}else game.fighters.forEach(f=>drawFighter(f));drawHUD();}else ambient.forEach(f=>drawFighter(f,true));
+drawEffects();ctx.restore();}
 let lastTip='';
-function frame(now){nowTime=now;const dt=Math.min(.05,(now-lastFrame)/1000||0);lastFrame=now;const input=sampleInput();networkTick(now,input);const comboButton=$('combo-touch');if(comboButton)comboButton.hidden=game?.rules.mode!=='duel'||!game?.fighters[localId]?.comboReady;
-const tip=classicControls()?(lastDevice==='pad'?'KLASSIK · Stick + ✕/A · zurück+oben/unten: Block · ?: alle Techniken':'KLASSIK · Pfeile oder F/D + J/Leertaste · zurück+oben/unten: Block · ?: Techniken'):lastDevice==='pad'?'STICK Schritte · □/X Schlag · ○/B Tritt · L1/LB hoch · L2/LT tief · R1/RB Serie':lastDevice==='touch'?'LINKS Schritte · RECHTS angreifen · ↓ + Block: unten':'F vor · D zurück · J Schlag · K Tritt · S Block · Leertaste Block unten · W Sprung';if(tip!==lastTip){lastTip=tip;$('input-tip').textContent=tip;}
+function frame(now){nowTime=now;const dt=Math.min(.05,(now-lastFrame)/1000||0);lastFrame=now;DojoAudio.tick();const input=sampleInput();networkTick(now,input);
+const tip=classicControls()?(lastDevice==='pad'?'KLASSIK · Stick + ✕/A · zurück+oben/unten: Block · ?: alle Techniken':'KLASSIK · Pfeile oder F/D + J/Leertaste · zurück+oben/unten: Block · ?: Techniken'):lastDevice==='pad'?'STICK Schritte · □/X Schlag · ○/B Tritt · L1/LB hoch · L2/LT tief':lastDevice==='touch'?'LINKS Schritte · RECHTS angreifen · ↓ + Block: unten':'F vor · D zurück · J Schlag · K Tritt · S Block · Leertaste Block unten · W Sprung';if(tip!==lastTip){lastTip=tip;$('input-tip').textContent=tip;}
 if(game&&mode!=='guest'&&!game.paused.some(Boolean)){
- acc+=dt;let first=true;while(acc>=DT){const humanEdge=first?takeEdges():blank();first=false;let other;if(mode==='ai')other=ai(DT);else{other={input:remoteInput,edges:remoteEdges};remoteEdges=blank();}step(game,[input,other.input],[humanEdge,other.edges],DT);acc-=DT;}consumeEvents();
+ acc+=dt;let first=true;while(acc>=DT){const humanEdge=first?takeEdges():blank();first=false;let other;if(mode==='ai')other=DojoAI.think(aiState,game,DT);else{other={input:remoteInput,edges:remoteEdges};remoteEdges=blank();}step(game,[input,other.input],[humanEdge,other.edges],DT);acc-=DT;}consumeEvents();
 }else{acc=0;if(mode!=='guest')takeEdges();}
-if(!game?.paused.some(Boolean)){particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=420*dt;p.life-=dt;});particles=particles.filter(p=>p.life>0);shake=Math.max(0,shake-dt);}if(game?.phase==='over'&&game.fighters.every(f=>f.hp>0||f.fall>=.85)&&$('result-panel').hidden)showResult();draw(dt);requestAnimationFrame(frame);}
+if(!game?.paused.some(Boolean))updateEffects(dt);if(game?.phase==='over'&&game.fighters.every(f=>f.hp>0||f.fall>=.85)&&$('result-panel').hidden)showResult();draw(dt);requestAnimationFrame(frame);}
 requestAnimationFrame(frame);
 // Optional browser agent interface uses the same visible actions.
 const modelContext=document.modelContext;if(modelContext?.registerTool){const lifecycle=new AbortController();addEventListener('pagehide',()=>lifecycle.abort(),{once:true});for(const tool of [{name:'read_duel_state',description:'Read current Strichkampf mode, health and pause state.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:input=>{if(input&&Object.keys(input).length)throw Error('No arguments expected');return {mode,phase:game?.phase||'menu',health:game?.fighters.map(f=>f.hp)||[],paused:game?.paused||[]};}},{name:'start_solo_duel',description:'Start a new duel against the computer from the main menu.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:false},execute:input=>{if(input&&Object.keys(input).length)throw Error('No arguments expected');if(mode!=='menu'||game)throw Error('Return to the main menu first');$('ai-btn').click();return {mode,phase:game.phase};}}])try{Promise.resolve(modelContext.registerTool(tool,{signal:lifecycle.signal})).catch(()=>{});}catch{}}

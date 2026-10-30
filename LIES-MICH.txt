@@ -1,4 +1,4 @@
-STRICHKAMPF – DOJO / 07
+STRICHKAMPF – DOJO / 08
 Eigenständige Version des gemeinsam erarbeiteten Spielstands.
 
 SO STARTET DAS SPIEL
@@ -14,35 +14,53 @@ Startdatei für optionales statisches Hosting.
 STEUERUNG
 Direkt: F vor, D zurück, J Schlag, K Tritt, S hoher Block,
 Leertaste tiefer Block, W oder Pfeil oben Sprung, Pfeil unten ducken.
-J + K: freigeschaltete Dreier-Serie im Duell.
 Klassik: Pfeilrichtung + J/Leertaste; die vollständige Belegung steht unter „?“.
 Controller: Mit dem Rechner verbinden, ins Spiel klicken und Taste drücken.
 Direkt: Quadrat Schlag, Kreis Tritt, Kreuz Sprung, L1 hoher Block,
-L2 tiefer Block, R1 Serie, Options Pause. Klassik: Richtung + Kreuz.
+L2 tiefer Block, Options Pause. Klassik: Richtung + Kreuz.
 Die Controllererkennung hängt vom Browser und seinem Standard-Gamepad-Support ab.
 
-SPIELMODI
-Duell: Lebensbalken; zwei Rundensiege gewinnen das Match.
+SPIELMODI (Regelwerk v1)
+Duell: 20 Trefferpunkte pro Runde, leichte Technik −½, starke −1; zwei Rundensiege
+gewinnen das Match. Combo nur im Duell: drei Treffer in Folge öffnen die Chance,
+danach zeigt das HUD die nächste Taste (Schlag/Tritt im Wechsel, Takt ½ Sekunde);
+Treffer 4–6 kann der Gegner mit einem perfekten Block brechen (Combo Breaker),
+Treffer 7–9 sind nicht blockbar, Ende bei 9.
 Punktkampf: Ein ungeblockter Treffer gibt einen Punkt; zwei oder drei Punkte zum Sieg.
 Steuerung und Regeln sind unabhängig wählbar. Zeitlimit optional.
 
+GÜRTEL UND COMPUTERGEGNER
+Nur Siege gegen den Computer zählen. Elf Gürtel von Weiß bis Meister 2: drei Siege
+je volle Farbe, der Zwischengürtel zeigt sich nach dem zweiten Sieg. Der Gegner ist
+immer die KI-Stufe über dir: Grün (bis zum grünen Gürtel), Schwarz, dann Meister 2.
+Der Gürtel bleibt im Browser gespeichert; zurücksetzen unter „?“.
+
+SOUND
+Alle Klänge entstehen im Spiel selbst (Web Audio): Wusch, krachende Treffer, Kiai,
+Ansager mit synthetischer Stimme. Kein fremdes Tonmaterial.
+
 ONLINE MIT ANDREAS
-Beide verwenden diese Version. Einer erstellt einen Raum, der andere tritt
-mit dem Raumcode bei. Beide brauchen Internet. Raumvermittlung und
+Beide verwenden diese Version (Protokoll v7). Einer erstellt einen Raum, der andere
+tritt mit dem Raumcode bei. Beide brauchen Internet. Raumvermittlung und
 Verbindungsaufbau verwenden externe PeerJS-/STUN-Dienste; diese Dienste sind
 nicht Bestandteil der ZIP. Strenge Router können direkte Verbindungen verhindern;
 ein TURN-Relay ist nicht eingerichtet. Echte Zweinetz- und Controller-Tests
 sind noch offen. Solo benötigt diese Dienste nicht.
 
 QUELLCODE
-Quellcode/src/: vollständiger HTML-, JavaScript- und Bibliothekscode.
+Quellcode/src/: vollständiger HTML-, JavaScript- und Bibliothekscode
+(engine, rig, controls, ai, progress, audio, game).
 Quellcode/build.py: erzeugt mit Python 3 die beiden Einzeldateien in Quellcode/dist/.
 Aufruf im Ordner Quellcode: python3 build.py
 Zum Spielen ist dieser Schritt NICHT nötig.
-Quellcode/tests/: vorhandene Simulationsprüfungen. Combat-Test: node tests/combat.cjs
-Der Integrationstest benötigt Node.js und @napi-rs/canvas, auflösbar über NODE_PATH.
+Quellcode/tests/: Prüfungen ohne Browser. Alle: npm test (braucht Node.js und
+einmalig npm install für @napi-rs/canvas). Einzeln: node tests/combat.cjs,
+tests/ki.cjs, tests/fortschritt.cjs, tests/effekte.cjs, tests/ton.cjs,
+tests/integration.cjs. Bildproben: npm run bildproben → Quellcode/bildproben/.
+Hörproben: Quellcode/tests/hoerprobe.html im Browser (misst Pegel) und
+Quellcode/hoerproben/*.wav.
 Quellcode/DEVELOPMENT.md: technischer Entwicklungsstand und Testgrenzen.
+PLAN.md, ENTSCHEIDUNGEN.md, REGELWERK.md: Bauplan, Entscheidungs-Log, Regeln.
 PeerJS-Lizenz: Quellcode/src/PEERJS-LICENSE.txt (auch im HTML eingebettet).
 
-Paketstand: DOJO / 07, Quellstand 31bdff40e5ae2c0cded17f8296132067280801ae.
-Export vom 27.10.2026. Spielmechanik gegenüber diesem Stand unverändert.
+Paketstand: DOJO / 08 (Regelwerk-Schritte 2–5), 30.10.2026.

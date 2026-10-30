@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('fs'),path=require('path');
 const {environment}=require('./umgebung.cjs');
 const env=environment();env.$('ai-btn').click();env.c.__render=true;
-const g=env.t.game;g.phase='fight';
+const g=env.t.game;g.phase='over';// kein laufender Kampf, damit nur die eingespeisten Ereignisse Effekte erzeugen
 const count=type=>env.t.effects.filter(e=>e.type===type).length;
 let checks=0;
 function test(name,fn){fn();checks++;console.log('PASS '+name);}

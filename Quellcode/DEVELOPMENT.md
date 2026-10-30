@@ -42,3 +42,19 @@ Die nach dem letzten veröffentlichten Stand noch ungesicherten Entwürfe für S
 Validierung: 27 gezielte Prüfungen in `tests/combat.cjs`; `tests/integration.cjs` prüft Anwendungseingaben, simulierten Standardcontroller, Touch, Host/Gast-Regeln, Punktwertung, Revanche, beidseitige Pause, Gegnerverhalten und Canvas-Zeichenfunktionen. Aufruf der Integration mit installiertem `@napi-rs/canvas` über NODE_PATH. Posen wurden mit den tatsächlichen Zeichenfunktionen gerendert und visuell kontrolliert. JavaScript-Syntax, Build und Patchformat geprüft.
 
 Grenzen: Keine interaktive Browserprüfung (für diese statische Site steht kein kompatibler verwalteter Preview-Server bereit), kein echter DualSense- oder Hörtest und kein Internet-Ende-zu-Ende-Test mit zwei Anschlüssen. Kein TURN-Relay. Nächster gemeinsamer Schritt ist die Abstimmung des Kampfgefühls durch Steve: Übergang Schritt/Tritt, beide Trittbeine, Lesbarkeit der geöffneten Haltung und Klassik-Steuerung. Weitere Designänderungen nach diesem Feedback, kein erneuter Komplettumbau.
+
+
+## Fortsetzung, 30. Oktober 2026 – DOJO / 08 (Bauplan, Regelwerk-Schritte 2–5)
+
+Umgesetzt nach `../PLAN.md` mit Entscheidungs-Log `../ENTSCHEIDUNGEN.md`; Quelle ist `../REGELWERK.md` v1.
+
+- **KI (`src/ai.js`)**: eigenes Modul, drei Stufen (Grün, Schwarz, Meister 2) mit Reaktionsverzögerung 0,18/0,11/0,05 s, Blockquote 70/82/92 %, ein bis drei Kampfstile mit Wechsel. Entscheidet auf eigenem Takt und sofort bei Angriffsbeginn/-ende des Gegners; blind bis zur Reaktionszeit nach jedem Neustart. Einspeisbarer Zufall für wiederholbare Simulationen.
+- **Gürtel (`src/progress.js`)**: elf Gürtel, Siege → Gürtel → KI-Stufe, Speicher mit Klammer 0–18, Rücksetzen im Hilfe-Dialog. Nur eigene Siege gegen den Computer zählen.
+- **Engine (`src/engine.js`)**: 20 Trefferpunkte (leicht ½, stark 1), Dreier-Serie entfernt, Combo-System (Zähler, Takt 0,5 s, angezeigte Taste, Breaker = perfekter Block in Treffer 4–6, Show 7–9 nicht blockbar, Ende bei 9), Reaktionstabelle (Kopf 0,28/0,21 s, Körper 0,32/0,21, Knie 0,45/0,30, Sturz 0,65/0,50). Netzwerkprotokoll v7.
+- **Figur (`src/rig.js`, `drawFighter`)**: Gewicht über dem Standfuß beim Schritt, Reaktionsposen Magen/Knie/Sturz, Becken, Taille, Schulterjoch, Gelenkscheiben, Füße, Kopfdetails. Gürtel am Gi (Variante `BELT_ON_GI`).
+- **Effekte**: Funken, Ring, Schlaglinien, Blitz, Combo-Zähler, Großtext, Leuchtspur; Obergrenze 400; reduzierte Bewegung halbiert.
+- **Ton (`src/audio.js`)**: nur Web Audio; Wusch, Treffer nach Reaktionsart, Block/Breaker, Gong, Stings, Kiai (Variante A/B), Ansager aus Formant-Synthese mit Warteschlange; Pegel je Familie, im Browser gemessen.
+
+Validierung: `npm test` = 45 Engine-, 10 KI-, 8 Gürtel-, 6 Effekt-, 8 Ton- und 10 Integrationsprüfungen (87). Bildproben in `bildproben/`, Hörproben in `hoerproben/` (27 Klänge, alle im Zielpegel). Schlusstest des gebauten Spiels im eingebauten Browser der Claude-App (Start, Tastatur, Match gegen den Computer, Gürtel-Anzeige, Konsole ohne Fehler).
+
+Grenzen: Kein echter Controller-Test, kein Internet-Ende-zu-Ende-Test mit zwei Anschlüssen, kein Touch-Gerät. Die Combo-Takt-Fenster und KI-Stufen warten auf Stefans Spieltest (Regelwerk §7: Feinabstimmung). Beobachtung: Mit 20 Trefferpunkten dauert eine Runde viermal so viele Treffer wie mit 100 Leben; so steht es im Regelwerk.
