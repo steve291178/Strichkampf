@@ -107,7 +107,7 @@ peer.on('error',err=>{if(gen!==generation)return;if(conn?.open){showToast('Raumv
 peer.on('disconnected',()=>{if(gen===generation&&!conn?.open)netFail('Die Verbindung zum Raumdienst wurde unterbrochen. Bitte erneut versuchen.');});
 }
 function attachConnection(c,gen){conn=c;c.on('open',()=>{if(gen!==generation)return;clearTimeout(connectTimer);lastReceived=performance.now();$('lobby-title').textContent='Ihr seid verbunden.';$('lobby-hint').textContent=mode==='host'?'Du spielst Koralle. Dein Gegner spielt Jade.':'Du spielst Jade. Der Gastgeber startet das Duell.';$('fight-online-btn').hidden=mode!=='host';$('net-status').textContent='VERBUNDEN';$('lobby-rules').textContent=mode==='host'?ruleText(selectedRules()):'Spielregeln werden vom Gastgeber übernommen.';send({type:'hello',version:7});if(mode==='host')send({type:'settings',rules:selectedRules()});});c.on('data',d=>{if(gen!==generation||!d||typeof d!=='object')return;lastReceived=performance.now();receive(d);});c.on('close',()=>{if(gen===generation)netFail('Dein Gegner hat die Verbindung beendet. Du kannst einen neuen Raum eröffnen.');});c.on('error',()=>{if(gen===generation)netFail('Die direkte Verbindung ist abgebrochen. Bitte erneut verbinden.');});}
-function validGame(g){return g&&['countdown','fight','break','over'].includes(g.phase)&&g.rules&&['duel','points'].includes(g.rules.mode)&&[2,3].includes(g.rules.pointsToWin)&&[0,60,90].includes(g.rules.timeLimit)&&Array.isArray(g.scores)&&g.scores.length===2&&g.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&Number.isFinite(g.clock)&&Number.isFinite(g.freeze)&&Number.isFinite(g.breakTime)&&Number.isFinite(g.elapsed)&&Number.isFinite(g.countdown)&&Array.isArray(g.paused)&&g.paused.length===2&&g.paused.every(v=>typeof v==='boolean')&&Array.isArray(g.fighters)&&g.fighters.length===2&&g.fighters.every(f=>f&&['x','y','hp','face','walk','stun','hit','vy','invuln','guardAge','parryCooldown','parryFlash','stagger','reactionTime','knockback','fall','combo','comboClock'].every(k=>Number.isFinite(f[k]))&&(f.comboKey===null||['punch','kick'].includes(f.comboKey))&&f.x>=0&&f.x<=1280&&f.y>=0&&f.y<600&&f.hp>=0&&f.hp<=Combat.HP&&(!f.attack||(MOVES[f.attack.kind]&&Number.isFinite(f.attack.t)&&Array.isArray(f.attack.spent)))&&(!f.stride||['t','duration','dir','length'].every(k=>Number.isFinite(f.stride[k]))))&&Number.isInteger(g.eventId)&&Array.isArray(g.events)&&g.events.length<=32;}
+function validGame(g){return g&&['countdown','fight','break','over'].includes(g.phase)&&g.rules&&['duel','points'].includes(g.rules.mode)&&[2,3].includes(g.rules.pointsToWin)&&[0,60,90].includes(g.rules.timeLimit)&&Array.isArray(g.scores)&&g.scores.length===2&&g.scores.every(v=>Number.isInteger(v)&&v>=0&&v<=3)&&Number.isFinite(g.clock)&&Number.isFinite(g.freeze)&&Number.isFinite(g.breakTime)&&Number.isFinite(g.elapsed)&&Number.isFinite(g.countdown)&&Array.isArray(g.paused)&&g.paused.length===2&&g.paused.every(v=>typeof v==='boolean')&&Array.isArray(g.fighters)&&g.fighters.length===2&&g.fighters.every(f=>f&&['x','y','hp','face','walk','stun','hit','vy','invuln','guardAge','parryCooldown','parryFlash','stagger','reactionTime','knockback','fall','combo','comboClock'].every(k=>Number.isFinite(f[k]))&&(f.comboKey===null||['punch','kick'].includes(f.comboKey))&&(f.reaction===null||f.reaction in Combat.REACTIONS)&&f.x>=0&&f.x<=1280&&f.y>=0&&f.y<600&&f.hp>=0&&f.hp<=Combat.HP&&(!f.attack||(MOVES[f.attack.kind]&&Number.isFinite(f.attack.t)&&Array.isArray(f.attack.spent)))&&(!f.stride||['t','duration','dir','length'].every(k=>Number.isFinite(f.stride[k]))))&&Number.isInteger(g.eventId)&&Array.isArray(g.events)&&g.events.length<=32;}
 function receive(d){
  if(d.type==='hello'&&mode==='host'){send({type:'settings',rules:selectedRules()});return;}
  if(d.type==='settings'&&mode==='guest'){$('lobby-rules').textContent=ruleText(Combat.rules(d.rules));return;}
@@ -158,7 +158,7 @@ let seed=17;for(let i=0;i<7000;i++){seed=(seed*16807)%2147483647;const x=seed%W;
 scene.getContext('2d').drawImage(canvas,0,0);}
 drawBackground();
 function drawFighter(f,ambient=false){
- const p=KarateRig.pose(f,nowTime/1000),color=COLORS[f.id],ink='#172521',cloth=f.id?'#879b94':'#e7e0cd',shade=f.id?'#566e67':'#b7ae97',skin='#e4bc98';
+ const p=KarateRig.pose(f,nowTime/1000),color=COLORS[f.id],ink='#172521',cloth=f.id?'#879b94':'#e7e0cd',shade=f.id?'#566e67':'#b7ae97',skin='#e4bc98',skinShade='#c9a07c';
  ctx.save();ctx.translate(f.x,FLOOR);ctx.fillStyle='#183c3438';ctx.beginPath();ctx.ellipse(0,7,49-f.y*.04,8,0,0,Math.PI*2);ctx.fill();ctx.translate(0,-f.y);ctx.scale(f.face,1);
  if(f.fall>0){
   const t=Math.min(1,f.fall),ease=t*t*(3-2*t),angle=(-Math.PI/2+.10)*ease;
@@ -169,18 +169,42 @@ function drawFighter(f,ambient=false){
  }
  function polygon(points,fill,stroke=ink,width=2){ctx.beginPath();points.forEach((v,i)=>i?ctx.lineTo(...v):ctx.moveTo(...v));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineJoin='round';ctx.stroke();}}
  function sleeve(a,b,w1,w2,fill){const d=Math.hypot(b[0]-a[0],b[1]-a[1])||1,n=[-(b[1]-a[1])/d,(b[0]-a[0])/d];polygon([[a[0]+n[0]*w1,a[1]+n[1]*w1],[b[0]+n[0]*w2,b[1]+n[1]*w2],[b[0]-n[0]*w2,b[1]-n[1]*w2],[a[0]-n[0]*w1,a[1]-n[1]*w1]],fill);}
- function leg(points,back){const [root,knee,ankle]=points,fill=back?shade:cloth,cuff=[knee[0]+(ankle[0]-knee[0])*.85,knee[1]+(ankle[1]-knee[1])*.85];line([cuff,ankle],ink,10);line([cuff,ankle],skin,6);sleeve(root,knee,15,12,fill);circle(knee[0],knee[1],11,fill);sleeve(knee,cuff,12,8,fill);const kicking=(back?1:0)===(p.strikeLeg||0)&&p.kick&&p.extension>.25;const toe=kicking?[ankle[0]+12,ankle[1]-2]:[ankle[0]+12,ankle[1]+3];line([[ankle[0]-4,ankle[1]+1],ankle,toe],ink,8);line([[ankle[0]-4,ankle[1]+1],ankle,toe],skin,5);line([[root[0]+3,root[1]+12],[knee[0]+3,knee[1]-5]],'#38584830',1.4);}
- function arm(points,back){const [root,elbow,hand]=points,cuff=[elbow[0]+(hand[0]-elbow[0])*.65,elbow[1]+(hand[1]-elbow[1])*.65],fill=back?shade:cloth;line([cuff,hand],ink,10);line([cuff,hand],skin,6);sleeve(root,elbow,12,9,fill);circle(elbow[0],elbow[1],8,fill);sleeve(elbow,cuff,9,7,fill);circle(hand[0],hand[1],6.3,ink);circle(hand[0],hand[1],4.5,skin);line([[hand[0]+2,hand[1]-2],[hand[0]+4,hand[1]]],'#796a5320',1);}
+ const along=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+ // Joints are drawn as discs with a short crease so knees and elbows read as hinges.
+ function hinge(q,r,fill,from,to){circle(q[0],q[1],r,fill);const d=Math.hypot(to[0]-from[0],to[1]-from[1])||1,n=[-(to[1]-from[1])/d,(to[0]-from[0])/d];line([[q[0]+n[0]*r*.6,q[1]+n[1]*r*.6],[q[0]-n[0]*r*.6,q[1]-n[1]*r*.6]],ink+'55',1.5);}
+ function foot(ankle,shin,kicking){const d=Math.hypot(ankle[0]-shin[0],ankle[1]-shin[1])||1,u=[(ankle[0]-shin[0])/d,(ankle[1]-shin[1])/d];
+  // Heel behind the ankle, toes ahead; a kicking foot points its toes, a planted one lies flat.
+  const heel=kicking?[ankle[0]-u[0]*4-u[1]*6,ankle[1]-u[1]*4+u[0]*6]:[ankle[0]-9,ankle[1]+3],toe=kicking?[ankle[0]+u[1]*13+u[0]*2,ankle[1]-u[0]*13+u[1]*2]:[ankle[0]+14,ankle[1]+3];
+  polygon([heel,[ankle[0]-3,ankle[1]-5],[ankle[0]+5,ankle[1]-4],toe,kicking?[toe[0]-u[1]*2+u[0]*3,toe[1]+u[0]*2+u[1]*3]:[toe[0]-1,toe[1]+3],kicking?heel:[heel[0]+2,heel[1]+3]],skin,ink,2);}
+ function leg(points,back){const [root,knee,ankle]=points,fill=back?shade:cloth,cuff=along(knee,ankle,.82);
+  sleeve(root,knee,16,12,fill);sleeve(knee,cuff,12,9,fill);hinge(knee,11,fill,root,ankle);
+  line([cuff,ankle],ink,10);line([cuff,ankle],skin,6);
+  const kicking=(back?1:0)===(p.strikeLeg||0)&&p.kick&&p.extension>.25;foot(ankle,cuff,kicking);
+  line([[root[0]+3,root[1]+12],[knee[0]+3,knee[1]-6]],'#38584830',1.4);}
+ function arm(points,back){const [root,elbow,hand]=points,cuff=along(elbow,hand,.62),fill=back?shade:cloth;
+  line([cuff,hand],ink,10);line([cuff,hand],skin,6);sleeve(root,elbow,13,10,fill);sleeve(elbow,cuff,10,8,fill);hinge(elbow,8,fill,root,hand);
+  // Fist: a knuckle ridge on the striking side.
+  circle(hand[0],hand[1],6.6,ink);circle(hand[0],hand[1],4.8,skin);line([[hand[0]+1,hand[1]-3],[hand[0]+4,hand[1]+1]],skinShade,1.6);}
  leg(p.backLeg,true);leg(p.frontLeg,false);
- const s=p.shoulder,h=p.hip;
- polygon([[s[0]-16,s[1]-3],[s[0]+16,s[1]-1],[h[0]+20,h[1]+11],[h[0]+2,h[1]+15],[h[0]-21,h[1]+10]],cloth);
+ const s=p.shoulder,h=p.hip,fs=p.frontArm[0],bs=p.backArm[0],waist=along(h,s,.42),waistWidth=14,hipWidth=20;
+ // Pelvis block under the belt, then the jacket with a tapered waist, chest and a shoulder yoke that turns with the hips.
+ polygon([[h[0]-hipWidth,h[1]-3],[h[0]+hipWidth,h[1]-3],[h[0]+hipWidth-4,h[1]+20],[h[0]+2,h[1]+24],[h[0]-hipWidth+4,h[1]+19]],cloth);
+ polygon([[bs[0]-6,bs[1]-4],[fs[0]+8,fs[1]-2],[waist[0]+waistWidth+2,waist[1]],[h[0]+hipWidth+1,h[1]+9],[h[0]+1,h[1]+13],[h[0]-hipWidth-1,h[1]+8],[waist[0]-waistWidth,waist[1]]],cloth);
  line([[s[0]-10,s[1]],[s[0]+2,s[1]+20],[h[0]+10,h[1]-9]],shade,5);line([[s[0]+11,s[1]],[s[0]+2,s[1]+20],[h[0]-6,h[1]-5]],ink,2);line([[s[0]-7,s[1]+2],[s[0]+2,s[1]+20]],'#ffffff70',2);
+ line([[waist[0]-waistWidth+3,waist[1]+1],[waist[0]+waistWidth-2,waist[1]+2]],shade+'80',2);
+ polygon([[p.neck[0]-7,p.neck[1]+2],[p.neck[0]+7,p.neck[1]+2],[fs[0]+6,fs[1]-1],[bs[0]-5,bs[1]-2]],cloth);line([[bs[0]-5,bs[1]-2],[fs[0]+6,fs[1]-1]],ink,2.5);
  // The obi shows the earned belt against the computer (two colours for an in-between belt, red marks for Meister).
  const belt=beltColors(f),bc=belt?belt.colors:[color],b1=bc[0],b2=bc[bc.length-1];
- line([[h[0]-19,h[1]-1],[h[0]+18,h[1]-1]],ink,9);line([[h[0]-18,h[1]-1],[h[0],h[1]-1]],b1,5);line([[h[0],h[1]-1],[h[0]+17,h[1]-1]],b2,5);const sway=Math.sin(nowTime*.008+f.walk*3)*2;line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],ink,6);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],b2,3);line([[h[0]+5,h[1]],[h[0]-1+sway,h[1]+19]],b1,3);
+ line([[h[0]-hipWidth,h[1]-1],[h[0]+hipWidth-1,h[1]-1]],ink,9);line([[h[0]-hipWidth+1,h[1]-1],[h[0],h[1]-1]],b1,5);line([[h[0],h[1]-1],[h[0]+hipWidth-2,h[1]-1]],b2,5);const sway=Math.sin(nowTime*.008+f.walk*3)*2;circle(h[0]+5,h[1],4.5,ink);circle(h[0]+5,h[1],3,b2);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],ink,6);line([[h[0]+5,h[1]],[h[0]+10+sway,h[1]+24]],b2,3);line([[h[0]+5,h[1]],[h[0]-1+sway,h[1]+19]],b1,3);
  if(belt&&belt.stripes)for(let i=0;i<belt.stripes;i++)line([[h[0]+7+sway*.7,h[1]+16-i*4],[h[0]+11+sway*.7,h[1]+17-i*4]],'#d84a3a',2);
- arm(p.backArm,true);arm(p.frontArm,false);line([p.shoulder,[p.head[0],p.head[1]+10]],ink,12);line([p.shoulder,[p.head[0],p.head[1]+10]],skin,7);
- circle(p.head[0],p.head[1],15.5,ink);circle(p.head[0],p.head[1],13,skin);line([[p.head[0]+8,p.head[1]-2],[p.head[0]+13,p.head[1]-1]],ink,1.7);
+ arm(p.backArm,true);
+ // Neck with a hint of trapezius, then the head: skull, jaw, ear, brow line and the headband with its tail.
+ line([p.shoulder,[p.head[0],p.head[1]+10]],ink,12);line([p.shoulder,[p.head[0],p.head[1]+10]],skin,7);
+ arm(p.frontArm,false);
+ circle(p.head[0],p.head[1],15.5,ink);circle(p.head[0],p.head[1],13,skin);
+ ctx.fillStyle=skin;ctx.beginPath();ctx.ellipse(p.head[0]+4,p.head[1]+8,9,6,.3,0,Math.PI*2);ctx.fill();ctx.strokeStyle=ink;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.head[0]+4,p.head[1]+8,9,6,.3,.2,Math.PI-.5);ctx.stroke();
+ circle(p.head[0]-9,p.head[1]+1,3.2,ink);circle(p.head[0]-9,p.head[1]+1,2,skinShade);
+ line([[p.head[0]+6,p.head[1]-2],[p.head[0]+13,p.head[1]-1]],ink,1.7);line([[p.head[0]+9,p.head[1]+1.5],[p.head[0]+11,p.head[1]+1.5]],ink,2.2);
  line([[p.head[0]-13,p.head[1]-6],[p.head[0]+13,p.head[1]-6]],color,5);line([[p.head[0]-12,p.head[1]-5],[p.head[0]-30,p.head[1]+sway]],color,3);
  if(f.hit>0){circle(p.head[0],p.head[1],13,'#fff5d34f');}
  if(p.strike&&p.extension>.70&&!reduce){const q=p.strike;line([[q[0]-15,q[1]-8],[q[0]+9,q[1]-8]],color+'65',2);}

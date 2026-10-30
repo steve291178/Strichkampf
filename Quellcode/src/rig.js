@@ -1,5 +1,6 @@
 'use strict';
 // Two-bone limbs keep upper/lower arm and leg lengths fixed throughout each move.
+// Weight sits over the planted foot during steps; hit reactions bend, kneel and knock down the figure.
 const KarateRig=(()=>{
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const smooth=v=>{v=clamp(v);return v*v*(3-2*v);};
@@ -10,6 +11,13 @@ function envelope(t,wind,active,kick=false){
  if(t<wind)return smooth((t-wind+launch)/launch);
  return 1-smooth((t-wind-hold)/recover);
 }
+// Reaction profiles: how far into the pose the figure is at a given age (0 = contact, 1 = done).
+const REACT_SHAPE={
+ head:age=>Math.sin(Math.PI*clamp(age*1.12))*.8,
+ body:age=>Math.sin(Math.PI*clamp(age*1.1))*.85,
+ knee:age=>age<.3?smooth(age/.3):age<.62?1:1-smooth((age-.62)/.38),
+ down:age=>age<.38?smooth(age/.38):age<.55?1:1-smooth((age-.55)/.45)
+};
 function pose(f,elapsed=0){
  const atk=f.attack,m=atk?Combat.MOVES[atk.kind]:null;
  const lowAttack=['body','sweep'].includes(atk?.kind);
@@ -23,8 +31,9 @@ function pose(f,elapsed=0){
   const firstLift=Math.sin(clamp(p*2)*Math.PI)*5,secondLift=Math.sin(clamp(p*2-1)*Math.PI)*4;
   frontFoot=[42+rel*((frontFirst?lead:follow)-travel),-4-(frontFirst?firstLift:secondLift)];
   backFoot=[-43+rel*((frontFirst?follow:lead)-travel),-4-(frontFirst?secondLift:firstLift)];
-  // The grounded foot stays fixed in world space as the pelvis passes over it.
-  hip[0]-=rel*3*Math.sin(p*Math.PI);hip[1]+=Math.sin(p*Math.PI)*2;
+  // The grounded foot stays fixed in world space; the pelvis carries the weight over it while the other foot is in the air.
+  const support=p<.5?(frontFirst?backFoot:frontFoot):(frontFirst?frontFoot:backFoot),transfer=Math.sin(Math.PI*((p*2)%1));
+  hip[0]+=(support[0]-hip[0])*.65*transfer;hip[1]+=Math.sin(p*Math.PI)*2;
   lean+=rel*.035*Math.sin(p*Math.PI);
  }
  if(f.settle&&!atk&&f.y===0){
@@ -89,11 +98,25 @@ function pose(f,elapsed=0){
   }
  }
  if(f.block){if(low){frontHand=[43,-79];backHand=[26,-112];}else{frontHand=[34,-174];backHand=[42,-145];}lean-=.045;}
- if(f.reactionTime>0){
-  const duration=.28,age=1-clamp(f.reactionTime/duration),amount=Math.sin(Math.PI*clamp(age*1.12))*.8;
-  if(f.reaction==='body'){lean+=.56*amount;hip[1]+=7*amount;frontHand=mix(frontHand,[37,-91],amount);backHand=mix(backHand,[24,-111],amount);}
-  else if(f.reaction==='low'){hip[1]+=9*amount;frontFoot[1]-=11*amount;lean-=.12*amount;}
-  else{lean-=.30*amount;hip[0]-=6*amount;frontHand=mix(frontHand,[39,-126],amount);backHand=mix(backHand,[7,-145],amount);}
+ let reaction=null;
+ if(f.reactionTime>0&&Combat.REACTIONS[f.reaction]){
+  const kind=f.reaction,duration=Combat.REACTIONS[kind][0],age=1-clamp(f.reactionTime/duration),amount=REACT_SHAPE[kind](age);
+  reaction={kind,amount};
+  if(kind==='body'){
+   // Körpertreffer: the stomach caves in, the torso folds forward, both hands go to the belly.
+   lean+=.7*amount;hip[1]+=12*amount;hip[0]-=10*amount;frontHand=mix(frontHand,[30,-86],amount);backHand=mix(backHand,[16,-96],amount);
+  }else if(kind==='knee'){
+   // Schwerer Treffer: the figure drops onto the rear knee, the shin lies on the floor, one hand props on the thigh.
+   hip=mix(hip,[-25,-56],amount);backFoot=mix(backFoot,[-62,-4],amount);frontFoot=mix(frontFoot,[40,-4],amount);lean+=.32*amount;
+   frontHand=mix(frontHand,[24,-100],amount);backHand=mix(backHand,[-14,-70],amount);
+  }else if(kind==='down'){
+   // Beinfeger: both feet fly forward, the figure lands on its back and pushes itself up again.
+   hip=mix(hip,[-30,-14],amount);lean=lean*(1-amount)-1.3*amount;frontFoot=mix(frontFoot,[58,-22],amount);backFoot=mix(backFoot,[22,-14],amount);
+   frontHand=mix(frontHand,[-90,-6],amount);backHand=mix(backHand,[-30,-12],amount);
+  }else{
+   // Head hit: the head snaps back, the hands come up late.
+   lean-=.36*amount;hip[0]-=7*amount;frontHand=mix(frontHand,[39,-126],amount);backHand=mix(backHand,[7,-145],amount);
+  }
  }else if(f.stagger>0){const amount=Math.sin(clamp(f.stagger/.55)*Math.PI*.75);lean-=amount*.35;hip[0]-=amount*4;frontHand=[42,-132];backHand=[7,-139];}
  // Reachable planted feet keep their exact targets, with knees flexing as needed.
  if(f.y===0)for(const [foot,offset] of [[frontFoot,7],[backFoot,-7]]){
@@ -108,7 +131,7 @@ function pose(f,elapsed=0){
  const fh=joint(frontShoulder,frontHand,37,36,1),bh=joint(backShoulder,backHand,37,36,1);
  const frontHip=[hip[0]+7,hip[1]],backHip=[hip[0]-7,hip[1]];
  const fl=joint(frontHip,frontFoot,55,55,-1),bl=joint(backHip,backFoot,55,55,-1);
- return {hip,shoulder,neck,head,frontArm:[frontShoulder,fh.mid,fh.end],backArm:[backShoulder,bh.mid,bh.end],frontLeg:[frontHip,fl.mid,fl.end],backLeg:[backHip,bl.mid,bl.end],strike:strike==='hand'?(strikeHand?bh.end:fh.end):strike==='foot'?(strikeLeg?bl.end:fl.end):null,kick,strikeLeg,extension,lean,turn};
+ return {hip,shoulder,neck,head,frontArm:[frontShoulder,fh.mid,fh.end],backArm:[backShoulder,bh.mid,bh.end],frontLeg:[frontHip,fl.mid,fl.end],backLeg:[backHip,bl.mid,bl.end],strike:strike==='hand'?(strikeHand?bh.end:fh.end):strike==='foot'?(strikeLeg?bl.end:fl.end):null,kick,strikeLeg,extension,lean,turn,reaction};
 }
 // Collision geometry shares the exact pose used by the canvas renderer.
 function geometry(f){

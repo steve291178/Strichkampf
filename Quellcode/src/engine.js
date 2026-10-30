@@ -4,6 +4,9 @@ const W=1280,FLOOR=542,DT=1/120,STEP_TIME=.36,STEP_REST=.07,PARRY_WINDOW=.14;
 // Regelwerk §5, Combo (nur Duell): Treffer 1–3 öffnen die Chance, 4–6 laufen nur im Takt mit der
 // angezeigten Taste weiter (Combo Breaker = perfekter Block), 7–9 sind nicht blockbar, Ende bei 9.
 const COMBO_BEAT=.5,COMBO_CHAIN=3,COMBO_SHOW=6,COMBO_MAX=9;
+// Hit reactions (Übergabe §4): [visible duration, seconds without block or attack].
+// head = light high hit, body = Körperschlag, knee = strong hit drops to one knee, down = Beinfeger knocks down.
+const REACTIONS={head:[.28,.21],body:[.32,.21],knee:[.45,.30],down:[.65,.50]};
 // Regelwerk §4: Duell startet mit 20 Trefferpunkten, leichte Technik −½, starke −1.
 const HP=20;
 const MOVES={
@@ -116,8 +119,8 @@ function step(g,inputs,edges,dt=DT){
    event(g,{type:breaker?'breaker':perfect?'parry':'block',x,y,who:def.id,kind});
   }else{
    def.hp=g.rules.mode==='points'||g.suddenDeath?0:Math.max(0,def.hp-m.damage);
-   def.stun=.21;def.invuln=.24;def.hit=.22;
-   def.reaction=kind==='body'?'body':kind==='sweep'?'low':'high';def.reactionTime=.28;
+   def.reaction=kind==='body'?'body':kind==='sweep'?'down':strong(m)?'knee':'head';
+   def.reactionTime=REACTIONS[def.reaction][0];def.stun=REACTIONS[def.reaction][1];def.invuln=.24;def.hit=.22;
    g.freeze=Math.max(g.freeze,strong(m)?.045:.03);def.block=false;def.attack=null;def.stride=null;def.settle=null;def.buffer=null;
    let combo=0;
    if(duel){
@@ -140,5 +143,5 @@ function step(g,inputs,edges,dt=DT){
   }
  }
 }
-return {W,FLOOR,DT,HP,MOVES,STEP_TIME,STEP_REST,PARRY_WINDOW,COMBO_BEAT,COMBO_CHAIN,COMBO_SHOW,COMBO_MAX,blank,fighter,create,rules,step};
+return {W,FLOOR,DT,HP,MOVES,REACTIONS,STEP_TIME,STEP_REST,PARRY_WINDOW,COMBO_BEAT,COMBO_CHAIN,COMBO_SHOW,COMBO_MAX,blank,fighter,create,rules,step};
 })();

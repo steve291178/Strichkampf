@@ -148,4 +148,28 @@ test('Combo resets when the attacker is hit and at the end of a round; nine stro
 });
 test('Point mode: no combo events, counters stay at zero',()=>{const g=C.create({mode:'points'});g.phase='fight';g.fighters[1].hp=C.HP;fresh(g);const r=strike(g,'punch');assert.equal(r.event.type,'hit');assert.equal(r.event.combo,0);assert.equal(g.fighters[0].combo,0);assert(!g.events.some(e=>e.type==='combo'));});
 test('Serialized online state resolves a combo identically',()=>{const g=setup(),copy=JSON.parse(JSON.stringify(g));for(let i=0;i<4;i++){for(const x of [g,copy]){fresh(x);strike(x,x.fighters[0].comboKey||(i%2?'kick':'punch'));}}assert.equal(g.fighters[0].combo,4);assert.equal(JSON.stringify(g),JSON.stringify(copy));});
+// --- Schritt 4: Anatomie und Trefferreaktionen (Plan 4a/4b), gemessen an der Pose.
+const joints=p=>[p.hip,p.shoulder,p.neck,p.head,...p.frontArm,...p.backArm,...p.frontLeg,...p.backLeg];
+const lengthsOk=p=>{for(const [limb,lengths] of [[p.frontArm,[37,36]],[p.backArm,[37,36]],[p.frontLeg,[55,55]],[p.backLeg,[55,55]]])for(let i=0;i<2;i++)if(Math.abs(Math.hypot(limb[i+1][0]-limb[i][0],limb[i+1][1]-limb[i][1])-lengths[i])>.001)return false;return true;};
+function reacting(kind,age){const f=C.fighter(0);f.reaction=kind;f.reactionTime=C.MOVES&&C.REACTIONS[kind][0]*(1-age);return R.pose(f);}
+test('Weight sits over the planted foot during a step (hip within 20 of the support foot) and between the feet when standing or blocking',()=>{
+ for(const rel of [1,-1])for(const phase of [.25,.75]){const f=C.fighter(0);const length=rel>0?36:30;f.stride={t:phase*.36,duration:.36,dir:rel,length};const p=R.pose(f);
+  const frontFirst=rel>0,support=phase<.5?(frontFirst?p.backLeg[2]:p.frontLeg[2]):(frontFirst?p.frontLeg[2]:p.backLeg[2]);
+  assert(Math.abs(p.hip[0]-support[0])<=20,`Schritt ${rel} Phase ${phase}: Hüfte ${p.hip[0].toFixed(1)} Standfuß ${support[0].toFixed(1)}`);}
+ for(const block of [false,true])for(const crouch of [false,true]){const f=C.fighter(0);f.block=block;f.crouch=crouch;const p=R.pose(f);assert(p.hip[0]>p.backLeg[2][0]&&p.hip[0]<p.frontLeg[2][0],'Hüfte zwischen den Füßen');}
+});
+test('No joint goes below the floor line in any technique, block or reaction',()=>{
+ const states=[];for(const kind of Object.keys(C.MOVES))for(let t=0;t<C.MOVES[kind].duration;t+=.02){const f=C.fighter(0);f.attack={kind,t,spent:[],hand:0,leg:0,stance:null};states.push(f);}
+ for(const kind of Object.keys(C.REACTIONS))for(let age=0;age<=1;age+=.05){const f=C.fighter(0);f.reaction=kind;f.reactionTime=C.REACTIONS[kind][0]*(1-age);states.push(f);}
+ for(const f of states){const p=R.pose(f);assert(lengthsOk(p),'Segmentlängen');for(const q of joints(p))assert(q[1]<=0,`Gelenk unter dem Boden: ${JSON.stringify(q)} bei ${f.attack?.kind||f.reaction}`);}
+});
+test('Body hit folds the torso forward by at least 0,45 rad and drops the hip at least 8 units',()=>{const idle=R.pose(C.fighter(0)),p=reacting('body',.45);assert(p.lean-idle.lean>=.45,'lean '+(p.lean-idle.lean).toFixed(2));assert(p.hip[1]-idle.hip[1]>=8,'hip '+(p.hip[1]-idle.hip[1]).toFixed(1));});
+test('Strong hit drops to one knee: hip at least 35 lower, rear knee at most 12 above the floor, back up at the end',()=>{const idle=R.pose(C.fighter(0)),p=reacting('knee',.45);assert(p.hip[1]-idle.hip[1]>=35,'hip '+(p.hip[1]-idle.hip[1]).toFixed(1));assert(-p.backLeg[1][1]<=12,'knee height '+(-p.backLeg[1][1]).toFixed(1));const end=reacting('knee',1);assert(Math.abs(end.hip[1]-idle.hip[1])<.5);assert.deepEqual([...C.REACTIONS.knee],[.45,.30]);});
+test('Sweep knocks down: head at most 60 above the floor after 0,25 s, standing again by 0,65 s',()=>{const f=C.fighter(0);f.reaction='down';f.reactionTime=C.REACTIONS.down[0]-.25;const p=R.pose(f);assert(-p.head[1]<=60,'head height '+(-p.head[1]).toFixed(1));const idle=R.pose(C.fighter(0)),end=reacting('down',1);assert(Math.abs(end.hip[1]-idle.hip[1])<.5&&Math.abs(end.head[1]-idle.head[1])<.5);assert.deepEqual([...C.REACTIONS.down],[.65,.50]);});
+test('Reaction kinds follow the technique: body, down for the sweep, knee for strong hits, head for light high hits; no block or attack while stunned, free right after',()=>{
+ const expect={jab:'head',body:'body',sweep:'down',lunge:'knee',kick:'knee',side:'knee',air:'knee'};
+ for(const [kind,reaction] of Object.entries(expect)){const g=setup();attack(g.fighters[0],kind);let n=0;while(!g.fighters[1].reaction&&n<150){tick(g);n++;}const d=g.fighters[1];assert.equal(d.reaction,reaction,kind);assert.equal(d.stun,C.REACTIONS[reaction][1]);
+  const held={...C.blank(),block:true};let ticks=0;while(d.stun>0&&ticks<200){tick(g,C.blank(),C.blank(),held);if(d.stun>0)assert(!d.block,'no block while stunned after '+kind);ticks++;}assert(ticks>=Math.round(C.REACTIONS[reaction][1]*120)-1,'stun lasted '+ticks+' ticks');tick(g,C.blank(),C.blank(),held);assert(d.block,'free right after the stun: '+kind);}
+});
+test('No slow motion: hit-stop never exceeds 0,065 s',()=>{const src=require('node:fs').readFileSync(require('node:path').join(root,'src','engine.js'),'utf8');for(const m of src.matchAll(/g\.freeze=Math\.max\(g\.freeze,(.*?)\);/g))for(const v of m[1].match(/\.\d+/g))assert(Number(v)<=.065,'freeze '+v);const g=setup();attack(g.fighters[0],'kick');let max=0;for(let i=0;i<150;i++){tick(g);max=Math.max(max,g.freeze);}assert(max<=.065&&max>0);});
 console.log(checks+' combat, movement and rules checks passed');
