@@ -15,6 +15,8 @@ let wins=Progress.load(store),promotion=null,resetArmed=null;
 const aiLevel=()=>Progress.level(wins);
 // Variant for Stefan (H9): the figure wears the earned belt against the computer; false keeps the fighter colour.
 const BELT_ON_GI=true;
+// Variant for Stefan (H9): kiai 'A' = long "wataaa", 'B' = short "hyah".
+const KIAI_VARIANT='A';DojoAudio.setKiaiVariant(KIAI_VARIANT);
 function beltColors(f){if(mode!=='ai'||!BELT_ON_GI||!aiState)return null;if(f.id===0)return Progress.belt(wins);return {colors:[DojoAI.LEVELS[aiState.level].belt==='green'?'#3f9a4e':'#1d1f22'],stripes:aiState.level===3?2:0};}
 function updateBelt(){const b=Progress.belt(wins),lv=DojoAI.LEVELS[aiLevel()];$('belt-line').textContent=`Dein Gürtel: ${b.name} · Gegner: ${lv.name} (KI-Stufe ${aiLevel()})`+(b.next?` · noch ${b.next.remaining} ${b.next.remaining===1?'Sieg':'Siege'} bis ${b.next.name}`:' · höchster Gürtel erreicht');}
 $('belt-reset').onclick=()=>{if(resetArmed){clearTimeout(resetArmed);resetArmed=null;wins=Progress.reset(store);updateBelt();$('belt-reset').textContent='Gürtel zurücksetzen';showToast('Gürtel zurückgesetzt: Weiß.');}else{$('belt-reset').textContent='Wirklich? Noch einmal tippen.';resetArmed=setTimeout(()=>{resetArmed=null;$('belt-reset').textContent='Gürtel zurücksetzen';},4000);}};
@@ -39,7 +41,7 @@ $('ai-btn').onclick=()=>{closeNetwork();startGame('ai');};
 $('online-btn').onclick=()=>{panels('online-panel');$('online-hint').textContent='Ihr braucht beide eine Internetverbindung.';$('online-hint').classList.remove('error');$('create-btn').disabled=false;$('join-btn').disabled=false;};
 document.querySelectorAll('.back-home').forEach(b=>b.onclick=home);
 $('touch-btn').onclick=()=>setTouch(!touchEnabled);
-$('sound-btn').onclick=()=>{muted=!muted;$('sound-btn').textContent=muted?'Ton aus':'Ton an';$('sound-btn').setAttribute('aria-pressed',String(!muted));DojoAudio.setEnabled(!muted);unlock();DojoAudio.play('block');};
+$('sound-btn').onclick=()=>{muted=!muted;$('sound-btn').textContent=muted?'Ton aus':'Ton an';$('sound-btn').setAttribute('aria-pressed',String(!muted));DojoAudio.setEnabled(!muted);unlock();DojoAudio.play({type:'block'});};
 $('full-btn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else showToast('Vollbild ist in diesem Browser nicht verfügbar.');}catch{showToast('Vollbild ist hier nicht verfügbar. Das Spiel bleibt spielbar.');}};
 function pausedUI(){if(!game)return;if(game.phase==='over'){if(game.fighters.every(f=>f.hp>0||f.fall>=.85))showResult();return;}if(game.paused.some(Boolean)){panels('pause-panel');const own=game.paused[localId],other=game.paused[1-localId];$('pause-message').textContent=other?'Dein Gegner hat pausiert. Ihr müsst beide bereit sein.':'Bereit für den nächsten Schlag?';$('resume-btn').disabled=!own;$('resume-btn').textContent=own?'Weiterkämpfen':'Warte auf deinen Gegner';}else panels(null);}
 function setPause(value){if(!game||game.phase==='over')return;clearInput();game.paused[localId]=value;if(mode==='guest')send({type:'pause',value});else if(mode==='host')sendState();pausedUI();}
@@ -173,13 +175,13 @@ function drawEffects(){
  }
  ctx.globalAlpha=1;
 }
-function consumeEvents(){if(!game)return;for(const e of game.events){if(e.id<=lastEvent)continue;lastEvent=e.id;DojoAudio.play(e.type,e.kind,e.strong);
+function consumeEvents(){if(!game)return;for(const e of game.events){if(e.id<=lastEvent)continue;lastEvent=e.id;DojoAudio.play(e);
  if(e.type==='hit'){hitEffects(e);rumble(e.who!==localId?(e.combo>=7?.7:.35):.10,e.combo>=7?120:75);}
  else if(e.type==='block'||e.type==='parry'||e.type==='breaker'){guardEffects(e);if(e.who===localId)rumble(e.type==='block'?.17:.55,e.type==='block'?45:140);}
  else if(e.type==='round'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;}
  else if(e.type==='reset'){clearInput();remoteInput=blank();remoteEdges=blank();renderFighters=null;effects=[];trails=[[],[]];}
  else if(e.type==='sudden')showToast('Verlängerung · der nächste eindeutige Treffer entscheidet.');
- else if(e.type==='match'){clearInput();if(mode==='ai'&&e.winner===0){const r=Progress.recordWin(store,wins);wins=r.wins;promotion=r.newBelt?r.belt:null;updateBelt();}if(game.fighters.every(f=>f.hp>0))showResult();}
+ else if(e.type==='match'){clearInput();if(mode==='ai'&&e.winner===0){const r=Progress.recordWin(store,wins);wins=r.wins;promotion=r.newBelt?r.belt:null;updateBelt();if(promotion)DojoAudio.play({type:'belt'});}if(game.fighters.every(f=>f.hp>0))showResult();}
 }}
 function rumble(strength,duration){const p=gamepads().find(p=>p.index===selectedPad);try{p?.vibrationActuator?.playEffect('dual-rumble',{duration,strongMagnitude:strength,weakMagnitude:strength*.65})?.catch(()=>{});}catch{}}
 function line(points,color,width=7){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();}
@@ -289,7 +291,7 @@ const ambient=[{...Combat.fighter(0),x:265},{...Combat.fighter(1),x:1015}];
 function draw(dt){ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shakeStrength*1.5,(Math.random()-.5)*shakeStrength);ctx.drawImage(scene,0,0);if(game){if(mode==='guest'){if(!renderFighters)renderFighters=structuredClone(game.fighters);renderFighters.forEach((r,i)=>{const f=game.fighters[i],alpha=1-Math.exp(-22*dt);const x=r.x+(f.x-r.x)*alpha,y=r.y+(f.y-r.y)*alpha;Object.assign(r,f,{x,y});drawFighter(r);});}else game.fighters.forEach(f=>drawFighter(f));drawHUD();}else ambient.forEach(f=>drawFighter(f,true));
 drawEffects();ctx.restore();}
 let lastTip='';
-function frame(now){nowTime=now;const dt=Math.min(.05,(now-lastFrame)/1000||0);lastFrame=now;const input=sampleInput();networkTick(now,input);
+function frame(now){nowTime=now;const dt=Math.min(.05,(now-lastFrame)/1000||0);lastFrame=now;DojoAudio.tick();const input=sampleInput();networkTick(now,input);
 const tip=classicControls()?(lastDevice==='pad'?'KLASSIK · Stick + ✕/A · zurück+oben/unten: Block · ?: alle Techniken':'KLASSIK · Pfeile oder F/D + J/Leertaste · zurück+oben/unten: Block · ?: Techniken'):lastDevice==='pad'?'STICK Schritte · □/X Schlag · ○/B Tritt · L1/LB hoch · L2/LT tief':lastDevice==='touch'?'LINKS Schritte · RECHTS angreifen · ↓ + Block: unten':'F vor · D zurück · J Schlag · K Tritt · S Block · Leertaste Block unten · W Sprung';if(tip!==lastTip){lastTip=tip;$('input-tip').textContent=tip;}
 if(game&&mode!=='guest'&&!game.paused.some(Boolean)){
  acc+=dt;let first=true;while(acc>=DT){const humanEdge=first?takeEdges():blank();first=false;let other;if(mode==='ai')other=DojoAI.think(aiState,game,DT);else{other={input:remoteInput,edges:remoteEdges};remoteEdges=blank();}step(game,[input,other.input],[humanEdge,other.edges],DT);acc-=DT;}consumeEvents();

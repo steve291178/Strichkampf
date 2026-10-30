@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Hörprobe – Strichkampf Klänge</title>
+<style>
+ body{font:14px/1.4 system-ui,sans-serif;margin:16px;background:#142424;color:#f6efd9}
+ table{border-collapse:collapse}td,th{padding:4px 10px;border-bottom:1px solid #345;text-align:left}
+ .bad{color:#ff9a79}.ok{color:#98dec8}button{font:inherit}
+</style>
+</head>
+<body>
+<!-- Rendert jeden Klang mit OfflineAudioContext, misst den Spitzenpegel und bietet jede Probe zum Anhören an.
+     Erwartet: Hauptklänge −12 … −1 dBFS, Hintergrund (Schritt, Landung, Sprung, Kette, Combo verloren) −36 … −14 dBFS.
+     Ergebnis auch in window.ERGEBNIS und window.WAVS (Base64, auf die hörbare Länge gekürzt). -->
+<h1>Hörprobe</h1><p id="status">rendert …</p>
+<table id="tbl"><tr><th>Klang</th><th>Spitze dBFS</th><th>Dauer</th><th>Anhören</th></tr></table>
+<script src="../src/audio.js"></script>
+<script>
+const RATE=22050;const HINTERGRUND=new Set(['schritt','landung','sprung','combo-kette','combo-verloren']);
+const proben=[
+ ['wusch-leicht',{type:'swing',kind:'jab'}],['wusch-stark',{type:'swing',kind:'kick'}],
+ ['treffer-kopf',{type:'hit',kind:'jab',strong:false,combo:1}],['treffer-koerper',{type:'hit',kind:'body',strong:false,combo:1}],['treffer-knie',{type:'hit',kind:'kick',strong:true,combo:1}],['treffer-sturz',{type:'hit',kind:'sweep',strong:false,combo:1}],['treffer-show-7',{type:'hit',kind:'lunge',strong:true,combo:7}],
+ ['block',{type:'block',kind:'jab'}],['perfekter-block',{type:'parry',kind:'kick'}],['combo-breaker',{type:'breaker',kind:'kick'}],
+ ['schritt',{type:'step'}],['landung',{type:'land'}],['sprung',{type:'jump'}],
+ ['combo-chance',{type:'combo',phase:'chance',count:3}],['combo-kette',{type:'combo',phase:'chain',count:4}],['combo-verloren',{type:'drop'}],
+ ['start-fight',{type:'start'}],['runde-ko',{type:'round',reason:'ko'}],['runde-zeit',{type:'round',reason:'time'}],['runde-doppel',{type:'round',reason:'double'}],['match-winner',{type:'match',reason:'ko'}],['verlaengerung',{type:'sudden'}],['neuer-guertel',{type:'belt'}],
+ ['kiai-variante-A',{type:'hit',kind:'kick',strong:true,combo:1},'A'],['kiai-variante-B',{type:'hit',kind:'kick',strong:true,combo:1},'B'],
+ ['ansager-seven',{type:'hit',kind:'lunge',strong:false,combo:7}],['ansager-nine',{type:'hit',kind:'lunge',strong:false,combo:9}]
+];
+function wav(buffer){const ch=buffer.getChannelData(0),n=ch.length,out=new DataView(new ArrayBuffer(44+n*2));const str=(o,s)=>{for(let i=0;i<s.length;i++)out.setUint8(o+i,s.charCodeAt(i));};
+ str(0,'RIFF');out.setUint32(4,36+n*2,true);str(8,'WAVE');str(12,'fmt ');out.setUint32(16,16,true);out.setUint16(20,1,true);out.setUint16(22,1,true);out.setUint32(24,RATE,true);out.setUint32(28,RATE*2,true);out.setUint16(32,2,true);out.setUint16(34,16,true);str(36,'data');out.setUint32(40,n*2,true);
+ for(let i=0;i<n;i++){const v=Math.max(-1,Math.min(1,ch[i]));out.setInt16(44+i*2,v<0?v*32768:v*32767,true);}return new Blob([out],{type:'audio/wav'});}
+const b64=blob=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(',')[1]);fr.readAsDataURL(blob);});
+(async()=>{
+ const rows=[],wavs={};
+ for(const [name,event,variant] of proben){
+  const off=new OfflineAudioContext(1,RATE*2.6,RATE);DojoAudio.attach(off);DojoAudio.setKiaiVariant(variant||'A');DojoAudio.play(event);
+  const buffer=await off.startRendering();const data=buffer.getChannelData(0);let peak=0,last=0;for(let i=0;i<data.length;i++){const a=Math.abs(data[i]);if(a>peak)peak=a;if(a>.002)last=i;}
+  const db=peak>0?20*Math.log10(peak):-99,dur=last/RATE,fine=HINTERGRUND.has(name)?db>=-36&&db<=-14:db>=-12&&db<=-1;
+  rows.push({name,db:+db.toFixed(1),dur:+dur.toFixed(2),fine,hintergrund:HINTERGRUND.has(name)});
+  const trimmed=new OfflineAudioContext(1,Math.min(data.length,last+Math.round(RATE*.15)),RATE).createBuffer(1,Math.min(data.length,last+Math.round(RATE*.15)),RATE);trimmed.getChannelData(0).set(data.subarray(0,trimmed.length));const blob=wav(trimmed);wavs[name]=await b64(blob);
+  const tr=document.createElement('tr');tr.innerHTML=`<td>${name}</td><td class="${fine?'ok':'bad'}">${db.toFixed(1)}</td><td>${dur.toFixed(2)} s</td><td></td>`;const a=document.createElement('audio');a.controls=true;a.src=URL.createObjectURL(blob);tr.lastChild.appendChild(a);document.getElementById('tbl').appendChild(tr);
+ }
+ const good=rows.filter(r=>r.fine).length;document.getElementById('status').textContent=`${good} von ${rows.length} Klängen im jeweiligen Pegelbereich`;
+ window.ERGEBNIS={rows,good,total:rows.length};window.WAVS=wavs;
+})();
+</script>
+</body>
+</html>

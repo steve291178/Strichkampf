@@ -4,7 +4,7 @@
  "private": true,
  "description": "Strichkampf – Quellcode, Build und Prüfungen",
  "scripts": {
-  "test": "node tests/combat.cjs && node tests/ki.cjs && node tests/fortschritt.cjs && node tests/effekte.cjs && node tests/integration.cjs",
+  "test": "node tests/combat.cjs && node tests/ki.cjs && node tests/fortschritt.cjs && node tests/effekte.cjs && node tests/ton.cjs && node tests/integration.cjs",
   "build": "python3 build.py",
   "bildproben": "node tests/bildproben.cjs && node tests/effekte.cjs"
  },
